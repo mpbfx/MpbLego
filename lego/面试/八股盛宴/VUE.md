@@ -14,12 +14,12 @@
 
 #### <font style="color:#DF2A3F;">ref和reactivate的区别（必背）</font>
 
-| **<font style="background-color:rgb(252, 252, 252);">特性</font>** | **<font style="background-color:rgb(252, 252, 252);">ref</font>** | **<font style="background-color:rgb(252, 252, 252);">reactive</font>** |
-| :---: | :---: | :---: |
-| **<font style="background-color:rgb(252, 252, 252);">用途</font>** | <font style="background-color:rgb(252, 252, 252);">定义基本类型（字符串、数字等）或对象类型</font> | <font style="background-color:rgb(252, 252, 252);">仅定义对象类型（对象、数组等）</font> |
-| **<font style="background-color:rgb(252, 252, 252);">返回值</font>** | <font style="background-color:rgb(252, 252, 252);">包含</font><code><font style="background-color:rgb(252, 252, 252);">.value</font></code><br/><font style="background-color:rgb(252, 252, 252);">属性的响应式引用对象</font> | <font style="background-color:rgb(252, 252, 252);">原始对象的Proxy代理对象</font> |
-| **<font style="background-color:rgb(252, 252, 252);">数据类型</font>** | <font style="background-color:rgb(252, 252, 252);">支持所有类型（基本类型+对象）</font> | <font style="background-color:rgb(252, 252, 252);">仅支持对象或数组</font> |
-| **<font style="background-color:rgb(252, 252, 252);">访问方式</font>** | <font style="background-color:rgb(252, 252, 252);">操作数据需</font><code><font style="background-color:rgb(252, 252, 252);">.value</font></code> | <font style="background-color:rgb(252, 252, 252);">直接访问属性，无需</font><code><font style="background-color:rgb(252, 252, 252);">.value</font></code> |
+|   **<font style="background-color:rgb(252, 252, 252);">特性</font>**   |                                                                               **<font style="background-color:rgb(252, 252, 252);">ref</font>**                                                                                |                                          **<font style="background-color:rgb(252, 252, 252);">reactive</font>**                                           |
+| :--------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------: |
+|   **<font style="background-color:rgb(252, 252, 252);">用途</font>**   |                                                               <font style="background-color:rgb(252, 252, 252);">定义基本类型（字符串、数字等）或对象类型</font>                                                               |                                 <font style="background-color:rgb(252, 252, 252);">仅定义对象类型（对象、数组等）</font>                                  |
+|  **<font style="background-color:rgb(252, 252, 252);">返回值</font>**  | <font style="background-color:rgb(252, 252, 252);">包含</font><code><font style="background-color:rgb(252, 252, 252);">.value</font></code><br/><font style="background-color:rgb(252, 252, 252);">属性的响应式引用对象</font> |                                     <font style="background-color:rgb(252, 252, 252);">原始对象的Proxy代理对象</font>                                     |
+| **<font style="background-color:rgb(252, 252, 252);">数据类型</font>** |                                                                    <font style="background-color:rgb(252, 252, 252);">支持所有类型（基本类型+对象）</font>                                                                     |                                        <font style="background-color:rgb(252, 252, 252);">仅支持对象或数组</font>                                         |
+| **<font style="background-color:rgb(252, 252, 252);">访问方式</font>** |                                       <font style="background-color:rgb(252, 252, 252);">操作数据需</font><code><font style="background-color:rgb(252, 252, 252);">.value</font></code>                                        | <font style="background-color:rgb(252, 252, 252);">直接访问属性，无需</font><code><font style="background-color:rgb(252, 252, 252);">.value</font></code> |
 
 **<font style="color:rgb(26, 32, 41);">ref 的实现机制</font>**
 
@@ -36,6 +36,19 @@
 <font style="color:rgb(26, 32, 41);">当访问对象属性时，触发依赖收集；当修改对象属性时，触发派发更新。</font>
 
 <font style="color:rgb(26, 32, 41);">Proxy 可以监听动态新增的属性和数组变化，无需额外处理</font>
+
+***
+
+**<font style="color:rgb(26, 32, 41);">LEGO 编辑器项目实战讲解</font>**
+
+在 **LEGO 编辑器** 项目中，遵循 **"基本类型/需整体替换用 `ref`，逻辑聚合对象用 `reactive`"** 的原则：
+
+1.  **UI 状态控制（使用 `ref`）**：在 `Editor.vue` 中用于状态切换，如 `activePanel` (控制右侧属性/图层面板切换)、`showPublishForm` (控制发布弹窗显示)。
+2.  **表单业务逻辑（使用 `reactive`）**：在 `Login.vue` 中收纳表单数据 `form`（手机号、验证码）及校验规则 `rules`。这样可以将相关的响应式数据聚合在一个对象中，代码结构更清晰。
+3.  **引用获取（使用 `ref`）**：用于获取 DOM 或组件实例。例如登录页绑定表单组件：`<a-form ref="loginForm" />`，以便在逻辑中调用组件的 `validate` 方法。
+4.  **避坑指南**：
+    - **状态重置**：`ref` 支持通过 `.value` 整体替换对象，非常适合重置表单或清空状态；而 `reactive` 如果直接重新赋值（如 `form = {}`）会丢失响应式。
+    - **解构丢失**：直接解构 `reactive` 对象会使其属性变为普通变量而丢失响应式。如果项目中需要解构导出给模板使用，需配合 `toRefs` 使用。
 
 #### vue源码中使用weakmap和set的场景介绍（了解）
 
@@ -177,6 +190,22 @@ data为一个函数，每个组件都会有自己的私有数据空间，不会�
 
 **<font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">维护性：</font>**<font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">强制规范数据修改入口，减少隐蔽的副作用（如子组件意外修改父状态）</font>
 
+***
+
+**<font style="color:rgb(26, 32, 41);">LEGO 编辑器项目实战讲解</font>**
+
+在 **LEGO 编辑器** 项目中，我们通过 **"Data Down, Events Up"** 构建了清晰的数据闭环：
+
+1.  **数据下行（Props）**：顶层组件 `Editor.vue` 从 Vuex 获取组件列表 `components`，通过属性下发给 `LayerList`（图层面板）和 `EditWrapper`（渲染容器）。
+2.  **事件上行（Emits）**：子组件严禁直接修改 Props。例如在 `LayerList` 中点击隐藏组件，子组件通过 `context.emit('change', ...)` 向上派发动作申请。
+3.  **状态闭环流转**：
+    -   **子组件**：仅负责 UI 交互，触发事件并传递需要修改的 `id`、`key` 和 `value`。
+    -   **父组件**：在 `Editor.vue` 中统一监听这些事件，解构数据后通过 `store.commit` 提交至 Vuex。
+    -   **响应式更新**：Vuex 状态更新后，通过单向流自动触发所有下游组件的界面重绘。
+4.  **带来的核心价值**：
+    -   **解耦**：`PropsTable` 等属性面板变得高度纯粹，只管“收”和“发”，不存储状态，方便在不同页面无缝复用。
+    -   **确定性**：所有状态变更均有迹可循，只需在 `Editor.vue` 一个入口即可调试所有组件属性变动的 Bug，避免了多级组件混战导致的数据不一致问题。
+
 #### 说一下 vm.$set 原理
 
 1. vm.$set 是 Vue 中用于在对象上设置属性并确保新属性是响应式的方法。其实现原理可以简化为以下几个步骤
@@ -188,12 +217,23 @@ data为一个函数，每个组件都会有自己的私有数据空间，不会�
 
 #### 如何手动触发响应式更新
 
-| **方法** | **适用场景** | **优点** | **缺点** | **Vue 版本** |
-| :--- | :--- | :--- | :--- | :--- |
-| <code>**this.$forceUpdate()**</code> | 数据变化未被 Vue 检测到（如非响应式数据变化），但仍需更新视图时 | 使用简单，可强制当前组件重新渲染 | 可能造成性能浪费，不推荐频繁使用 | 2.x, 3.x |
-| **修改**\*\* **<code>**key**</code>**属性** | 需要**完全重置组件状态\*\*（如表单重置）、强制组件完全重新创建时 | 能彻底重新渲染组件，确保状态全新 | 组件会完全销毁并重建，可能略有性能开销 | 2.x, 3.x |
-| **变更响应式数据** | **最推荐**的方式。通过修改 Vue 管理的响应式数据（如 `data`、`ref`、`reactive`等）来自然触发更新 | 符合 Vue 设计理念，性能最佳，可维护性高 | 无 | 2.x, 3.x |
-| <code>**triggerRef()**</code> | 在 Vue 3 中，手动通知由 `ref`创建的响应式数据更新，即使其值未变 | 针对 `ref`数据提供更细粒度的控制 | 仅适用于 Vue 3 的 `ref` | 3.x |
+| **方法**                                    | **适用场景**                                                                                    | **优点**                                | **缺点**                               | **Vue 版本** |
+| :------------------------------------------ | :---------------------------------------------------------------------------------------------- | :-------------------------------------- | :------------------------------------- | :----------- |
+| <code>**this.$forceUpdate()**</code>        | 数据变化未被 Vue 检测到（如非响应式数据变化），但仍需更新视图时                                 | 使用简单，可强制当前组件重新渲染        | 可能造成性能浪费，不推荐频繁使用       | 2.x, 3.x     |
+| **修改**\*\* **<code>**key**</code>**属性** | 需要**完全重置组件状态\*\*（如表单重置）、强制组件完全重新创建时                                | 能彻底重新渲染组件，确保状态全新        | 组件会完全销毁并重建，可能略有性能开销 | 2.x, 3.x     |
+| **变更响应式数据**                          | **最推荐**的方式。通过修改 Vue 管理的响应式数据（如 `data`、`ref`、`reactive`等）来自然触发更新 | 符合 Vue 设计理念，性能最佳，可维护性高 | 无                                     | 2.x, 3.x     |
+| <code>**triggerRef()**</code>               | 在 Vue 3 中，手动通知由 `ref`创建的响应式数据更新，即使其值未变                                 | 针对 `ref`数据提供更细粒度的控制        | 仅适用于 Vue 3 的 `ref`                | 3.x          |
+
+***
+
+**<font style="color:rgb(26, 32, 41);">LEGO 编辑器项目实战讲解</font>**
+
+在项目中，我们极少使用 `$forceUpdate`，而是通过以下策略确保数据与视图同步：
+
+1.  **首选自然响应式**：直接修改 `ref` 或 Vuex 状态。例如切换面板 `activePanel`，Vue 自动完成高效更新。
+2.  **Key 值的妙用**：在画布遍历组件时，使用独特的 `component.id` 作为 `key`。这不仅是性能的要求，也确保了在拖动排序、增删组件时，DOM 状态能被 Vue 精确追踪。
+3.  **v-if 强制重置**：对于复杂的预览弹窗组件（`PreviewForm`），我们利用 `v-if` 的切换特性来手动触发组件的生命周期重置，确保每次打开时内部表单状态都是初始值。
+4.  **异步等待**：在发布截图等需要即时 DOM 状态的场景下，配合 `nextTick()` 使用，手动确保在数据变更后的“下一帧”进行 DOM 残留操作。
 
 ### <font style="color:#F38F39;background-color:rgb(252, 252, 252);">虚拟DOM与渲染机制</font>
 
@@ -371,13 +411,13 @@ v-if与v-for 都是 vue 模板系统中的指令
 
 #### <font style="color:#DF2A3F;background-color:rgb(252, 252, 252);">组件通信最佳实践总结</font><font style="color:#DF2A3F;">（必背）</font>
 
-| **<font style="background-color:rgb(252, 252, 252);">场景</font>** | **<font style="background-color:rgb(252, 252, 252);">推荐方案</font>** | **<font style="background-color:rgb(252, 252, 252);">示例/说明</font>** |
-| :---: | :---: | :---: |
-| <font style="background-color:rgb(252, 252, 252);">父子组件通信</font> | <font style="background-color:rgb(252, 252, 252);">Props + Events</font> | <font style="background-color:rgb(252, 252, 252);">父传数据、子触发事件</font> |
-| <font style="background-color:rgb(252, 252, 252);">跨层级/多组件共享状态</font> | <font style="background-color:rgb(252, 252, 252);">Vuex (Pinia)</font> | <font style="background-color:rgb(252, 252, 252);">集中管理状态</font> |
-| <font style="background-color:rgb(252, 252, 252);">避免直接修改引用类型</font> | <font style="background-color:rgb(252, 252, 252);">深拷贝或事件通知</font> | <font style="background-color:rgb(252, 252, 252);">保持 Props 只读性</font> |
-| <font style="background-color:rgb(252, 252, 252);">表单控件双向绑定</font> | <code><font style="background-color:rgb(252, 252, 252);">v-model</font></code><font style="background-color:rgb(252, 252, 252);">（语法糖）</font> | <font style="background-color:rgb(252, 252, 252);">等价于 </font><code><font style="background-color:rgb(252, 252, 252);">:value</font></code><font style="background-color:rgb(252, 252, 252);">+ </font><code><font style="background-color:rgb(252, 252, 252);">@input</font></code> |
-| <font style="background-color:rgb(252, 252, 252);">复杂数据处理</font> | <font style="background-color:rgb(252, 252, 252);">计算属性（</font><code><font style="background-color:rgb(252, 252, 252);">computed</font></code><font style="background-color:rgb(252, 252, 252);">）</font> | <font style="background-color:rgb(252, 252, 252);">基于 props 派生新数据</font> |
+|       **<font style="background-color:rgb(252, 252, 252);">场景</font>**        |                                                                     **<font style="background-color:rgb(252, 252, 252);">推荐方案</font>**                                                                      |                                                                                                         **<font style="background-color:rgb(252, 252, 252);">示例/说明</font>**                                                                                                         |
+| :-----------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+|     <font style="background-color:rgb(252, 252, 252);">父子组件通信</font>      |                                                                    <font style="background-color:rgb(252, 252, 252);">Props + Events</font>                                                                     |                                                                                                     <font style="background-color:rgb(252, 252, 252);">父传数据、子触发事件</font>                                                                                                      |
+| <font style="background-color:rgb(252, 252, 252);">跨层级/多组件共享状态</font> |                                                                     <font style="background-color:rgb(252, 252, 252);">Vuex (Pinia)</font>                                                                      |                                                                                                         <font style="background-color:rgb(252, 252, 252);">集中管理状态</font>                                                                                                          |
+| <font style="background-color:rgb(252, 252, 252);">避免直接修改引用类型</font>  |                                                                   <font style="background-color:rgb(252, 252, 252);">深拷贝或事件通知</font>                                                                    |                                                                                                       <font style="background-color:rgb(252, 252, 252);">保持 Props 只读性</font>                                                                                                       |
+|   <font style="background-color:rgb(252, 252, 252);">表单控件双向绑定</font>    |                               <code><font style="background-color:rgb(252, 252, 252);">v-model</font></code><font style="background-color:rgb(252, 252, 252);">（语法糖）</font>                                | <font style="background-color:rgb(252, 252, 252);">等价于 </font><code><font style="background-color:rgb(252, 252, 252);">:value</font></code><font style="background-color:rgb(252, 252, 252);">+ </font><code><font style="background-color:rgb(252, 252, 252);">@input</font></code> |
+|     <font style="background-color:rgb(252, 252, 252);">复杂数据处理</font>      | <font style="background-color:rgb(252, 252, 252);">计算属性（</font><code><font style="background-color:rgb(252, 252, 252);">computed</font></code><font style="background-color:rgb(252, 252, 252);">）</font> |                                                                                                     <font style="background-color:rgb(252, 252, 252);">基于 props 派生新数据</font>                                                                                                     |
 
 #### <font style="color:#DF2A3F;">动态组件和异步组件（必背）</font>
 
@@ -527,12 +567,12 @@ export defaultf
 
 <font style="color:rgb(0, 0, 0);">传统的打包方式会把所有组件代码都合并到一个大文件中。而动态组件借助现代构建工具（如 Webpack 或 Vite），允许你将某些组件分离成独立的代码块（chunk），这些代码块</font>**<font style="color:rgb(0, 0, 0);">只在需要时才被加载</font>**<font style="color:rgb(0, 0, 0);">。</font>
 
-| **特性** | **传统静态导入** | **动态导入 (代码分割)** |
-| :--- | :--- | :--- |
-| **打包方式** | 组件代码会打入主包 | 组件代码会被分离成独立的 chunk(chunk) |
-| **加载时机** | 应用初始化时立即加载 | 只有当组件需要被渲染或预加载时才会加载 |
-| **网络请求** | 无额外请求 (但初始包更大) | 有额外请求 (但初始包更小) |
-| **适用场景** | 核心组件、小组件 | 非核心组件、大组件、路由组件 |
+| **特性**         | **传统静态导入**                                       | **动态导入 (代码分割)**                                    |
+| :--------------- | :----------------------------------------------------- | :--------------------------------------------------------- |
+| **打包方式**     | 组件代码会打入主包                                     | 组件代码会被分离成独立的 chunk(chunk)                      |
+| **加载时机**     | 应用初始化时立即加载                                   | 只有当组件需要被渲染或预加载时才会加载                     |
+| **网络请求**     | 无额外请求 (但初始包更大)                              | 有额外请求 (但初始包更小)                                  |
+| **适用场景**     | 核心组件、小组件                                       | 非核心组件、大组件、路由组件                               |
 | **Tree Shaking** | 生效，但组件本身只要被导入，即使未使用，通常也会被打包 | 生效，且组件未被引用则不会生成任何 chunk，完美实现按需加载 |
 
 **<font style="color:rgb(0, 0, 0);">核心原理：</font>**
@@ -772,14 +812,14 @@ query传参
 * 路由独享守卫：beforeEnter
 * 组件内守卫：beforeRouteEnter(无法访问this),beforeRouteUpdate
 
-| **守卫类型** | **触发时机** | **典型场景** | **访问**\*\* \*\*<code>**this**</code> |
-| :---: | :---: | :---: | :---: |
-| `beforeEach` | 全局跳转前 | 登录验证、全局权限控制 | ❌ |
-| `afterEach` | 导航完成后 | 页面统计、滚动复位 | ❌ |
-| `beforeEnter` | 特定路由进入前 | 付费内容访问控制 | ❌ |
-| `beforeRouteEnter` | 组件激活前（实例未创建） | 数据预加载、组件级权限校验 | ❌（需回调） |
-| `beforeRouteUpdate` | 路由参数变化（组件复用时） | 动态参数响应（如ID变化刷新数据） | ✅ |
-| `beforeRouteLeave` | 离开组件前 | 防止未保存离开、清理资源 | ✅ |
+|    **守卫类型**     |        **触发时机**        |           **典型场景**           | **访问**\*\* \*\*<code>**this**</code> |
+| :-----------------: | :------------------------: | :------------------------------: | :------------------------------------: |
+|    `beforeEach`     |         全局跳转前         |      登录验证、全局权限控制      |                   ❌                    |
+|     `afterEach`     |         导航完成后         |        页面统计、滚动复位        |                   ❌                    |
+|    `beforeEnter`    |       特定路由进入前       |         付费内容访问控制         |                   ❌                    |
+| `beforeRouteEnter`  |  组件激活前（实例未创建）  |    数据预加载、组件级权限校验    |              ❌（需回调）               |
+| `beforeRouteUpdate` | 路由参数变化（组件复用时） | 动态参数响应（如ID变化刷新数据） |                   ✅                    |
+| `beforeRouteLeave`  |         离开组件前         |     防止未保存离开、清理资源     |                   ✅                    |
 
 #### Vue Router 中的路由守卫
 
@@ -1103,16 +1143,16 @@ function render() {
 
 #### 模板、render、jsx三者区别
 
-| **特性** | **模板** | **Render 函数** | **JSX** |
-| :--- | :--- | :--- | :--- |
-| **语法形式** | HTML-like 声明式模板 | JavaScript 函数式编程 | HTML-like 声明式模板（通过 JSX） |
-| **灵活性** | 有限（受限于模板语法规则） | 极高（可使用完整 JavaScript 能力） | 高（通过 JSX 可以使用 HTML-like 语法） |
-| **动态组件** | 需要 `v-if`<br/>/`v-for`<br/> 等指令 | 直接使用 JavaScript 逻辑控制 | 直接使用 JavaScript 逻辑控制 |
-| **JSX 支持** | 不支持 | 不支持 | 支持（需配置 Babel 插件） |
-| **类型支持** | 有限（TypeScript 支持较弱） | 更好（适合 TypeScript 开发） | 更好（适合 TypeScript 开发） |
-| **编译优化** | 自动优化（模板预编译） | 需要手动优化（更贴近底层） | 自动优化（通过 JSX 转换为 render 函数） |
-| **学习曲线** | 低（易上手） | 高（需理解虚拟 DOM 和函数式编程） | 中等（需熟悉 JSX 和 Vue 的 render 函数） |
-| **调试难度** | 容易（可视化结构） | 较难（需要理解虚拟 DOM 结构） | 中等（需理解 JSX 和虚拟 DOM 结构） |
+| **特性**     | **模板**                             | **Render 函数**                    | **JSX**                                  |
+| :----------- | :----------------------------------- | :--------------------------------- | :--------------------------------------- |
+| **语法形式** | HTML-like 声明式模板                 | JavaScript 函数式编程              | HTML-like 声明式模板（通过 JSX）         |
+| **灵活性**   | 有限（受限于模板语法规则）           | 极高（可使用完整 JavaScript 能力） | 高（通过 JSX 可以使用 HTML-like 语法）   |
+| **动态组件** | 需要 `v-if`<br/>/`v-for`<br/> 等指令 | 直接使用 JavaScript 逻辑控制       | 直接使用 JavaScript 逻辑控制             |
+| **JSX 支持** | 不支持                               | 不支持                             | 支持（需配置 Babel 插件）                |
+| **类型支持** | 有限（TypeScript 支持较弱）          | 更好（适合 TypeScript 开发）       | 更好（适合 TypeScript 开发）             |
+| **编译优化** | 自动优化（模板预编译）               | 需要手动优化（更贴近底层）         | 自动优化（通过 JSX 转换为 render 函数）  |
+| **学习曲线** | 低（易上手）                         | 高（需理解虚拟 DOM 和函数式编程）  | 中等（需熟悉 JSX 和 Vue 的 render 函数） |
+| **调试难度** | 容易（可视化结构）                   | 较难（需要理解虚拟 DOM 结构）      | 中等（需理解 JSX 和虚拟 DOM 结构）       |
 
 #### 如何打破 scope 对样式隔离的限制?
 
@@ -1234,13 +1274,13 @@ watch：用于监听数据变化，是无缓存的，同时支持异步逻辑，
 
 #### <font style="color:#DF2A3F;">watch和watcheffect（重要）</font>
 
-| **特性** | \*\*Vue2 的 \*\*<code>**watch**</code> | \*\*Vue3 的 \*\*<code>**watchEffect**</code> |
-| :--- | :--- | :--- |
-| **依赖追踪** | 需手动指定依赖（如 `watch: { data: {} }`） | 自动追踪所有读取的响应式变量（深度监听） |
-| **语法结构** | 选项式 API（位于 `export default` 对象中） | Composition API（函数式，需 `import { watchEffect }`） |
-| **回调执行时机** | 立即执行一次，之后在依赖变化时触发 | 惰性执行（首次访问时执行，依赖变化时触发） |
-| **清理机制** | 需手动调用 `this.$watch(...).remove()` | 自动清理（组件销毁时自动移除） |
-| **适用场景** | 选项式 API 项目，简单数据监听 | Composition API 项目，复杂响应式逻辑 |
+| **特性**         | \*\*Vue2 的 \*\*<code>**watch**</code>     | \*\*Vue3 的 \*\*<code>**watchEffect**</code>           |
+| :--------------- | :----------------------------------------- | :----------------------------------------------------- |
+| **依赖追踪**     | 需手动指定依赖（如 `watch: { data: {} }`） | 自动追踪所有读取的响应式变量（深度监听）               |
+| **语法结构**     | 选项式 API（位于 `export default` 对象中） | Composition API（函数式，需 `import { watchEffect }`） |
+| **回调执行时机** | 立即执行一次，之后在依赖变化时触发         | 惰性执行（首次访问时执行，依赖变化时触发）             |
+| **清理机制**     | 需手动调用 `this.$watch(...).remove()`     | 自动清理（组件销毁时自动移除）                         |
+| **适用场景**     | 选项式 API 项目，简单数据监听              | Composition API 项目，复杂响应式逻辑                   |
 
 #### computed 计算值为什么还可以依赖另外一个 computed 计算值
 
@@ -1264,11 +1304,11 @@ computed 计算属性本质上是具有缓存功能的特殊方法。它们只�
 
 #### 如何应对监听的newValue和oldValue一样的场景
 
-| **场景** | **问题** | **解决方案** |
-| :--- | :--- | :--- |
-| **基本数据类型** | 手动赋相同值，`newValue`<br/> 和 `oldValue`<br/> 一样。 | 在 `watch`<br/> 回调中增加 `if (newVal !== oldVal)`<br/> 判断。 |
-| **对象/数组** | 修改内部属性，`deep: true`<br/> 会触发，但 `newValue`<br/> 和 `oldValue`<br/> 是**同一个引用**。 | 在 `watch`<br/> 回调中使用 `JSON.stringify(newVal) !== JSON.stringify(oldVal)`<br/> 进行深度比较。 |
-| **Vue 3 Composition API** | 需要自动追踪依赖，但不直接提供新旧值。 | 使用 `watchEffect`<br/> 或 `watch`<br/> 的 `getter`<br/> 函数形式。 |
+| **场景**                  | **问题**                                                                                         | **解决方案**                                                                                       |
+| :------------------------ | :----------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------- |
+| **基本数据类型**          | 手动赋相同值，`newValue`<br/> 和 `oldValue`<br/> 一样。                                          | 在 `watch`<br/> 回调中增加 `if (newVal !== oldVal)`<br/> 判断。                                    |
+| **对象/数组**             | 修改内部属性，`deep: true`<br/> 会触发，但 `newValue`<br/> 和 `oldValue`<br/> 是**同一个引用**。 | 在 `watch`<br/> 回调中使用 `JSON.stringify(newVal) !== JSON.stringify(oldVal)`<br/> 进行深度比较。 |
+| **Vue 3 Composition API** | 需要自动追踪依赖，但不直接提供新旧值。                                                           | 使用 `watchEffect`<br/> 或 `watch`<br/> 的 `getter`<br/> 函数形式。                                |
 
 #### webSocket如何兼容低浏览器
 
