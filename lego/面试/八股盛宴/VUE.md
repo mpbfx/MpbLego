@@ -326,6 +326,25 @@ Vue3实现了自动批处理机制，在同一个事件循环中对多次数据�
 2. 渲染机制 - DOM操作 - 初始渲染开销 - 切换开销 - 使用场景
 3. 页面中的复杂组件 只在特定情况下显示/tab切换 下拉菜单等频繁显示或隐藏的组件
 
+***
+
+**<font style="color:rgb(26, 32, 41);">LEGO 编辑器项目实战讲解</font>**
+
+在 **LEGO 编辑器** 项目中，我们根据逻辑复杂度与性能平衡，灵活运用 `v-if` 与 `v-show`：
+
+1.  **复杂组件的“逻辑重置”（使用 `v-if`重点场景）**：
+    在 `Editor.vue` 中，对 `PreviewForm`（预览弹窗）采用了 `v-if`。
+    -   **原因**：弹窗组件内部状态极多。使用 `v-if` 确保弹窗关闭时组件被销毁，下次打开时重新执行 `mounted` 生命周期，从而实现**自动清空表单数据和预览截图**，避免了繁琐的手动状态重置工作。
+2.  **减少初始加载压力（使用 `v-if`）**：
+    编辑器右侧属性面板有“属性设置”、“图层设置”、“页面设置”三个 Tab。我们只对当前选中的 Tab 进行渲染。
+    -   **原因**：这可以显著减少页面初次渲染时的 DOM 节点数量，提升复杂编辑器界面的启动速度。
+3.  **频繁显隐切换（使用 `v-show` 适用场景）**：
+    虽然项目中目前以 `v-if` 为主，但对于如**右键菜单（Context Menu）**等需要跟随鼠标频繁显示、位置变动且结构简单的元素，使用 `v-show` 性能更佳，因为无需频繁创建/销毁 DOM。
+
+**避坑指南**：
+-   在 LEGO 这样以表单和属性编辑为核心的项目中，`v-if` 带来的“组件状态自动销毁”能力往往比 `v-show` 节省的微量 CPU 开销更有维护价值。
+-   如果你遇到了“弹窗第二次打开数据没变”的问题，检查一下是不是误用了 `v-show` 而没有手动清理状态。
+
 #### 为什么Vue中的v-if和v-for不建议一起用?
 
 一、作用
@@ -355,7 +374,66 @@ v-if与v-for 都是 vue 模板系统中的指令
 
 1.永远不要把 v-if 和 v-for 同时用在同一个元素上，带来性能方面的浪费(每次渲染都会先循环再进行条件判断)
 
-2.如果避免出现这种情况，则在外层嵌套 template(页面渲染不生成 dom 节点)，在这一层进行v-if判断，然2.后在内部进行v-for循环
+2.如果避免出现这种情况，则在外层嵌套 template(页面渲染不生成 dom 节点)，在这一层进行v-if判断，然后在内部进行v-for循环
+
+***
+
+**<font style="color:rgb(26, 32, 41);">LEGO 编辑器项目实战讲解</font>**
+
+在 **LEGO 编辑器** 项目中，我们严格遵守不将 `v-if` 与 `v-for` 写在同一标签上的原则，主要采用以下两种方案：
+
+1.  **Computed 提前过滤（最推荐）**：
+    在渲染编辑器画布组件 `EditWrapper` 或图层列表 `LayerList` 时，如果需要过滤掉已删除或某些特定状态的组件，我们会先在 `computed` 中处理好列表。
+    -   **案例**：
+        ```typescript
+        // ❌ 错误：在 v-for 中用 v-if 过滤
+        <div v-for="item in components" v-if="!item.isHidden">...</div>
+
+        // ✅ 正确：使用计算属性
+        const visibleComponents = computed(() => {
+          return store.state.editor.components.filter(c => !c.isHidden)
+        })
+        // 模板中直接循环 visibleComponents
+        ```
+    -   **优点**：性能最高，逻辑清晰。Vue 只需遍历最终显示的项，避免了渲染过程中的无效判断。
+
+2.  **template 标签包裹**：
+    如果只是简单的逻辑开关（如：只有当列表有数据时才渲染循环体），我们会使用 `<template>` 标签包裹。
+    -   **优点**：符合 Vue 3 的优先级逻辑，且不会在页面上产生多余的 DOM 节点。
+
+**避坑指南**：
+-   在 Vue 3 中，由于 `v-if` 优先级高于 `v-for`，在同一标签写两者会导致 `v-if` 拿不到循环中的 `item` 变量，从而直接报错。一定要养成 **“先过滤数据，后循环渲染”** 的好习惯。
+
+#### <font style="color:#DF2A3F;">template 标签的作用（重要）</font>
+
+`<template>` 是 Vue 中的一个一个**不可见的包装元素**。它本身不会被渲染到真实 DOM 中，但在编译后能承载各种指令和插槽逻辑。
+
+**<font style="color:rgb(26, 32, 41);">LEGO 编辑器项目实战讲解</font>**
+
+在项目中，逻辑容器 `<template>` 是保持 DOM 树简洁、解决布局冲突的利器：
+
+1.  **逻辑分组而不增加层级**：
+    在 `Editor.vue` 的侧边栏渲染中，有时需要根据权限或状态显示一组相关的组件（如“预览”和“设置”按钮）。使用 `template` 包裹这些按钮并绑定 `v-if`，可以确保渲染结果中这些按钮是并列的，而不会因为多套一层 `div` 而破坏 Flex 布局。
+2.  **解决 v-if 与 v-for 的作用域冲突**：
+    当我们需要先执行判断再循环时，`<template>` 提供了一个完美的逻辑层：
+    ```html
+    <template v-if="components.length > 0">
+      <edit-wrapper v-for="item in components" :key="item.id" ... />
+    </template>
+    ```
+3.  **具名插槽的精准分发**：
+    在 `Uploader.vue`（自定义上传组件）中，我们大量使用 `<template>` 来定义不同的显示状态（加载中、已上传、默认状态）：
+    ```html
+    <uploader>
+      <template #loading> <button disabled>正在上传...</button> </template>
+      <template #uploaded="{ uploadedData }"> <img :src="uploadedData.url" /> </template>
+    </uploader>
+    ```
+    这里使用 `template` 可以优雅地接收插槽作用域参数（Scroped Slots），且不额外产生 DOM 节点。
+
+**避坑指南**：
+-   `<template>` 标签上不能绑定 `class` 或 `style`，因为它没有实体。如果你需要增加样式，必须改用真正的 HTML 标签（如 `div` 或 `span`）。
+-   它是 Vue 模板特有的，不要在常规 HTML 逻辑中混淆使用原生 `<template>` 元素（原生元素通常用于延迟渲染内容）。
 
 #### vue列表为什么要加key
 
@@ -367,6 +445,26 @@ v-if与v-for 都是 vue 模板系统中的指令
 * 如果含有表单项，可能造成数据偏移（渲染错位）
 
 2. 不能使用index，列表发生变化时，index会重新分配，导致key变化 使用唯一且稳定的值
+
+***
+
+**<font style="color:rgb(26, 32, 41);">LEGO 编辑器项目实战讲解</font>**
+
+在 **LEGO 编辑器** 的核心画布区域（`Editor.vue`），我们对 `key` 的使用极其严格：
+
+1.  **场景**：画布中的组件列表渲染
+    ```html
+    <edit-wrapper
+      v-for="component in components"
+      :key="component.id" 
+      ...
+    />
+    ```
+2.  **为什么必须用 `id` 而非 `index`？**
+    -   **拖拽排序时的状态保持**：编辑器支持组件的上下层级调整（拖动排序）。如果使用 `index`，当数组顺序变化时，Vue 可能会错误地复用旧位置的 DOM 节点，导致组件内部的状态（如选中的高亮框、临时的编辑状态）并没有跟随组件移动，而是留在了原来的位置。
+    -   **删除时的正确性**：当用户删除中间某个组件时，如果用 `index`，后面组件的 `index` 会前移，导致 Diff 算法识别错误，可能导致删除动画异常甚至数据错位。
+3.  **唯一性保障**：
+    我们在添加组件时（`store/editor.ts` 中的 `addComponent`），会生成一个 UUID（如 `uuidv4()`）作为 `id`，从源头保证了 Keys 在整个应用生命周期中的全局唯一性和稳定性。
 
 #### <font style="color:#DF2A3F;">长列表渲染怎么优化（必背）</font>
 
@@ -394,6 +492,23 @@ v-if与v-for 都是 vue 模板系统中的指令
 
 <font style="color:rgb(26, 32, 41);">在开发长列表时，尽量使用轻量级的组件，避免复杂的嵌套结构和冗余的样式。这样可以减少渲染时间和内存占用。</font>
 
+***
+
+**<font style="color:rgb(26, 32, 41);">LEGO 编辑器项目实战讲解</font>**
+
+在 LEGO 项目的首页模版列表（`Home.vue`）中，我们并没有盲目使用虚拟列表，而是基于**业务场景**选择了更轻量的**“分页懒加载”**策略：
+
+1.  **自定义 Hook 封装逻辑**：
+    我们开发了 `useLoadMore` Hook，将分页状态（`pageIndex`）、加载更多方法（`loadMorePage`）和数据总量判断（`isLastPage`）进行了逻辑抽离。
+2.  **点击加载更多**：
+    相比于无限滚动（Infinite Scroll），“点击加载”给了用户明确的控制权，避免了在卡片高度不固定的 Grid 布局中计算滚动位置的性能损耗。
+    ```javascript
+    // Home.vue 中的应用
+    const { loadMorePage, isLastPage } = useLoadMore('fetchTemplates', total, { pageSize: 8 })
+    ```
+3.  **性能收益**：
+    首屏仅渲染 8 个复杂的卡片组件，DOM 节点数量极少，确保了首页秒开（LCP 极低）。只有当用户明确需要更多内容时，才会请求并追加新的 DOM 节点。
+
 ### <font style="color:#EDCE02;background-color:rgb(252, 252, 252);">组件系统</font>
 
 #### <font style="color:#DF2A3F;">vue生命周期（必背）</font>
@@ -409,6 +524,20 @@ v-if与v-for 都是 vue 模板系统中的指令
 * <font style="color:rgb(26, 32, 41);">beforeDestory：实例销毁之前可以调用，实例仍然可用，this可以获取到实例，销毁定时器，解绑全局事件，销毁插件对象</font>
 * <font style="color:rgb(26, 32, 41);">destoryed：实例销毁后调用，所有的事件监听器和子实例都被移除，清理工作</font>
 
+***
+
+**<font style="color:rgb(26, 32, 41);">LEGO 编辑器项目实战讲解</font>**
+
+在 **LEGO 编辑器** (`Editor.vue`) 中，我们对生命周期的运用非常典型：
+
+1.  **初始化（`onMounted`）**：
+    -   **数据预加载**：调用 `store.dispatch('fetchWork')` 获取画布对应的组件数据。
+    -   **事件注册**：调用 `initHotKeys()` 绑定 Ctrl+C/V 等快捷键。必须在 `mounted` 中进行，确保组件已就位，且避免 SSR 环境下的报错。
+2.  **依赖 DOM 的逻辑（配合 `nextTick`）**：
+    -   **发布截图**：在 `publish` 方法中，我们修改了 `canvasFix` 状态（隐藏辅助线）后，必须 `await nextTick()`。这确保了我们将要截取的 DOM 是 Vue **更新完成后的最新状态**，防止截图出现“残影”。
+3.  **销毁清理（`onUnmounted`）**：
+    -   **防止内存泄漏**：离开编辑器时，必须移除快捷键监听和右键菜单事件，否则这些全局事件会在其他页面继续生效，引发 Bug。
+
 #### <font style="color:#DF2A3F;background-color:rgb(252, 252, 252);">组件通信最佳实践总结</font><font style="color:#DF2A3F;">（必背）</font>
 
 |       **<font style="background-color:rgb(252, 252, 252);">场景</font>**        |                                                                     **<font style="background-color:rgb(252, 252, 252);">推荐方案</font>**                                                                      |                                                                                                         **<font style="background-color:rgb(252, 252, 252);">示例/说明</font>**                                                                                                         |
@@ -419,10 +548,46 @@ v-if与v-for 都是 vue 模板系统中的指令
 |   <font style="background-color:rgb(252, 252, 252);">表单控件双向绑定</font>    |                               <code><font style="background-color:rgb(252, 252, 252);">v-model</font></code><font style="background-color:rgb(252, 252, 252);">（语法糖）</font>                                | <font style="background-color:rgb(252, 252, 252);">等价于 </font><code><font style="background-color:rgb(252, 252, 252);">:value</font></code><font style="background-color:rgb(252, 252, 252);">+ </font><code><font style="background-color:rgb(252, 252, 252);">@input</font></code> |
 |     <font style="background-color:rgb(252, 252, 252);">复杂数据处理</font>      | <font style="background-color:rgb(252, 252, 252);">计算属性（</font><code><font style="background-color:rgb(252, 252, 252);">computed</font></code><font style="background-color:rgb(252, 252, 252);">）</font> |                                                                                                     <font style="background-color:rgb(252, 252, 252);">基于 props 派生新数据</font>                                                                                                     |
 
+***
+
+**<font style="color:rgb(26, 32, 41);">LEGO 编辑器项目实战讲解</font>**
+
+在庞大的编辑器架构中，我们根据场景严格限制了通信方式的选择，避免数据流向混乱：
+
+1.  **原子组件（ColorPicker / InlineEdit）**：
+    严格遵守 **Props-Down / Events-Up**。
+    -   例如 `ColorPicker` 只是一个纯粹的 UI 渲染器，它不修改任何数据，所有点击操作都通过 `emit('change', value)` 抛出。这种无状态设计（Stateless）让它可以被无缝嵌入到属性面板、背景设置等任何地方。
+2.  **业务组件（Editor / LayerList / PropsTable）**：
+    采用 **Vuex 单向数据流**。
+    -   当在图层列表 (`LayerList`) 调整顺序时，并不是直接操作 Props 里的数组，而是提交 `store.commit('moveComponent')`。这样无论是画布拖拽还是图层按钮点击，都汇聚到 Store 的同一个 Mutation 中处理，保证了状态变更的可追溯性。
+3.  **插件系统（ContextMenu / HotKeys）**：
+    使用 **全局事件总线（EventBus）** 或 **回调函数**。
+    -   右键菜单插件是独立于 Vue 组件树之外的 DOM 元素，它无法通过 Props 通信。我们通过在全局注册回调函数，让普通的 JS 脚本也能触发 Vue 组件内部的逻辑（如删除、复制）。
+
 #### <font style="color:#DF2A3F;">动态组件和异步组件（必背）</font>
 
 1. 动态组件：通过\<component is:"currentComponent"> 动态切换组件
 2. 异步组件：通过defineAsyncComponent或者路由懒加载(()=>import('./Component.vue'))优化首屏加载性能
+
+***
+
+**<font style="color:rgb(26, 32, 41);">LEGO 编辑器项目实战讲解</font>**
+
+我们在项目中大量使用了这两种机制，是低代码架构的核心：
+
+1.  **动态组件（Core）**：
+    在 `PropsTable.vue`（属性编辑面板）中，我们通过映射表将不同的属性（字体颜色、阴影、背景）映射为不同的表单组件名。
+    ```html
+    <!-- 只需要一行代码，即可渲染几十种不同的编辑器组件 -->
+    <component 
+      :is="value.component" 
+      v-bind="value.extraProps" 
+    />
+    ```
+    这使得我们新增一种属性编辑器（如“渐变色选择器”）时，只需注册组件并修改配置，无需触碰 UI 模板代码，符合**开闭原则**。
+
+2.  **异步组件（Perf）**：
+    对于非首屏必须的重型组件（如 `ImageProcesser` 图片裁剪器），或者路由页面，我们使用 `defineAsyncComponent` 或 `import()` 语法进行懒加载，将打包后的 JS 文件拆分（Code Splitting），保证首页加载速度。
 
 #### <font style="color:#DF2A3F;">vue的keep-alive（必背）</font>
 
@@ -432,6 +597,26 @@ v-if与v-for 都是 vue 模板系统中的指令
 4. 生命周期钩子函数：触发两个特殊的生命周期钩子函数activated，deactivated
 5. 固定数据的组件、频繁切换的组件、性能优化
 6. 组件状态保持、内存占用、动态组件
+
+***
+
+**<font style="color:rgb(26, 32, 41);">LEGO 编辑器项目实战讲解</font>**
+
+在项目中，我们主要在 **路由层级** 使用 `keep-alive` 来优化用户体验：
+
+1.  **场景：作品列表页 → 详情页 → 返回**
+    当用户在首页（作品列表）滚动浏览并点击进入作品详情时，无论是为了减少 API 请求，还是保留用户的滚动位置，我们都希望从详情页返回时，列表页能**保持原样**，而不是重新刷新。
+2.  **实现策略（App.vue 改造示例）**：
+    我们配合 Vue Router 的 `meta` 属性来精准控制哪些页面需要缓存：
+    ```html
+    <router-view v-slot="{ Component }">
+      <keep-alive>
+        <component :is="Component" v-if="$route.meta.keepAlive" />
+      </keep-alive>
+      <component :is="Component" v-if="!$route.meta.keepAlive" />
+    </router-view>
+    ```
+    这种**“按需缓存”**的模式，既保证了重型页面（如编辑器）每次进入都是全新的状态（避免数据污染），又让展示型页面（如模板列表）拥有了“秒回”的流畅体验。
 
 #### <font style="color:#DF2A3F;">keep-alive的原理（必背）</font>
 
@@ -514,6 +699,30 @@ export default {
 可能原因：缓存了过多大型组件或复杂组件，导致渲染性能下降。\
 解决方法：合理配置缓存范围，避免缓存不必要的组件，或使用 v-if 和 v-show 结合优化渲染
 
+***
+
+**<font style="color:rgb(26, 32, 41);">LEGO 编辑器项目实战讲解</font>**
+
+我们在项目实战中，曾因 `keep-alive` 缓存机制而遇到**数据不更新**的“坑”，最终通过精准的生命周期控制解决了它：
+
+1.  **痛点场景**：
+    用户在“作品列表页”点击加载了更多数据并滚动到底部，然后由于某个误操作（如切换路由配置错误）导致从“详情页”退回列表页时，页面虽然保留了，但**新增的作品数据没有刷出来**，或者**用户登录状态变更后列表没刷新**。
+2.  **根源**：
+    `keep-alive` 会跳过 `created` 和 `mounted` 钩子。如果我们的列表数据请求写在 `mounted` 里，那么只有第一次进入页面会请求，后续返回时都不会触发请求。
+3.  **解决方案（黄金钩子 `activated`）**：
+    我们将那些**必须实时检查**的逻辑（如：检查用户是否已登出）移到了 `activated` 钩子中。
+    ```javascript
+    // WorksList.vue (伪代码)
+    onActivated(() => {
+      // 每次从缓存恢复显示时，检查一下用户信息
+      if (!store.state.user.isLogin) {
+        // 如果用户在别的页面退出了，强制重置列表
+        resetList()
+      }
+    })
+    ```
+    这确保了页面既保留了流畅的“秒开”体验（DOM 缓存），又不会因为缓存而展示严重的脏数据。
+
 #### vue组件里写的原生addEventListeners监听事件，要手动去销毁吗?为什么?
 
 在 Vue 组件中，如果你使用 addEventListener 添加了原生的 DOM 事件监听器，通常需要在组件销毁时手动移除这些监听器。
@@ -544,6 +753,36 @@ export defaultf
 }
 </script>
 ```
+
+***
+
+**<font style="color:rgb(26, 32, 41);">LEGO 编辑器项目实战讲解</font>**
+
+在项目中，我们通过自定义 Hook 完美解决了手动销毁事件的繁琐问题：
+
+1.  **场景**：快捷键系统（Copy/Paste/Delete）
+    编辑器需要监听大量键盘事件。如果每个组件都手写 `addEventListener` 和 `removeEventListener`，不仅代码冗余，而且极易忘记销毁，导致“按一下删除键，删掉了两个组件”的严重 Bug。
+2.  **Hook 封装（`useHotKey.ts`）**：
+    我们将事件的绑定与销毁逻辑封装在 Hook 内部：
+    ```typescript
+    // src/hooks/useHotKey.ts
+    const useHotKey = (keys: string, callback: KeyHandler) => {
+      onMounted(() => {
+        hotkeys(keys, callback) // 自动绑定
+      })
+      onUnmounted(() => {
+        hotkeys.unbind(keys, callback) // 自动销毁
+      })
+    }
+    ```
+3.  **使用体验**：
+    在 `Editor.vue` 中，我们只需关心业务逻辑，完全不用操心内存泄漏问题：
+    ```typescript
+    // Editor.vue
+    useHotKey('ctrl+c', () => { store.commit('copyComponent') }) 
+    // 组件销毁时，这个 ctrl+c 的监听会自动被清理
+    ```
+    这种**“自动挡”**的开发模式，极大地提升了代码的安全性和可维护性。
 
 #### postMessage和onMessage属于那种设计模式
 
