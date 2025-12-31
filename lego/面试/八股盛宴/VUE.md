@@ -897,6 +897,25 @@ const routes = [
 * **<font style="color:rgb(0, 0, 0);">第三方库的按需引入</font>**<font style="color:rgb(0, 0, 0);">：例如，使用 </font><code><font style="color:rgb(0, 0, 0);">lodash-es</font></code><font style="color:rgb(0, 0, 0);">替代 </font><code><font style="color:rgb(0, 0, 0);">lodash</font></code><font style="color:rgb(0, 0, 0);">，或者使用 UI 库（如 Element Plus、Ant Design Vue）提供的按需导入功能，避免引入整个库</font>
 * **<font style="color:rgb(0, 0, 0);">使用构建分析工具</font>**<font style="color:rgb(0, 0, 0);">：利用 </font><code><font style="color:rgb(0, 0, 0);">webpack-bundle-analyzer</font></code><font style="color:rgb(0, 0, 0);">或 Vite 的类似插件分析打包产物，找出体积过大的模块，并针对性地进行优化</font>
 
+***
+
+**<font style="color:rgb(26, 32, 41);">LEGO 编辑器项目实战讲解</font>**
+
+在项目中，我们通过精细化的打包策略将首屏体积压缩了 40% 以上：
+
+1.  **路由懒加载策略（src/routes/index.ts）**：
+    我们将核心的“重型页面”进行了拆分：
+    -   `Editor.vue`（编辑器核心）体积巨大。
+    -   `Login.vue`（登录页）相对独立。
+    我们使用 `import()` 语法配合 Magic Comments：
+    ```typescript
+    component: () => import(/* webpackChunkName: "editor" */ '../views/Editor.vue')
+    ```
+    这确保了用户在浏览首页模版时，不需要下载编辑器的代码。只有当用户点击“立即使用”时，才会触发 `editor.chunk.js` 的下载。
+
+2.  **依赖库优化**：
+    我们全线采用了 `lodash-es` 代替 `lodash`，并配合 Ant Design Vue 的按需加载，确保最终构建产物中不包含任何未使用的工具函数或 UI 组件代码（Tree Shaking 生效）。
+
 ### <font style="color:#8CCF17;background-color:rgb(252, 252, 252);">状态管理与路由</font>
 
 #### <font style="color:#DF2A3F;">Pinia（重要）</font>
@@ -920,6 +939,26 @@ Vue Components 负责接收用户操作交互行为，执行dispatch触发对应
 * getters读取state方法
 
 Vue组件接收交互行为，调用dispatch方法触发action相关处理，若页面状态需要改变，则调用commit方法提交mutation修改state，通过getters获取到state新值，重新渲染Vue Components，界面随之更新。
+
+***
+
+**<font style="color:rgb(26, 32, 41);">LEGO 编辑器项目实战讲解</font>**
+
+我们的编辑器模块（`store/editor.ts`）是 Vuex 的教科书式应用：
+
+1.  **State 设计**：
+    我们将复杂的画布数据扁平化存储为 `components` 数组，并额外维护 `histories` 栈来实现撤销重做。
+2.  **Mutation 的高级应用**：
+    为了自动管理“未保存状态”，我们使用了高阶函数技巧：
+    ```typescript
+    // setDirtyWrapper：一个装饰器风格的包装函数
+    // 自动将任何数据修改操作标记为 isDirty = true，提示用户保存
+    addComponent: setDirtyWrapper((state, component) => { ... })
+    ```
+3.  **Getter 的派生能力**：
+    利用 Getter 动态计算 `checkUndoDisable`（撤销按钮是否禁用），这比在组件里写 watch 优雅得多。
+4.  **Action 的职责**：
+    只处理 API 交互（如 `saveWork`），拿到数据后立即 commit 给 mutation，严格遵守“Action 异步，Mutation 同步”的原则。
 
 #### vue-router底层原理
 
@@ -1010,6 +1049,21 @@ const routes = [
 3. \*\*\*\***<font style="color:rgb(0, 0, 0);">导航守卫系统</font>**<font style="color:rgb(0, 0, 0);">：控制导航流程，执行钩子函数</font>**<font style="background-color:rgba(0, 0, 0, 0.05);">2</font>**<font style="color:rgb(0, 0, 0);">。</font>
 4. \*\*\*\***<font style="color:rgb(0, 0, 0);">响应式状态管理</font>**<font style="color:rgb(0, 0, 0);">：维护当前路由的响应式状态</font>**<font style="background-color:rgba(0, 0, 0, 0.05);">2</font>**<font style="color:rgb(0, 0, 0);">。</font>
 5. **<font style="color:rgb(0, 0, 0);">路由组件渲染系统</font>**<font style="color:rgb(0, 0, 0);">：通过 </font><code><font style="color:rgb(0, 0, 0);"><router-view></font></code><font style="color:rgb(0, 0, 0);"> 和 </font><code><font style="color:rgb(0, 0, 0);"><router-link></font></code><font style="color:rgb(0, 0, 0);"> 实现组件的渲染和导航</font>**<font style="background-color:rgba(0, 0, 0, 0.05);">2</font>**<font style="color:rgb(0, 0, 0);">。</font>
+
+***
+
+**<font style="color:rgb(26, 32, 41);">LEGO 编辑器项目实战讲解</font>**
+
+我们的路由模块（`src/routes/index.ts`）完美体现了 Vue Router 的底层机制：
+
+1.  **历史模式选择**：
+    使用 `createWebHistory` 摒弃了丑陋的 Hash 符，让作品链接看起来更像标准网页（如 `lego.com/editor/123`），配合 Nginx 的 Try_files 配置解决了刷新 404 问题。
+2.  **导航守卫系统（The Guard）**：
+    我们将 **JWT 鉴权逻辑** 嵌入到了 `beforeEach` 钩子中：
+    -   **路由元数据驱动**：通过检查 `to.meta.requiredLogin`，决定是否拦截跳转。
+    -   **异步解析**：在守卫中 `await store.dispatch('fetchCurrentUser')`，实现了“Token 自动续期”和“静默登录”功能。这利用了 Vue Router 支持异步守卫的特性——只有当 Promise resolve 后，导航才会通过（Confirmed）。
+3.  **响应式状态流转**：
+    守卫执行过程中会多次读取 `store.state.user` 这一响应式对象，一旦 Token 失效触发 `store.commit('logout')`，界面会立即响应变化（跳转回登录页）。
 
 #### route和router
 
