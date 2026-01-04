@@ -107,14 +107,14 @@ SEO主要分为内部和外部两个方向。
 
 #### <audio>
 
-| **属性** | **类型/值** | **描述与注意事项** |
-| :--- | :--- | :--- |
-| `src` | URL | **最重要**的属性。用于指定要播放的音频文件的路径（可以是相对路径或绝对URL）。没有它，音频标签就没有内容可播放。 |
-| `controls` | Boolean (布尔属性) | 如果出现，则**向用户显示播放控件**（如播放/暂停按钮、进度条、音量控制）。**强烈建议始终添加此属性**，除非您想完全通过自定义 JavaScript 按钮来控制播放，以确保良好的用户体验。 |
-| `autoplay` | Boolean (布尔属性) | 如果出现，则音频在**就绪后会自动尝试播放**。**注意**：现代浏览器（如 Chrome）出于用户体验和节省流量的考虑，通常会**阻止自动播放**。除非用户之前与页面有过交互（如点击），否则带 `autoplay`的视频或音频可能无法生效。 |
-| `loop`** | Boolean (布尔属性) | 如果出现，则每当**音频播放结束后会自动重新开始播放**，实现循环播放的效果。常用于背景音乐或氛围音效。 |
-| `muted` | Boolean (布尔属性) | 如果出现，则音频的**输出会被静音**（默认无声）。**实用技巧**：与 `autoplay`搭配使用。由于浏览器限制，**静音的音频通常允许自动播放**。可以先设置 `muted`和 `autoplay`让视频自动背景播放，然后让用户通过控件取消静音。 |
-| `preload` | `none``metadata``auto` | 建议**根据优先级选择值**，而不是依赖默认的 `auto`。用于提示浏览器在页面加载时应该如何加载音频数据。它不是强制命令，浏览器可能会根据自身策略（如为用户节省流量）调整行为。 |
+| **属性**   | **类型/值**            | **描述与注意事项**                                                                                                                                                                                                   |
+| :--------- | :--------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src`      | URL                    | **最重要**的属性。用于指定要播放的音频文件的路径（可以是相对路径或绝对URL）。没有它，音频标签就没有内容可播放。                                                                                                      |
+| `controls` | Boolean (布尔属性)     | 如果出现，则**向用户显示播放控件**（如播放/暂停按钮、进度条、音量控制）。**强烈建议始终添加此属性**，除非您想完全通过自定义 JavaScript 按钮来控制播放，以确保良好的用户体验。                                        |
+| `autoplay` | Boolean (布尔属性)     | 如果出现，则音频在**就绪后会自动尝试播放**。**注意**：现代浏览器（如 Chrome）出于用户体验和节省流量的考虑，通常会**阻止自动播放**。除非用户之前与页面有过交互（如点击），否则带 `autoplay`的视频或音频可能无法生效。 |
+| `loop`**   | Boolean (布尔属性)     | 如果出现，则每当**音频播放结束后会自动重新开始播放**，实现循环播放的效果。常用于背景音乐或氛围音效。                                                                                                                 |
+| `muted`    | Boolean (布尔属性)     | 如果出现，则音频的**输出会被静音**（默认无声）。**实用技巧**：与 `autoplay`搭配使用。由于浏览器限制，**静音的音频通常允许自动播放**。可以先设置 `muted`和 `autoplay`让视频自动背景播放，然后让用户通过控件取消静音。 |
+| `preload`  | `none``metadata``auto` | 建议**根据优先级选择值**，而不是依赖默认的 `auto`。用于提示浏览器在页面加载时应该如何加载音频数据。它不是强制命令，浏览器可能会根据自身策略（如为用户节省流量）调整行为。                                            |
 
 ***
 
@@ -148,14 +148,14 @@ HTML5新增的表单控件类型包括:
 
 DOM（文档对象模型）树将HTML或XML文档表示为一系列节点（Node）的层次结构，这些节点共同描述了文档的内容与结构。理解不同类型的节点是进行DOM操作的基础。下面我将为你详细讲解DOM树中的几种主要节点类型。
 
-| **节点类型** | **nodeType 值** | **nodeName** | **nodeValue** | **描述** |
-| :--- | :--- | :--- | :--- | :--- |
-| **Element** | 1 | 标签名（如DIV） | `null` | 表示HTML或XML元素，是DOM树的主要构建块 |
-| **Text** | 3 | `#text` | 文本内容 | 包含元素内的文本内容，包括空格和换行符 |
-| **Comment** | 8 | `#comment` | 注释内容 | 表示HTML文档中的注释（`<!-- 注释内容 -->`） |
-| **Document** | 9 | `#document` | `null` | 代表整个文档的根节点，是DOM树的入口点 |
-| **DocumentType** | 10 | `html` | `null` | 表示文档类型声明（`<!DOCTYPE html>`）。  |
-| **Attribute** | 2 | 属性名 | 属性值 | 表示元素的属性（如 `id="myId"`）。  **注意**：在DOM标准中，属性节点被视为其所属元素节点的一部分，并非DOM树中独立的子节点。 |
+| **节点类型**     | **nodeType 值** | **nodeName**    | **nodeValue** | **描述**                                                                                                                   |
+| :--------------- | :-------------- | :-------------- | :------------ | :------------------------------------------------------------------------------------------------------------------------- |
+| **Element**      | 1               | 标签名（如DIV） | `null`        | 表示HTML或XML元素，是DOM树的主要构建块                                                                                     |
+| **Text**         | 3               | `#text`         | 文本内容      | 包含元素内的文本内容，包括空格和换行符                                                                                     |
+| **Comment**      | 8               | `#comment`      | 注释内容      | 表示HTML文档中的注释（`<!-- 注释内容 -->`）                                                                                |
+| **Document**     | 9               | `#document`     | `null`        | 代表整个文档的根节点，是DOM树的入口点                                                                                      |
+| **DocumentType** | 10              | `html`          | `null`        | 表示文档类型声明（`<!DOCTYPE html>`）。                                                                                    |
+| **Attribute**    | 2               | 属性名          | 属性值        | 表示元素的属性（如 `id="myId"`）。  **注意**：在DOM标准中，属性节点被视为其所属元素节点的一部分，并非DOM树中独立的子节点。 |
 
 ### 浏览器渲染机制
 
@@ -170,13 +170,6 @@ DOM（文档对象模型）树将HTML或XML文档表示为一系列节点（Node
 
 4. 布局 5.分层 6.绘制 7.合成
 
-**项目实践 - 慕课乐高编辑器：**
-
-在乐高低代码编辑器项目中，用户访问编辑器页面时会经历完整的URL加载流程：
-- 首次访问时，Webpack打包的JS/CSS资源会被下载并缓存，后续访问利用强缓存（Cache-Control）加速
-- 编辑器核心组件（如画布、属性面板）的代码通过路由懒加载实现，避免首屏加载过多资源阻塞渲染
-- 项目中CSS放在`<head>`中通过`mini-css-extract-plugin`提取，JS通过`defer`属性延迟执行，确保页面快速呈现
-
 #### 浏览器如何渲染页面（必背）
 
 1. 构建DOM树：解析HTML文件，识别标签、属性、文本，每个元素对应一个节点
@@ -186,6 +179,30 @@ DOM（文档对象模型）树将HTML或XML文档表示为一系列节点（Node
 5. 分层：渲染树分为多个图层，优化渲染，根据transform、z-index将节点分配到不同图层，每个图层独立渲染，避免不必要的重绘
 6. 绘制、光栅化：将每个图层的节点转换为绘制指令，生成绘制列表，转换为像素，生成位图、存储与显存中
 7. 合成：将多个图层的页面按照层级关系
+
+#### 结合 LEGO 项目实战：编辑器渲染全流程
+
+以我们的 LEGO 低代码平台为例，当用户访问编辑器时，浏览器主要经历了以下过程：
+
+1.  **解析 HTML 与资源加载**：
+    *   浏览器请求 `index.html`，解析出 `<div id="app">` 挂载点。
+    *   识别并加载 `main.ts` 打包后的 JS 文件（如 `app.js`）以及 `antd.less`、`lego-bricks.css` 等样式资源。
+
+2.  **脚本执行与 Vue 初始化**：
+    *   浏览器执行 JS脚本，`main.ts` 运行，调用 `createApp(App)` 创建 Vue 实例。
+    *   执行 `.use(LegoBricks)`、`.use(store)` 等插件注册。
+    *   调用 `app.mount('#app')`，Vue 将虚拟 DOM 挂载到宿主节点。
+
+3.  **构建渲染树**：
+    *   Vue 解析 `Editor.vue` 及其子组件，生成包含 `L-Text`、`L-Image` 等组件的 DOM 结构。
+    *   结合 CSSOM（包括 Ant Design 的样式），生成最终的渲染树。
+
+4.  **布局 (Layout)**：
+    *   计算编辑器界面中左侧组件库、右侧属性面板的宽度。
+    *   **关键点**：对于画布中的组件，浏览器根据 `style` 属性中的 `left`、`top`、`width`、`height` 计算其绝对定位的确切坐标。
+
+5.  **绘制 (Paint) 与合成**：
+    *   将计算好的布局绘制成像素。若组件涉及复杂动画或变换（如画布缩放），浏览器会将其分层处理，利用 GPU 加速合成。
 
 #### 重绘和重排的区别（必背）
 
@@ -207,14 +224,14 @@ DOM（文档对象模型）树将HTML或XML文档表示为一系列节点（Node
 
 当你读取以下属性或调用以下方法时，通常会强制浏览器清空队列并进行重排
 
-| **类别** | **属性/方法** |
-| :--- | :--- |
-| 元素尺寸和位置 | `offsetTop`, `offsetLeft`, `offsetWidth`, `offsetHeight` |
-| 元素内容区域 | `clientTop`, `clientLeft`, `clientWidth`, `clientHeight` |
-| 元素滚动相关 | `scrollTop`, `scrollLeft`, `scrollWidth`, `scrollHeight` |
-| 计算样式 | `window.getComputedStyle()`, `element.currentStyle`(IE) |
-| 获取元素几何信息 | `element.getBoundingClientRect()` |
-| 窗口大小 | `window.innerWidth`, `window.innerHeight`(在某些情况下) |
+| **类别**         | **属性/方法**                                            |
+| :--------------- | :------------------------------------------------------- |
+| 元素尺寸和位置   | `offsetTop`, `offsetLeft`, `offsetWidth`, `offsetHeight` |
+| 元素内容区域     | `clientTop`, `clientLeft`, `clientWidth`, `clientHeight` |
+| 元素滚动相关     | `scrollTop`, `scrollLeft`, `scrollWidth`, `scrollHeight` |
+| 计算样式         | `window.getComputedStyle()`, `element.currentStyle`(IE)  |
+| 获取元素几何信息 | `element.getBoundingClientRect()`                        |
+| 窗口大小         | `window.innerWidth`, `window.innerHeight`(在某些情况下)  |
 
 ##### 触发重绘的操作
 
@@ -232,6 +249,26 @@ DOM（文档对象模型）树将HTML或XML文档表示为一系列节点（Node
 
 `text-decoration`
 
+#### 结合 LEGO 项目实战：编辑器中的重绘与重排
+
+在我们的 LEGO 编辑器 (`EditWrapper.vue`) 中，组件的交互操作完美体现了重排与重绘的机制：
+
+1.  **强制重排 (Forced Reflow) 的典型场景**
+    *   **代码位置**：`EditWrapper.vue` 中的 `startMove` 和 `startResize` 方法。
+    *   **现象**：当用户按下鼠标准备拖拽时，代码调用了 `currentElement.getBoundingClientRect()`。
+    *   **原理**：为了获取组件当前精确的屏幕坐标（`left`, `top`, `width`, `height`），浏览器必须**立即清空渲染队列**并重新计算布局，这被称为“强制重排”。
+
+2.  **高频重排 (Reflow) 的操作**
+    *   **代码位置**：`mousemove` 事件处理函数 `handleMove`。
+    *   **现象**：在拖拽过程中，我们实时修改了组件的 `style.top`、`style.left`、`style.width` 和 `style.height`。
+    *   **原理**：每次修改这些几何属性，浏览器都需要重新计算组件的位置和大小，引发重排。
+    *   **优化思考**：如果在拖拽过程中使用 CSS `transform: translate(...)` 代替 `top/left`，则可以利用 GPU 加速，只触发**合成 (Composite)**，避免高频重排，从而提升动画流畅度。
+
+3.  **重绘 (Repaint) 的操作**
+    *   **代码位置**：CSS 中的 `.edit-wrapper:hover` 和 `.edit-wrapper.active`。
+    *   **现象**：当鼠标悬停或选中组件时，边框变为虚线或蓝色实线（`border` 样式改变）。
+    *   **原理**：这只改变了元素的外观颜色，未改变几何尺寸，因此只会触发重绘，开销较小。
+
 #### 浏览器垃圾回收机制（必背）
 
 1. 栈垃圾回收：用于存储执行上下文，遵循后进先出，函数执行结束，JS引擎移动栈指针销毁函数执行上下文，释放栈空间
@@ -241,6 +278,43 @@ DOM（文档对象模型）树将HTML或XML文档表示为一系列节点（Node
 
 * 全停顿-垃圾回收过程影响JS脚本执行，造成页面卡顿
 * 增量标记-V8引擎将标记过程分为多个子标记过程，交替执行垃圾回收和JS脚本
+
+#### 结合 LEGO 项目实战：避免内存泄漏
+
+垃圾回收机制虽好，但糟糕的代码会导致“内存泄漏”（对象不再使用但未被引用计数清除）。在 LEGO 项目的 `EditWrapper.vue` 中，我们有一个经典的防范案例：
+
+1.  **场景描述**：
+    *   我们在组件中实现了拖拽功能，这需要在 `mousedown` 时向 `document` 添加全局的 `mousemove` 和 `mouseup` 事件监听器。
+
+    ```typescript
+    // EditWrapper.vue
+    const startResize = (direction: ResizeDirection) => {
+      // ...
+      // 绑定事件到全局 document，而非组件自身
+      document.addEventListener('mousemove', handleMove)
+      document.addEventListener('mouseup', handleMouseUp)
+    }
+    ```
+
+2.  **潜在风险（内存泄漏）**：
+    *   如果不手动移除这些监听器，`handleMove` 和 `handleMouseUp` 函数将一直被 `document` 引用。
+    *   由于闭包特性，这两个函数又引用了组件内的变量（如 `editWrapper` DOM 引用、`props` 等）。
+    *   结果：即使该组件被销毁（例如用户删除了该组件），由于 `document` 还引用着回调函数，回调函数引用着组件作用域，导致组件占用的堆内存（Heap）无法被 V8 引擎的标记清除算法回收。
+
+3.  **解决方案**：
+    *   在 `mouseup`（拖拽结束）时，必须显式移除事件监听。
+
+    ```typescript
+    const handleMouseUp = (e: MouseEvent) => {
+        document.removeEventListener('mousemove', handleMove) // 切断引用
+        // ...
+        nextTick(() => {
+          document.removeEventListener('mouseup', handleMouseUp) // 切断引用
+        })
+    }
+    ```
+
+    *   **原理**：切断了 `document` 到回调函数的引用链，使组件相关的内存对象成为“不可达”节点，从而在下一次垃圾回收时被释放。
 
 #### 浏览器乱码的原因是什么?如何解决?
 
@@ -339,6 +413,48 @@ Firefox，Chrome 和 Opera 都会在 DOMContentLoaded 中自动填充表单例�
 
 当用户最终离开时，window上的 unload 事件就会被触发。在外理程序中，我们只能执行不涉及延迟或询问用户的简单操作。正是由于这个限制，它很少被使用。我们可以使用 naviqatorsendBeacon 来发送网络请求,
 
+#### 结合 LEGO 项目实战：生命周期与数据安全
+
+在 LEGO 项目的 `src/hooks/useSaveWork.ts` 中，我们通过 Vue 的生命周期钩子完美映射了浏览器页面的生命周期概念，以此保证用户作品数据的安全：
+
+1.  **DOMContentLoaded 与 `onMounted`**
+    *   **实战应用**：当编辑器加载完成（DOM 准备就绪）后，我们在 `onMounted` 钩子中启动了一个**自动保存定时器**。
+    *   **代码片段**：
+        ```typescript
+        // src/hooks/useSaveWork.ts
+        onMounted(() => {
+          timer = window.setInterval(() => {
+            if (isDirty.value) { // 检查是否有未保存的修改
+              saveWork()
+            }
+          }, 1000 * 50) // 每50秒自动保存
+        })
+        ```
+    *   **原理**：此时页面元素已生成，相关的数据响应式系统已建立，是启动后台任务的最佳时机。
+
+2.  **离开页面保护：`beforeunload` 的应用**
+    *   **现状**：目前项目使用了 Vue Router 的 `onBeforeRouteLeave` 钩子来拦截**路由跳转**（如点击“返回首页”），提示用户保存。
+    *   **进阶优化（浏览器原生关闭拦截）**：为了防止用户直接**关闭浏览器标签页**或**刷新页面**导致数据丢失，我们需要监听原生的 `beforeunload` 事件。这是 `onBeforeRouteLeave` 无法覆盖的场景。
+    *   **推荐实现**：
+        ```typescript
+        // 建议添加到 useSaveWork.ts 中
+        const beforeUnloadListener = (e: BeforeUnloadEvent) => {
+          if (isDirty.value) {
+            e.preventDefault()
+            e.returnValue = '' // Chrome 需要设置此属性才会弹出默认提示框
+          }
+        }
+
+        onMounted(() => {
+          window.addEventListener('beforeunload', beforeUnloadListener)
+        })
+
+        onUnmounted(() => {
+          window.removeEventListener('beforeunload', beforeUnloadListener)
+        })
+        ```
+    *   **原理**：利用 `beforeunload` 事件，在页面卸载前一刻（用户点击关闭按钮时）进行拦截，这是防止用户误操作导致作品丢失的最后一道防线。
+
 #### MutationObserver
 
 MutationObserver 是一个用于监听 DOM变化的 JavaScript API。它能够监控 DOM 树中的各种变动，例如元素的添加、删除、属性变化以及文本内容的修改，并在这些变化发生时触发回调函数。
@@ -358,6 +474,60 @@ MutationObserver 采用异步机制监听 DOM 变化，与同步触发的事件�
 **三、与事件的区别**
 
 MutationObserver 与传统事件机制不同，事件是同步触发的，而 MutationObserver 是异步批量处理的。这种设计使其在处理复杂 DOM 操作时更加高效
+
+#### 结合 LEGO 项目实战：使用 MutationObserver 实现防删水印
+
+虽然在 Vue/React 等现代框架中我们主要关注数据驱动，但在某些特定场景下，`MutationObserver` 依然通过其 DOM 监控能力发挥着独特作用。在 LEGO 的企业版功能中，我们可能会遇到**“预览页水印保护”**的需求：
+
+1.  **需求场景**：
+    *   在非付费用户的预览页面 (生成的 H5 页面) 上覆盖一层带有 "LEGO Free Version" 的水印 `div`。
+    *   **挑战**：懂技术的用户可能会打开控制台 (DevTools)，手动 `delete` 这个水印节点，或者修改其 CSS `display: none` / `opacity: 0` 来去除水印。
+
+2.  **解决方案**：
+    *   利用 `MutationObserver` 监听水印节点的父容器。一旦发现水印被删除或属性被篡改，立即强制恢复。
+
+    ```javascript
+    // 模拟水印保护逻辑
+    const protectWatermark = (watermarkId, containerId) => {
+      const targetNode = document.getElementById(containerId);
+      // ... 获取或创建水印节点的逻辑
+
+      const observer = new MutationObserver((mutationsList) => {
+        for (const mutation of mutationsList) {
+          // 1. 监听子节点移除 (防删除)
+          if (mutation.type === 'childList') {
+            mutation.removedNodes.forEach(node => {
+              if (node.id === watermarkId) {
+                console.warn('检测到水印被删除，正在恢复...');
+                // 重新插入水印
+                targetNode.appendChild(watermarkNode);
+              }
+            });
+          }
+
+          // 2. 监听属性修改 (防隐藏)
+          if (mutation.type === 'attributes' && mutation.target.id === watermarkId) {
+             const { style } = mutation.target;
+             if (style.display === 'none' || style.visibility === 'hidden' || style.opacity === '0') {
+                console.warn('检测到水印样式被篡改，正在恢复...');
+                // 强制重置样式
+                watermarkNode.setAttribute('style', 'opacity: 0.5; position: fixed; ...');
+             }
+          }
+        }
+      });
+
+      // 配置观察选项
+      observer.observe(targetNode, {
+        attributes: true,      // 观察属性变动
+        childList: true,       // 观察子节点变动
+        subtree: true,         // 观察所有后代节点
+        attributeFilter: ['style', 'class'] // 只观察特定属性
+      });
+    };
+    ```
+
+3.  **价值**：这种“基于 DOM 的防御”是数据驱动框架难以直接覆盖的，展示了原生 API 在特定业务安全场景下的不可替代性。
 
 #### iframe
 
@@ -389,6 +559,59 @@ iframe 元素 可以在一个网站里面嵌入另一个网站内容
 
 这些方法各有特点，适用于不同的场景。根据具体需求和使用环境，选择合适的跨页面通信方法可以实现数据传递和协作。
 
+#### 结合 LEGO 项目实战：多标签页登录状态同步
+
+在 LEGO 项目中，我们利用 `localStorage` 实现了**多标签页登录状态同步**。
+
+1.  **场景**：
+    *   用户打开了两个 LEGO 标签页 A 和 B。
+    *   用户在 A 标签页进行登录操作。
+    *   **期望**：B 标签页由于检测到登录态变化，应自动刷新或获取用户信息，保持状态一致。
+    *   同样，用户在 A 标签页退出登录，B 标签页也应自动退出。
+
+2.  **实现原理**：
+    *   基于 `localStorage.setItem` 设置数据时，其他页面会触发 `window.addEventListener('storage', callback)` 事件。
+
+3.  **代码示意**：
+
+    ```typescript
+    // src/App.vue 或 main.ts 全局逻辑
+    window.addEventListener('storage', (e) => {
+      // 监听 token 变化
+      if (e.key === 'token') {
+        const newToken = e.newValue
+        const oldToken = e.oldValue
+        
+        // 场景1：用户在其他页面登录了
+        if (!oldToken && newToken) {
+           store.commit('login', { data: { token: newToken } })
+           store.dispatch('fetchCurrentUser') // 重新拉取用户信息
+           message.success('检测到已在其他页面登录，正在同步状态...')
+        }
+        
+        // 场景2：用户在其他页面退出了
+        else if (oldToken && !newToken) {
+           store.commit('logout')
+           router.push('/login')
+           message.warning('您已退出登录')
+        }
+      }
+    })
+    ```
+
+4.  **项目位置**：
+    *   我们在 `src/store/user.ts` 中通过 `localStorage.setItem('token', token)` 存储 Token，这正是触发 `storage` 事件的源头。
+
+    ```typescript
+    // src/store/user.ts
+    login(state, rawData) {
+      const { token } = rawData.data
+      state.token = token
+      localStorage.setItem('token', token) // 触发 storage 事件
+      // ...
+    }
+    ```
+
 #### 什么是 DOM 和 BOM?
 
 DOM(Document Object Model)和 BOM(Browser Object Model)是JavaScript 中常用的两个概念，用于描述浏览器中的不同对象模型。
@@ -405,6 +628,49 @@ DOM(Document Object Model)和 BOM(Browser Object Model)是JavaScript 中常用�
 * BOM 还提供了其他一些对象，如 navigator(提供浏览器相关信息)、location(提供当前文档的。URL信息)、history(提供浏览器历史记录)、screen(提供屏幕信息)等。
 
 总的来说，**DOM 是用于访问和操作网页文档的对象模型，而 BOM 是用于控制浏览器窗口及其各个组件的对象模型**。在 JavaScript 编程中，开发者通常会同时使用 DOM 和 BOM 来完成各种任务，如操作网页元素、导航控制,事件处理等。
+
+#### 结合 LEGO 项目实战：DOM 与 BOM 的应用
+
+尽管 Vue 帮我们也屏蔽了大部分直接操作 DOM 的细节，但在 LEGO 项目中，我们依然频繁使用了 DOM 和 BOM API 解决特定问题：
+
+1.  **DOM 操作：点击外部关闭菜单**
+    *   **场景**：用户点击下拉菜单以外的区域时，菜单应自动关闭。
+    *   **代码**：`src/hooks/useClickOutside.ts`
+    *   **核心逻辑**：
+        ```typescript
+        const handler = (e: MouseEvent) => {
+           // 使用 DOM API: node.contains(otherNode) 判断包含关系
+           if (elementRef.value.contains(e.target as HTMLElement)) {
+              isClickOutside.value = false
+           } else {
+              isClickOutside.value = true
+           }
+        }
+        document.addEventListener('click', handler) // 绑定到 document
+        ```
+    *   **解析**：这里使用了标准的 DOM API `contains` 来判断点击事件的 `target` 是否在目标元素内部。
+
+2.  **DOM 操作：获取截图区域**
+    *   **场景**：发布作品时，需要将画布生成一张图片作为封面。
+    *   **代码**：`src/views/Editor.vue`
+    *   **核心逻辑**：
+        ```typescript
+        // 获取真实的 DOM 节点传递给 html2canvas 库
+        const el = document.getElementById('canvas-area') as HTMLElement
+        await publishWork(el)
+        ```
+
+3.  **BOM 操作：定时与存储**
+    *   **场景**：自动保存功能。
+    *   **代码**：`src/hooks/useSaveWork.ts`
+    *   **核心逻辑**：
+        ```typescript
+        // 使用 BOM API: window.setInterval
+        timer = window.setInterval(() => {
+           // ...
+        }, 1000 * 50)
+        ```
+    *   **其他 BOM 应用**：`localStorage` (Storage API) 用于 Token 存储；`navigator.clipboard` (Navigator API) 用于复制文本。
 
 ### 资源加载与性能优化
 
@@ -454,6 +720,27 @@ DOM(Document Object Model)和 BOM(Browser Object Model)是JavaScript 中常用�
 
 ```
 
+#### 结合 LEGO 项目实战：工程化中的样式引入
+
+在 LEGO 这样的现代工程化项目中（基于 Webpack/Vue CLI），我们几乎看不到 CSS 中的 `@import` 语法，而是通过 JS 模块化引入样式。
+
+1.  **实战代码**：
+    *   **位置**：`src/main.ts`
+    *   **代码**：
+        ```typescript
+        import 'ant-design-vue/dist/antd.less'
+        import 'lego-bricks/dist/bundle.css'
+        import 'cropperjs/dist/cropper.css'
+        ```
+
+2.  **原理分析**：
+    *   **Webpack 机制**：这些 `import` 语句在构建时会被 Webpack 的 `css-loader` 和 `style-loader`（或 `MiniCssExtractPlugin`）处理。
+    *   **最终产物**：
+        *   在**开发环境**，样式会被转换成 `<style>` 标签插入到 `<head>` 中（类似 CSS-in-JS 但实际上是注入）。
+        *   在**生产环境**，样式会被提取成单独的 `.css` 文件，并通过 `<link rel="stylesheet">` 标签自动注入到 `dist/index.html` 中。
+    
+3.  **结论**：在现代项目实战中，我们通过 **Webpack/Vite 自动构建机制** 最终生成的是性能更好、兼容性更强的 `<link>` 标签引入方式，彻底摒弃了运行时 `@import`。
+
 #### script标签中defer和async的区别（必背）
 
 如果没有defer或async属性，浏览器会**立即加载并执行相应**的**脚本**。它不会等待后续加载的文档元素，读取到就会开始加载和执行，这样就阻塞了后续文档的加载。
@@ -470,9 +757,27 @@ DOM(Document Object Model)和 BOM(Browser Object Model)是JavaScript 中常用�
 * defer 和 async 的共同点是都是可以并行加载JS文件，不会阻塞页面的加载，不同点是 defer的加载完成之后，JS会等待整个页面全部加载完成了再执行，而带async属性的JS是加载完成之后，会马上执行
 *  JS脚本的执行需要等待文档所有元 素解析完之后，load和DOMContentLoaded事件之前执行
 
+#### 结合 LEGO 项目实战：工程化中的脚本加载
+
+在 LEGO 项目中，我们打开 `public/index.html`，不仅看不到 `<script>` 标签，也看不到 `defer` 或 `async` 属性：
+
+```html
+<!-- public/index.html -->
+<body>
+  <div id="app"></div>
+  <!-- built files will be auto injected -->
+</body>
+```
+
+这是因为脚手架（Vue CLI / Webpack）在构建阶段（`npm run build`）会自动处理脚本注入，其默认行为通常符合最佳实践：
+
+1.  **自动注入**：`html-webpack-plugin` 会将构建好的 JS 文件（如 `app.js`, `chunk-vendors.js`）自动插入到 HTML 中。
+2.  **默认策略 (defer)**：在现代 Vue CLI 配置中，默认生成的 Script 标签通常带有 `defer` 属性（或者直接注入到 `<body>` 底部），确保 JS 的下载和执行不会阻塞 HTML 的解析，且严格按照依赖顺序执行（先 vendor 后 app）。
+3.  **预加载优化**：Webpack 还会自动生成 `<link rel="preload" as="script">` (在 `vue.config.js` 中可见相关插件配置，虽本项目的 `chainWebpack` 中未显式修改，但这是 Vue CLI 的默认预设)，进一步提升核心脚本的加载优先级。
+
 #### 上传图片后，怎么通过浏览器预览上传图片
 
-1. window.URL.createObjectURL(img.files\[0])
+1. window.URL.createObjectURL(img.files[0])
 
 2. FileReader
 
@@ -492,6 +797,39 @@ document.getElementById('uploader').addEventListener('change', (e) => {
 });
 
 ```
+
+#### 结合 LEGO 项目实战：两种预览方式的实战对决
+
+在 LEGO 项目中，我们同时使用到了 `readAsDataURL` 和 `createObjectURL`，它们各有适应场景：
+
+1.  **场景一：Uploader 组件的本地快速预览**
+    *   **代码**：`src/components/Uploader.vue` (第 147-152 行)
+    *   **方式**：`URL.createObjectURL(file)`
+    *   **理由**：`createObjectURL` 生成的是一个浏览器内部的 blob URL（如 `blob:http://...`），转换速度极快，不需要像 FileReader 那样进行 Base64 编码（大文件的 Base64 转换可能会卡顿主线程）。适合用于上传列表中的**缩略图快速展示**。
+    *   **注意**：代码中应补充 `URL.revokeObjectURL(url)` 来释放内存（Todo Item）。
+
+2.  **场景二：获取图片真实尺寸**
+    *   **代码**：`src/helper.ts` 中的 `getImageDimensions` 方法
+    *   **方式**：`URL.createObjectURL(file)` + `new Image()`
+    *   **逻辑**：
+        ```typescript
+        export const getImageDimensions = (url: string | File) => {
+          return new Promise<{ width: number; height: number }>((resolve, reject) => {
+            const img = new Image()
+            // 如果是 File 对象，创建 blob url
+            img.src = typeof url === 'string' ? url : URL.createObjectURL(url)
+            img.addEventListener('load', () => {
+               // ... 获取 naturalWidth
+            })
+          })
+        }
+        ```
+
+3.  **对比总结**：
+    *   **性能**：`createObjectURL` > `FileReader` (Base64)。
+    *   **用途**：
+        *   `blob url` 适合短期、页内预览，刷新失效。
+        *   `base64` (FileReader) 适合需要将图片作为字符串传输、存储或嵌入到 HTML 字符串中的场景（例如富文本编辑器插入图片）。
 
 #### 页面统计数据中，常用的 PV、UV 指标分别是什么?
 
@@ -550,13 +888,42 @@ autocomplete 属性是用来规定输入字段是否启用自动完成的功能�
 
 #### preload、prefetch、preconnect 和 prerender
 
-| **特性** | `preload` | `prefetch` | `preconnect` | `prerender` |
-| :--- | :--- | :--- | :--- | :--- |
-| **核心目的** | **当前页面**关键资源高优先级加载 | **未来页面/资源**低优先级预获取 | **提前建立连接**（DNS, TCP, TLS） | **后台预渲染**整个未来页面 |
-| **加载时机** | 立即，**高优先级** | 浏览器**空闲时**，低优先级 | 立即 | 浏览器空闲时 |
-| **适用场景** | 当前页字体、首屏关键脚本/样式 | 用户可能访问的下一页资源 | 静态资源域名、第三方域名 | 确定用户下一步访问的页面 |
+| **特性**     | `preload`                                          | `prefetch`                                    | `preconnect`                                             | `prerender`                                              |
+| :----------- | :------------------------------------------------- | :-------------------------------------------- | :------------------------------------------------------- | :------------------------------------------------------- |
+| **核心目的** | **当前页面**关键资源高优先级加载                   | **未来页面/资源**低优先级预获取               | **提前建立连接**（DNS, TCP, TLS）                        | **后台预渲染**整个未来页面                               |
+| **加载时机** | 立即，**高优先级**                                 | 浏览器**空闲时**，低优先级                    | 立即                                                     | 浏览器空闲时                                             |
+| **适用场景** | 当前页字体、首屏关键脚本/样式                      | 用户可能访问的下一页资源                      | 静态资源域名、第三方域名                                 | 确定用户下一步访问的页面                                 |
 | **语法示例** | `<link rel="preload" href="font.woff2" as="font">` | `<link rel="prefetch" href="next-page.html">` | `<link rel="preconnect" href="https://cdn.example.com">` | `<link rel="prerender" href="https://example.com/next">` |
-| **注意点** | 需配合 `as`属性，否则可能重复加载 | 可能浪费带宽；注意预测准确性 | 每个预连接都有开销，**慎用于过多域名** | **开销巨大**；兼容性与统计问题；需谨慎使用 |
+| **注意点**   | 需配合 `as`属性，否则可能重复加载                  | 可能浪费带宽；注意预测准确性                  | 每个预连接都有开销，**慎用于过多域名**                   | **开销巨大**；兼容性与统计问题；需谨慎使用               |
+
+#### 结合 LEGO 项目实战：构建工具的默认优化
+
+在 LEGO 项目中，我们通过 Vue Router 使用了路由懒加载（Lazy Loading），这与 Webpack 的 `prefetch` 机制紧密配合：
+
+1.  **代码位置**：`src/routes/index.ts`
+    ```typescript
+    {
+      path: '/editor/:id',
+      name: 'editor',
+      // 魔法注释 webpackChunkName 自定义包名
+      component: () => import(/* webpackChunkName: "editor" */ '../views/Editor.vue'),
+    }
+    ```
+
+2.  **构建产物与 Prefetch**：
+    *   当 Vue CLI / Webpack 构建时，会分离出名为 `editor.js` 的 Chunk。
+    *   因为这是动态引入的模块，Weppack 默认会自动 inject 一个 `prefetch` 标签到 `index.html`：
+        ```html
+        <link href="/js/editor.js" rel="prefetch">
+        ```
+    *   **效果**：当用户访问首页（Home）时，浏览器会在网络空闲时默默下载 `editor.js`。当用户点击“创建设计”跳转到编辑器时，资源已在本地缓存中，实现**秒开**体验。
+
+3.  **Preload 的应用**：
+    *   对于 `app.js` 和 `chunk-vendors.js` 等首屏必须的资源，构建工具会自动注入 `preload`：
+        ```html
+        <link href="/js/app.js" rel="preload" as="script">
+        ```
+    *   这确保了核心 JS 拥有最高的下载优先级，避免首屏白屏时间过长。
 
 ### 移动适配与响应式
 
@@ -589,7 +956,7 @@ name 和 content 一起使用，前者表示元数据的名称，后者是元数
 
 ```
 
-6\. 搜索引擎索引方式：\ <meta name="robots" content="index,follow"/>
+6. 搜索引擎索引方式：\ <meta name="robots" content="index,follow"/>
 
 其中，content 参数有以下几种：
 
@@ -629,6 +996,23 @@ viewport翻译为中文可以叫做“视区”
 ***maximum-scale**：允许用户缩放到的最大比例
 ***minimum-scale**：允许用户缩放到的最小比例
 ***user-scalable**：用户是否可以手动缩放
+
+#### 结合 LEGO 项目实战：移动端适配的核心配置
+
+在 LEGO 项目的入口文件 `public/index.html` 中，我们配置了标准的 Viewport Meta 标签，这是 H5 页面在移动端正常显示的基础：
+
+1.  **代码位置**：`public/index.html` (第 6 行)
+    ```html
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    ```
+
+2.  **配置解析**：
+    *   `width=device-width`：让视口宽度等于设备屏幕宽度，防止移动端浏览器默认将页面渲染成 980px 宽的桌面模式。
+    *   `initial-scale=1.0`：设置初始缩放比例为 1:1，即不进行默认缩放。
+
+3.  **项目意义**：
+    *   **编辑器端（PC）**：虽然编辑器主要在 PC 端使用，但这个标签保证了在如 iPad 等平板设备上访问时，布局比例也是 1:1 的，不会出现意外缩放。
+    *   **H5 作品端（Mobile）**：LEGO 生成的 H5 作品页面（虽然通常是独立的 SPA），也**必须**包含此标签。如果缺少它，用户在手机上打开海报时，文字和图片会变得极小（因为浏览器会尝试模拟桌面显示器宽度），彻底破坏用户体验。这是移动端开发的**第一条军规**。
 
 #### img标签title、alt、srcset
 
@@ -734,25 +1118,46 @@ sizes就是指默认显示128px，如果视区宽度大于360px，则显示340px
 * scrollBy（0，-top）
 * scrollIntoView(true)
 
+#### 结合 LEGO 项目实战：编辑器坐标计算中的 Scroll 应用
+
+在 LEGO 编辑器的拖拽逻辑中，虽然我们不需要“回到顶部”，但**滚动条位置 (`scrollTop/scrollLeft`)** 对坐标计算至关重要：
+
+1.  **场景**：
+    *   当用户在画布太长导致出现滚动条，且向下滚动了一段距离后，尝试拖拽组件。
+    *   此时鼠标的 `clientY` (视口坐标) 不再直接等于组件在画布中的 `top` 值。
+
+2.  **代码实战**：
+    *   **位置**：`src/components/EditWrapper.vue` (第 59-67 行 `caculateMovePosition` 函数)
+    *   **计算公式**：
+        ```typescript
+        const caculateMovePosition = (e: MouseEvent) => {
+          const container = document.getElementById('canvas-area') as HTMLElement
+          // 最终 Top = 鼠标Y - 鼠标内部偏移 - 容器Offset + 容器已滚动的距离
+          const top = e.clientY - gap.y - container.offsetTop  + container.scrollTop
+          return { left, top }
+        }
+        ```
+    *   **核心逻辑**：必须加上 `container.scrollTop`，否则当画布滚动后，拖拽的组件会“跟不上”鼠标（向上偏移了滚动距离）。这展示了 Scroll 属性在复杂交互应用中的核心地位。
+
 #### Canvas和SVG有什么区别?
 
 ##### **1. 基础概念**
 
-| **特性** | **Canvas** | **SVG** |
-| --- | --- | --- |
-| **类型** | **位图**（基于像素的栅格图形） | **矢量图**（基于数学描述的图形） |
-| **DOM 支持** | 无（通过 JavaScript API 绘制） | 是（XML 格式，可通过 DOM 操作） |
-| **渲染方式** | 逐像素渲染，绘制后无法直接修改 | 保留模式，可动态修改属性或结构 |
+| **特性**     | **Canvas**                     | **SVG**                          |
+| ------------ | ------------------------------ | -------------------------------- |
+| **类型**     | **位图**（基于像素的栅格图形） | **矢量图**（基于数学描述的图形） |
+| **DOM 支持** | 无（通过 JavaScript API 绘制） | 是（XML 格式，可通过 DOM 操作）  |
+| **渲染方式** | 逐像素渲染，绘制后无法直接修改 | 保留模式，可动态修改属性或结构   |
 
 ##### **2. 核心区别**
 
-| **对比维度** | **Canvas** | **SVG** |
-| --- | --- | --- |
-| **性能** | 适合高频重绘（如游戏、动画） | 适合静态或少量动态图形（DOM 操作有性能开销） |
-| **缩放适应性** | 放大时会模糊（位图特性） | 无限缩放不失真（矢量特性） |
-| **事件交互** | 需手动计算坐标实现交互（复杂） | 原生支持事件绑定（如 `onclick` ） |
-| **SEO/可访问性** | 内容不可被搜索引擎抓取 | 文本和结构可被索引 |
-| **复杂度** | 适合复杂动态场景（如数据可视化） | 适合结构化图形（如图标、图表） |
+| **对比维度**     | **Canvas**                       | **SVG**                                      |
+| ---------------- | -------------------------------- | -------------------------------------------- |
+| **性能**         | 适合高频重绘（如游戏、动画）     | 适合静态或少量动态图形（DOM 操作有性能开销） |
+| **缩放适应性**   | 放大时会模糊（位图特性）         | 无限缩放不失真（矢量特性）                   |
+| **事件交互**     | 需手动计算坐标实现交互（复杂）   | 原生支持事件绑定（如 `onclick` ）            |
+| **SEO/可访问性** | 内容不可被搜索引擎抓取           | 文本和结构可被索引                           |
+| **复杂度**       | 适合复杂动态场景（如数据可视化） | 适合结构化图形（如图标、图表）               |
 
 #### canvas在标签上设置宽高，与在style中设置宽高有什么区别?
 
@@ -760,6 +1165,59 @@ sizes就是指默认显示128px，如果视区宽度大于360px，则显示340px
 * 而style的width和height是canvas在浏览器中被渲染的高度和宽度
 
 如果canvas的width和height没指定或值不正确，就被设置成默认值。
+
+#### 结合 LEGO 项目实战：截图与二维码中的 Canvas 应用
+
+在 LEGO 项目中，虽然我们没有手写原生的 Canvas 绘图 API，但我们在两个关键功能中充分借助了 Canvas 的能力：
+
+1.  **场景一：作品截图（html2canvas）**
+    *   **原理**：`html2canvas` 库的工作原理是遍历 DOM 节点，根据其样式在内存中构建一个 Canvas 对象，然后将每个 DOM 节点“画”到这个 Canvas 上。
+    *   **代码位置**：`src/helper.ts` (第 96-106 行)
+    *   **核心逻辑**：
+        ```typescript
+        // 将 DOM (ele) 转换为 Canvas
+        const canvas = await html2canvas(ele, { width: 375, useCORS: true, scale: 1 })
+        // 将 Canvas 转换为 Blob 对象以上传
+        canvas.toBlob(blob => { ... })
+        ```
+    *   **Canvas 优势**：利用 Canvas 可以方便地将像素数据转换为 Blob/File 对象进行上传，这是 SVG 做不到的（SVG 本质是 XML 文本）。
+
+2.  **场景二：二维码生成（qrcode）**
+    *   **代码位置**：`src/helper.ts` (第 108-112 行)
+    *   **核心逻辑**：
+        ```typescript
+        export function generateQRCode(id: string, url: string, width = 100) {
+          const ele = document.getElementById(id) as HTMLCanvasElement
+          // 将二维码直接绘制到 Canvas 上
+          return QRCode.toCanvas(ele, url, { width })
+        }
+        ```
+    *   **Canvas 优势**：相比生成大量的 DOM 节点（如 `div` 矩阵）来模拟二维码，Canvas 绘制性能更高，且生成的图像易于保存和复制。
+
+3.  **总结**：在 LEGO 中，我们主要利用 Canvas **“易于转换为图片数据”** 的特性来实现截图和导出，利用 SVG (图标库) **“无损缩放”** 的特性来实现 UI 图标展示。
+
+#### 结合 LEGO 项目实战：图标系统中的 SVG 应用
+
+在 LEGO 的编辑器 UI 中，各种操作按钮的图标（如删除、文件、Loading）都是 SVG 的典型应用：
+
+1.  **代码位置**：`src/components/Uploader.vue` (第 43 行)
+    ```typescript
+    import { DeleteOutlined, LoadingOutlined, FileOutlined } from '@ant-design/icons-vue'
+    ```
+
+2.  **实现原理**：
+    *   **Ant Design Icons**：这些组件本质上是封装好的 Vue 组件，它们在渲染时会生成 `<svg>` 标签。
+    *   **Style 样式控制**：
+        ```scss
+        .file-icon svg {
+          margin-right: 5px;
+          color: rgba(0, 0, 0, 0.45); /* 直接通过 CSS 控制 SVG 颜色 */
+        }
+        ```
+
+3.  **SVG 优势展示**：
+    *   **无损缩放**：无论用户如何缩放浏览器，或在高分屏（Retina）设备上，这些图标的边缘永远是平滑的（数学公式计算渲染），不会像位图（PNG/JPG）那样出现锯齿或模糊。
+    *   **CSS 可控性**：我们可以直接通过 CSS 的 `color` 属性改变 SVG 的 `fill` 颜色，实现 hover 变色等交互效果，而位图通常需要更换图片源。
 
 ### HTML基础与规范
 
@@ -832,6 +1290,42 @@ i 和 em 的区别
 * i**纯视觉斜体**
 * em **语义化强调**
 
+#### 结合 LEGO 项目实战：空元素与 JSX 应用
+
+在现代 Vue 开发中，我们除了编写标准的 HTML 模板，还会使用 TSX (JSX) 来编写复杂的动态组件，此时对 HTML 标签规范的理解尤为重要。
+
+1.  **实战场景：空元素的使用**
+    *   **代码位置**：`public/index.html`
+    *   **实战**：`<meta>`, `<link>` 等空元素在头部大量使用，必须不需要闭合标签（HTML5 宽松标准），但在 TSX 中必须自闭合。
+
+2.  **实战场景：语义化标签与 TSX**
+    *   **代码位置**：`src/components/PropsTable.tsx` (第 63 行)
+    *   **逻辑**：
+        ```tsx
+        // PropsTable.tsx 使用了 TSX 语法
+        return () =>
+          <div class="props-table">
+            {
+              Object.keys(finalProps.value).map(key => {
+                // ...
+                return (
+                  <div key={key} class="prop-item">
+                    {/* 使用 span 等行内元素包裹文本 */}
+                    { value.text && <span class="label">{value.text}</span> }
+                    <div class="prop-component">
+                       {/* 动态组件渲染 */}
+                       <ComponentName {...props}>
+                         {/* ... */}
+                       </ComponentName>
+                    </div>
+                  </div>
+                )
+              })
+            }
+          </div>
+        ```
+    *   **注意**：在 TSX 中，虽然最终渲染的是 HTML，但编写时遵循的是 XML 严格语法。例如 `<input>` 必须写成 `<input />` 自闭合形式。同时 `PropsTable.tsx` 展示了如何用 `div` (块级) 进行布局，用 `span` (行内) 显示标签文本，体现了基础的 HTML 结构语义。
+
 最后
 
 需要注意的是，在 HTML5 中，b和i标记已经被废弃，推荐使用 strong 和 em 标记来代替。同时，随着搜索引擎的发展和语义化网页的兴起，h1-h6 标记也被赋予了更重要的语义化含义，应该根据具体情况来选择使用不同的标记。
@@ -866,6 +1360,31 @@ src和href都是用来加载外部资源，区别如下
 
 * src当浏览器解析到该元素时，会**暂停其他资源的加载和处理**，直到该资源加载完成。它会**将资源内容嵌入到当前标签所在的位置**，将其指向的资源下载应用到文档内，如js脚本等。常用在img、script、iframe等标签。
 * href指向**外部资源所在的位置**，和当前元素位置建立链接，当浏览器解识别到它指向的位置，将其下载的时候**不会阻止其他资源的加载解析**。常用在a 、 link标签。
+
+#### 结合 LEGO 项目实战：src 与 href 的实战分野
+
+在 LEGO 项目中，`src` 和 `href` 的区别清晰地体现在资源管理和交互逻辑中：
+
+1.  **href：建立连接（非阻塞）**
+    *   **场景一：资源引入**：在 `public/index.html` 中，我们使用 `<link>` 引入图标。
+        ```html
+        <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+        ```
+        *   **特性**：浏览器识别到这是 Favicon 的引用关系，会并行下载它，**不会阻塞**页面后续 DOM 的解析。
+    *   **场景二：文件下载**：在 `src/helper.ts` 的 `downloadFile` 函数中，我们创建 `<a>` 标签并设置 `href` 来触发下载。
+        ```typescript
+        const link = document.createElement('a')
+        link.href = src // 指向外部资源位置
+        link.dispatchEvent(new MouseEvent('click'))
+        ```
+
+2.  **src：嵌入资源（阻塞/替换）**
+    *   **场景一：图片展示**：在 `src/components/Uploader.vue` 中，`<img>` 标签使用 `src`。
+        ```html
+        <img :src="file.url" class="upload-list-thumbnail">
+        ```
+        *   **特性**：这是**内容嵌入**。浏览器必须下载该图片数据，并将其**替换**掉这块 `img` 占位区域，显示为具体的像素。`src` 的内容是页面不可或缺的一部分。
+    *   **场景二：JS 脚本**：虽然看不到源码，但构建后的 `app.js` 最终是以 `<script src="...">` 形式存在的。它代表**执行**，JS 代码被下载并执行后，页面的功能才会被激活。
 
 > 更新: 2025-12-17 14:28:49
 > 原文: <https://www.yuque.com/u56987424/lwyx/amgdcznyd86l6y4k>
