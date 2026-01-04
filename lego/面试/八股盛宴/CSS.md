@@ -1,16 +1,25 @@
+---
+tags:
+  - 前端
+  - 八股
+  - CSS
+  - 样式
+  - 布局
+---
+
 # CSS
 
-> 1. **<font style="color:rgba(0, 0, 0, 0.6);background-color:rgb(252, 252, 252);">基础概念与核心机制</font>**
-> 2. **<font style="color:rgba(0, 0, 0, 0.6);background-color:rgb(252, 252, 252);">布局与定位技术</font>**
-> 3. **<font style="color:rgba(0, 0, 0, 0.6);background-color:rgb(252, 252, 252);">响应式与移动适配</font>**<font style="color:rgba(0, 0, 0, 0.6);background-color:rgb(252, 252, 252);"></font>
-> 4. **<font style="color:rgba(0, 0, 0, 0.6);background-color:rgb(252, 252, 252);">动画与变换</font>**<font style="color:rgba(0, 0, 0, 0.6);background-color:rgb(252, 252, 252);"></font>
-> 5. **<font style="color:rgba(0, 0, 0, 0.6);background-color:rgb(252, 252, 252);">元素样式与视觉效果</font>**<font style="color:rgba(0, 0, 0, 0.6);background-color:rgb(252, 252, 252);"></font>
-> 6. **<font style="color:rgba(0, 0, 0, 0.6);background-color:rgb(252, 252, 252);">性能优化与工程化</font>**
-> 7. **<font style="color:rgba(0, 0, 0, 0.6);background-color:rgb(252, 252, 252);">特殊问题解决方案</font>**
+> 1. **基础概念与核心机制**
+> 2. **布局与定位技术**
+> 3. **响应式与移动适配**
+> 4. **动画与变换**
+> 5. **元素样式与视觉效果**
+> 6. **性能优化与工程化**
+> 7. **特殊问题解决方案**
 
-### <font style="color:#E4495B;background-color:rgb(252, 252, 252);">基础概念与核心机制</font>
+### 基础概念与核心机制
 
-#### <font style="color:#DF2A3F;">盒模型（必背）</font>
+#### 盒模型（必背）
 
 box-sizing
 
@@ -19,27 +28,27 @@ box-sizing
 * 怪异盒模型 **border-box** 设置的height和width包含了padding和border   设置的宽高就是盒子的宽高
 * 默认是标准盒模型
 
-#### <font style="color:#DF2A3F;">文档流（必背）</font>
+#### 文档流（必背）
 
-<font style="color:rgb(63, 74, 84);">浏览器在渲染页面时默认的布局方式，指元素按照其在 HTML 中的</font>**<font style="color:rgb(63, 74, 84);">自然顺序</font>**<font style="color:rgb(63, 74, 84);">依次排列的规则</font>
+浏览器在渲染页面时默认的布局方式，指元素按照其在 HTML 中的**自然顺序**依次排列的规则
 
-##### **<font style="color:rgb(63, 74, 84);">1. 文档流的特点</font>**
+##### **1. 文档流的特点**
 
-* **<font style="color:rgb(63, 74, 84);">默认布局方式</font>**<font style="color:rgb(63, 74, 84);">：除非通过 CSS 显式修改（如</font><font style="color:rgb(63, 74, 84);"> </font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">float</font></code><font style="color:rgb(63, 74, 84);">、</font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">position</font></code><font style="color:rgb(63, 74, 84);">、</font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">flex</font></code><font style="color:rgb(63, 74, 84);">），否则所有元素均处于文档流中。</font>
-* **<font style="color:rgb(63, 74, 84);">排列方向</font>**<font style="color:rgb(63, 74, 84);">：</font>
-  * **<font style="color:rgb(63, 74, 84);">块级元素</font>**<font style="color:rgb(63, 74, 84);">：垂直排列（如</font><font style="color:rgb(63, 74, 84);"> </font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);"><div></font></code><font style="color:rgb(63, 74, 84);">、</font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);"><p></font></code><font style="color:rgb(63, 74, 84);">），独占一行。</font>
-  * **<font style="color:rgb(63, 74, 84);">行内元素</font>**<font style="color:rgb(63, 74, 84);">：水平排列（如</font><font style="color:rgb(63, 74, 84);"> </font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);"><span></font></code><font style="color:rgb(63, 74, 84);">、</font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);"><a></font></code><font style="color:rgb(63, 74, 84);">），宽度由内容决定。</font>
-* **<font style="color:rgb(63, 74, 84);">空间占用</font>**<font style="color:rgb(63, 74, 84);">：文档流中的元素会占据其对应位置，后续元素无法重叠。（外边距合并 选大的而不是简单合并）</font>
+***默认布局方式**：除非通过 CSS 显式修改（如 `float`、`position`、`flex`），否则所有元素均处于文档流中。
+***排列方向**：
+  * **块级元素**：垂直排列（如 `<div>`、`<p>`），独占一行。
+  * **行内元素**：水平排列（如 `<span>`、`<a>`），宽度由内容决定。
+***空间占用**：文档流中的元素会占据其对应位置，后续元素无法重叠。（外边距合并 选大的而不是简单合并）
 
-##### **<font style="color:rgb(63, 74, 84);">2. 脱离文档流的情况</font>**
+##### **2. 脱离文档流的情况**
 
-<font style="color:rgb(63, 74, 84);">当元素脱离文档流时，其布局不再影响其他元素的位置，常见方式包括：</font>
+当元素脱离文档流时，其布局不再影响其他元素的位置，常见方式包括：
 
-<font style="color:rgb(63, 74, 84);">1.float（高度坍塌）</font>
+1. float（高度坍塌）
 
-<font style="color:rgb(63, 74, 84);">2.absolute（相对于最近的设置了relative的父级元素定位）/fixed(固定)</font>
+2. absolute（相对于最近的设置了relative的父级元素定位）/fixed(固定)
 
-#### <font style="color:#DF2A3F;">样式优先级（必背）</font>
+#### 样式优先级（必背）
 
 ！important > ( 行内| 外链、嵌入） > (id选择器) > （类|伪类|属性）>  (后代|伪元素) > (子选择器|相邻选择器) > > 通配符 > 继承 > 浏览器默认
 
@@ -76,6 +85,7 @@ div[class~="warning"] { color: orange; } /* 匹配 class="alert warning" */
 div p {
   color: red;  /* 选中 div 内所有层级的 <p> 元素 */
 }
+
 ```
 
 ```css
@@ -93,13 +103,14 @@ ul > li {
   color: red;  /* 仅选中 ul 的直接子级 li */
 }
 //仅匹配直接子元素，不匹配更深层级的后代。
+
 ```
 
 ```css
 严格相邻关系：
 仅匹配紧邻的下一个兄弟元素
 <h2>标题</h2>
-<p>被选中（紧邻 h2）</p>  
+<p>被选中（紧邻 h2）</p>
 <p>不被选中（非紧邻）</p>  <!-- 不匹配 -->
 
 h2 + p {
@@ -108,110 +119,108 @@ h2 + p {
 
 ```
 
-#### <font style="color:#DF2A3F;">CSS 选择器优先级计算规则（必背）</font>
+#### CSS 选择器优先级计算规则（必背）
 
-<font style="color:rgb(0, 0, 0);">SS 优先级是由 </font>**<font style="color:rgb(0, 0, 0);">特异性（Specificity）</font>**<font style="color:rgb(0, 0, 0);"> 决定的。特异性是一个由四个值组成的序列，可以理解为</font><font style="color:rgb(0, 0, 0);"> </font><code><font style="color:rgb(0, 0, 0);">0,0,0,0</font></code><font style="color:rgb(0, 0, 0);">。比较时，</font>**<font style="color:rgb(0, 0, 0);">从左到右</font>**<font style="color:rgb(0, 0, 0);">逐位比较，数字大的优先级高。</font>
+SS 优先级是由 **特异性（Specificity）** 决定的。特异性是一个由四个值组成的序列，可以理解为 `0,0,0,0`。比较时，**从左到右**逐位比较，数字大的优先级高。
 
-<font style="color:rgb(0, 0, 0);">这四位分别代表：</font>
+这四位分别代表：
 
-1. **<font style="color:rgb(0, 0, 0);">内联样式</font>**<font style="color:rgb(0, 0, 0);"> (千位)：直接在 HTML 标签的 </font><code><font style="color:rgb(0, 0, 0);">style</font></code><font style="color:rgb(0, 0, 0);">属性中设置的样式，记作 </font><code><font style="color:rgb(0, 0, 0);">1,0,0,0</font></code><font style="color:rgb(0, 0, 0);">。本题中不涉及</font>
-2. **<font style="color:rgb(0, 0, 0);">ID 选择器</font>**<font style="color:rgb(0, 0, 0);"> (百位)：每使用一个 </font><code><font style="color:rgb(0, 0, 0);">#id</font></code><font style="color:rgb(0, 0, 0);">选择器，百位+1</font>
-3. **<font style="color:rgb(0, 0, 0);">类、属性、伪类选择器</font>**<font style="color:rgb(0, 0, 0);"> (十位)：每使用一个 </font><code><font style="color:rgb(0, 0, 0);">.class</font></code><font style="color:rgb(0, 0, 0);">、</font><code><font style="color:rgb(0, 0, 0);">[type="text"]</font></code><font style="color:rgb(0, 0, 0);">、</font><code><font style="color:rgb(0, 0, 0);">:hover</font></code><font style="color:rgb(0, 0, 0);">等选择器，十位+1</font>
-4. **<font style="color:rgb(0, 0, 0);">元素、伪元素选择器</font>**<font style="color:rgb(0, 0, 0);"> (个位)：每使用一个 </font><code><font style="color:rgb(0, 0, 0);">div</font></code><font style="color:rgb(0, 0, 0);">、</font><code><font style="color:rgb(0, 0, 0);">p</font></code><font style="color:rgb(0, 0, 0);">、</font><code><font style="color:rgb(0, 0, 0);">::before</font></code><font style="color:rgb(0, 0, 0);">等选择器，个位+1</font>
+1. **内联样式** (千位)：直接在 HTML 标签的 `style`属性中设置的样式，记作 `1,0,0,0`。本题中不涉及
+2. **ID 选择器** (百位)：每使用一个 `#id`选择器，百位+1
+3. **类、属性、伪类选择器** (十位)：每使用一个 `.class`、`[type="text"]`、`:hover`等选择器，十位+1
+4. **元素、伪元素选择器** (个位)：每使用一个 `div`、`p`、`::before`等选择器，个位+1
 
 #### 继承
 
-**<font style="color:rgb(51, 51, 51);">可继承</font>**
+**可继承**
 
-* <font style="color:rgb(51, 51, 51);">字体属性   </font>
-  * <code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">font-family</font></code><font style="color:rgb(63, 74, 84);">、</font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">font-size</font></code><font style="color:rgb(63, 74, 84);">、</font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">font-weight</font></code><font style="color:rgb(63, 74, 84);">、</font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">font-style</font></code>
-  * <code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">color</font></code><font style="color:rgb(63, 74, 84);">、</font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">line-height</font></code><font style="color:rgb(63, 74, 84);">、</font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">text-align</font></code><font style="color:rgb(63, 74, 84);">、</font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">text-indent（文本缩进）</font></code>
-  * <code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">letter-spacing(</font><font style="color:rgb(51, 51, 51);">字符间距</font><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">)</font></code><font style="color:rgb(63, 74, 84);">、</font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">word-spacing(</font><font style="color:rgb(51, 51, 51);">字间隔</font><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">)</font></code><font style="color:rgb(63, 74, 84);">、</font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">text-transform(</font><font style="color:rgb(51, 51, 51);">控制文本大小写</font><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">)</font></code>
+* 字体属性
+  * `font-family`、`font-size`、`font-weight`、`font-style`
+  * `color`、`line-height`、`text-align`、`text-indent（文本缩进）`
+  * `letter-spacing(字符间距)`、`word-spacing(字间隔)`、`text-transform(控制文本大小写)`
 * 列表
-  * <code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">list-style-type</font></code><font style="color:rgb(63, 74, 84);">、</font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">list-style-image</font></code><font style="color:rgb(63, 74, 84);">、</font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">list-style-position</font></code>
+  * `list-style-type`、`list-style-image`、`list-style-position`
 * 其他
-  * <code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">visibility(元素可见)</font></code><font style="color:rgb(63, 74, 84);">、</font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">cursor（悬浮光标）</font></code><font style="color:rgb(63, 74, 84);">、</font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">direction（方向）</font></code><font style="color:rgb(63, 74, 84);">、</font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">white-space（换行显示）</font></code>
+  * `visibility(元素可见)`、`cursor（悬浮光标）`、`direction（方向）`、`white-space（换行显示）`
 
-**<font style="color:rgb(51, 51, 51);">不可继承</font>**
+**不可继承**
 
-* **<font style="color:rgb(63, 74, 84);">盒模型相关</font>**<font style="color:rgb(63, 74, 84);">：</font>
-  * <code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">width</font></code><font style="color:rgb(63, 74, 84);">、</font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">height</font></code><font style="color:rgb(63, 74, 84);">、</font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">margin</font></code><font style="color:rgb(63, 74, 84);">、</font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">padding</font></code><font style="color:rgb(63, 74, 84);">、</font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">border</font></code>
-  * <code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">display</font></code><font style="color:rgb(63, 74, 84);">、</font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">box-sizing</font></code><font style="color:rgb(63, 74, 84);">、</font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">overflow</font></code>
-* **<font style="color:rgb(63, 74, 84);">定位与布局</font>**<font style="color:rgb(63, 74, 84);">：</font>
-  * <code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">position</font></code><font style="color:rgb(63, 74, 84);">、</font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">top</font></code><font style="color:rgb(63, 74, 84);">、</font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">left</font></code><font style="color:rgb(63, 74, 84);">、</font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">z-index</font></code><font style="color:rgb(63, 74, 84);">、</font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">float</font></code>
-* **<font style="color:rgb(63, 74, 84);">背景与装饰</font>**<font style="color:rgb(63, 74, 84);">：</font>
-  * <code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">background</font></code><font style="color:rgb(63, 74, 84);">、</font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">background-color</font></code><font style="color:rgb(63, 74, 84);">、</font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">background-image</font></code>
-  * <code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">opacity</font></code><font style="color:rgb(63, 74, 84);">、</font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">box-shadow</font></code><font style="color:rgb(63, 74, 84);">、</font><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);"> text-decoration </font><font style="color:rgb(63, 74, 84);">、</font><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">border</font>
-* **<font style="color:rgb(63, 74, 84);"> 其他</font>**<font style="color:rgb(63, 74, 84);">：</font>
-  * <code>**<font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">vertical-align</font>**</code><font style="color:rgb(63, 74, 84);">、</font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">table-layout</font></code><font style="color:rgb(63, 74, 84);">、</font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">flex</font></code><font style="color:rgb(63, 74, 84);">、</font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">grid</font></code><font style="color:rgb(63, 74, 84);"> 相关属性</font>
+***盒模型相关**：
+  * `width`、`height`、`margin`、`padding`、`border`
+  * `display`、`box-sizing`、`overflow`
+***定位与布局**：
+  * `position`、`top`、`left`、`z-index`、`float`
+***背景与装饰**：
+  * `background`、`background-color`、`background-image`
+  * `opacity`、`box-shadow`、 text-decoration 、border
+*** 其他**：
+  * `vertical-align`、`table-layout`、`flex`、`grid` 相关属性
 
 #### 不可继承属性实现继承
 
 | **关键字** | **作用** | **示例** |
 | :--- | :--- | :--- |
-| <code>**inherit**</code> | **强制元素继承其父元素该属性的值** | `border: inherit;` |
-| <code>**initial**</code> | 将属性设置为其**初始默认值**，而非继承父元素的值 | `width: initial;`<br/> /\* 可能恢复为 auto */ |
-| <code>**unset**</code> | 如果属性**默认可继承**，则行为同 `inherit`<br/>；否则行为同 `initial` | `color: unset;`<br/> /* 若颜色可继承则继承，否则重置 */ |
-| <code>**revert**</code> | 将属性值恢复为**浏览器默认样式表**或**用户自定义样式表**中定义的值 | `display: revert;`<br/> /* 可能恢复为 block 或 inline \*/ |
+| `inherit` | **强制元素继承其父元素该属性的值** | `border: inherit;` |
+| `initial` | 将属性设置为其**初始默认值**，而非继承父元素的值 | `width: initial;`  /* 可能恢复为 auto */ |
+| `unset` | 如果属性**默认可继承**，则行为同 `inherit` ；否则行为同 `initial` | `color: unset;`  /* 若颜色可继承则继承，否则重置 */ |
+| `revert` | 将属性值恢复为**浏览器默认样式表**或**用户自定义样式表**中定义的值 | `display: revert;`  /* 可能恢复为 block 或 inline */ |
 
-#### <font style="color:rgb(51, 51, 51);">display（布局）</font>
+#### display（布局）
 
 | **属性值** | **作用** |
 | --- | --- |
-| none | <font style="color:#DF2A3F;">不显示，会从文档流中移除</font> |
+| none | 不显示，会从文档流中移除 |
 | block | 块类型。默认宽度为父元素宽度，可设置宽高，换行显示 |
-| inline | **默认**！！！行内元素类型。默认宽度为内容宽度，**不可设置宽高**，同行显示，<font style="color:rgb(51, 51, 51);">可设置内外边距，但只对左右起作用，只能容纳文本或其他行内元素。</font> |
+| inline | **默认**！！！行内元素类型。默认宽度为内容宽度，**不可设置宽高**，同行显示，可设置内外边距，但只对左右起作用，只能容纳文本或其他行内元素。 |
 | inline-block | 默认宽度为内容宽度，可设置宽高，同行显示 |
-| list-item | <font style="color:rgb(63, 74, 84);background-color:rgb(246, 248, 250);">显示为列表项（默认 </font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);"><li></font></code><font style="color:rgb(63, 74, 84);background-color:rgb(246, 248, 250);"> 的行为）</font> |
-| table | <font style="color:rgb(63, 74, 84);">模拟表格行为（如 </font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">display: table-cell</font></code><font style="color:rgb(63, 74, 84);">）</font> |
+| list-item | 显示为列表项（默认 `<li>` 的行为） |
+| table | 模拟表格行为（如 `display: table-cell`） |
 | inherit | 继承 |
-| <font style="color:#DF2A3F;">flex</font> | <font style="color:#DF2A3F;">display</font><font style="color:#DF2A3F;">: flex; </font><font style="color:#DF2A3F;">/\* 启用弹性布局 */</font><font style="color:#DF2A3F;">justify-content</font><font style="color:#DF2A3F;">: center; </font><font style="color:#DF2A3F;">/* 水平对齐 */</font><font style="color:#DF2A3F;">align-items</font><font style="color:#DF2A3F;">: center; </font><font style="color:#DF2A3F;">/* 垂直对齐 */</font> |
-| <font style="color:#DF2A3F;">grid</font> | <font style="color:#DF2A3F;">display</font><font style="color:#DF2A3F;">: grid; </font><font style="color:#DF2A3F;">grid-template-columns</font><font style="color:#DF2A3F;">: </font><font style="color:#DF2A3F;">1</font><font style="color:#DF2A3F;">fr </font><font style="color:#DF2A3F;">2</font><font style="color:#DF2A3F;">fr; </font><font style="color:#DF2A3F;">/* 列宽比例 */</font><font style="color:#DF2A3F;">gap</font><font style="color:#DF2A3F;">: </font><font style="color:#DF2A3F;">10px</font><font style="color:#DF2A3F;">; </font><font style="color:#DF2A3F;">/* 间距 \*/</font> |
+| flex | display: flex; /* 启用弹性布局 */justify-content: center; /* 水平对齐 */align-items: center; /* 垂直对齐 */ |
+| grid | display: grid; grid-template-columns: 1fr 2fr; /* 列宽比例 */gap: 10px; /* 间距 */ |
 
 #### css3新特性（了解）
 
-1.选择器增强
+1. 选择器增强
 
-* **<font style="color:rgb(63, 74, 84);">属性选择器</font>**<font style="color:rgb(63, 74, 84);">：\ </font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">[attr^="val"]</font></code><font style="color:rgb(63, 74, 84);">（开头匹配）、</font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">[attr$="val"]</font></code><font style="color:rgb(63, 74, 84);">（结尾匹配）、</font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">[attr*="val"]</font></code><font style="color:rgb(63, 74, 84);">（包含匹配）。</font>
-* **<font style="color:rgb(63, 74, 84);">伪类/伪元素</font>**<font style="color:rgb(63, 74, 84);">：\ </font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">:nth-child()</font></code><font style="color:rgb(63, 74, 84);">、</font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">:not()</font></code><font style="color:rgb(63, 74, 84);">、</font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">::selection</font></code><font style="color:rgb(63, 74, 84);">（文本选中样式）、</font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">:target</font></code><font style="color:rgb(63, 74, 84);">（URL 锚点匹配）。</font>
+***属性选择器**：\ `[attr^="val"]`（开头匹配）、`[attr$="val"]`（结尾匹配）、`[attr*="val"]`（包含匹配）。
+***伪类/伪元素**：\ `:nth-child()`、`:not()`、`::selection`（文本选中样式）、`:target`（URL 锚点匹配）。
 
-2.盒模型与布局
+2. 盒模型与布局
 
-* **<font style="color:rgb(63, 74, 84);">弹性盒子（Flexbox）</font>**<font style="color:rgb(63, 74, 84);">：\ </font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">display: flex</font></code><font style="color:rgb(63, 74, 84);">，实现灵活的一维布局（水平/垂直对齐、动态分配空间）。</font>
-* **<font style="color:rgb(63, 74, 84);">网格布局（Grid）</font>**<font style="color:rgb(63, 74, 84);">：\ </font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">display: grid</font></code><font style="color:rgb(63, 74, 84);">，二维布局系统，支持行列精确控制。</font>
-* **<font style="color:rgb(63, 74, 84);">盒模型扩展</font>**<font style="color:rgb(63, 74, 84);">：\ </font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">box-sizing: border-box</font></code><font style="color:rgb(63, 74, 84);">（边框和内边距计入宽度）。</font>
+***弹性盒子（Flexbox）**：\ `display: flex`，实现灵活的一维布局（水平/垂直对齐、动态分配空间）。
+***网格布局（Grid）**：\ `display: grid`，二维布局系统，支持行列精确控制。
+***盒模型扩展**：\ `box-sizing: border-box`（边框和内边距计入宽度）。
 
-3.视觉效果
+3. 视觉效果
 
-* **<font style="color:rgb(63, 74, 84);">圆角与阴影</font>**<font style="color:rgb(63, 74, 84);">：\ </font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">border-radius</font></code><font style="color:rgb(63, 74, 84);">（圆角）、</font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">box-shadow</font></code><font style="color:rgb(63, 74, 84);">（盒子阴影）、</font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">text-shadow</font></code><font style="color:rgb(63, 74, 84);">（文本阴影）。</font>
-* **<font style="color:rgb(63, 74, 84);">渐变背景</font>**<font style="color:rgb(63, 74, 84);">：\ </font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">linear-gradient()</font></code><font style="color:rgb(63, 74, 84);">（线性渐变）、</font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">radial-gradient()</font></code><font style="color:rgb(63, 74, 84);">（径向渐变）。</font>
-* **<font style="color:rgb(63, 74, 84);">透明度</font>**<font style="color:rgb(63, 74, 84);">：\ </font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">opacity</font></code><font style="color:rgb(63, 74, 84);">、</font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">rgba()</font></code><font style="color:rgb(63, 74, 84);">/</font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">hsla()</font></code><font style="color:rgb(63, 74, 84);">（带透明度的颜色）。</font>
+***圆角与阴影**：\ `border-radius`（圆角）、`box-shadow`（盒子阴影）、`text-shadow`（文本阴影）。
+***渐变背景**：\ `linear-gradient()`（线性渐变）、`radial-gradient()`（径向渐变）。
+***透明度**：\ `opacity`、`rgba()`/`hsla()`（带透明度的颜色）。
 
-<font style="color:rgb(63, 74, 84);">4. 动画与过渡</font>
+4. 动画与过渡
 
-* **<font style="color:rgb(63, 74, 84);">过渡（Transition）</font>**<font style="color:rgb(63, 74, 84);">：\ </font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">transition: property duration timing-function</font></code><font style="color:rgb(63, 74, 84);">（如悬停效果）。</font>
-* **<font style="color:rgb(63, 74, 84);">动画（Animation）</font>**<font style="color:rgb(63, 74, 84);">：\ </font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">@keyframes</font></code><font style="color:rgb(63, 74, 84);"> 定义动画序列，</font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">animation</font></code><font style="color:rgb(63, 74, 84);"> 控制播放（如旋转、淡入淡出）。</font>
+***过渡（Transition）**：\ `transition: property duration timing-function`（如悬停效果）。
+***动画（Animation）**：\ `@keyframes` 定义动画序列，`animation` 控制播放（如旋转、淡入淡出）。
 
-5.响应式设计
+5. 响应式设计
 
-* 媒体查询 <code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">@media (max-width: 768px)</font></code><font style="color:rgb(63, 74, 84);">，适配不同屏幕尺寸。</font>
+* 媒体查询 `@media (max-width: 768px)`，适配不同屏幕尺寸。
 
-6.其他
+6. 其他
 
-* **<font style="color:rgb(63, 74, 84);">自定义字体</font>**<font style="color:rgb(63, 74, 84);">：\ </font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">@font-face</font></code><font style="color:rgb(63, 74, 84);"> 引入外部字体。</font>
-* **<font style="color:rgb(63, 74, 84);">变形（Transform）</font>**<font style="color:rgb(63, 74, 84);">：\ </font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">transform: rotate()/scale()/translate()</font></code><font style="color:rgb(63, 74, 84);">（2D/3D 变换）。</font>
+***自定义字体**：\ `@font-face` 引入外部字体。
+***变形（Transform）**：\ `transform: rotate()/scale()/translate()`（2D/3D 变换）。
 
-#### <font style="color:#DF2A3F;">css样式文件类型（必背）</font>
+#### css样式文件类型（必背）
 
-<font style="color:rgb(0, 0, 0);">主要有三种：</font>**<font style="color:rgb(0, 0, 0);">内联样式</font>**<font style="color:rgb(0, 0, 0);">、</font>**<font style="color:rgb(0, 0, 0);">内部样式表</font>**<font style="color:rgb(0, 0, 0);">和</font>**<font style="color:rgb(0, 0, 0);">外部样式表</font>**<font style="color:rgb(0, 0, 0);">。它们各有特点，适用于不同的场景。下面这个表格汇总了它们的核心区别，帮你快速了解全貌。</font>
+主要有三种：**内联样式**、**内部样式表**和**外部样式表**。它们各有特点，适用于不同的场景。下面这个表格汇总了它们的核心区别，帮你快速了解全貌。
 
 | **类型** | **写法/引入方式** | **作用范围** | **主要优点** | **主要缺点** | **优先级 (由高到低)** |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **内联样式** | 在HTML标签的`style`属性中直接编写 | **单个标签** | 优先级最高，调试方便 | 难以维护，代码冗余，违背结构与样式分离原则 | **最高** |
 | **内部样式表** | 在HTML文档`<head>`内的`<style>`标签中编写 | **当前HTML页面** | 比内联样式更易于维护，页面内可复用 | 不能在多个HTML页面间复用 | **居中** |
 | **外部样式表** | 通过`<link>`标签引入独立的`.css`文件 | **所有引入的页面** | 最佳可维护性和复用性，利于团队协作，减少代码冗余 | 页面加载初期需要额外的HTTP请求（但可通过缓存优化） | **最低** |
-
-<font style="color:rgb(0, 0, 0);"></font>
 
 #### type类型（了解）
 
@@ -243,11 +252,11 @@ h2 + p {
 * border-width:默认值medium,定义中等的上边框（在设置border:solid red时，才会默认border-width为medium，medium具体值根据浏览器缩放比例大小决定 100%时chrome为2.4px）
 * outline-width:默认值medium,规定中等的轮廓
 
-#### **<font style="color:#DF2A3F;">em 与 rem 的区别</font>**<font style="color:#DF2A3F;">（必背）</font>
+#### **em 与 rem 的区别**（必背）
 
-| **特性** | <code>**em**</code> | <code>**rem**</code>**(Root Em)** |
+| **特性** | `em` | `rem`**(Root Em)** |
 | :--- | :--- | :--- |
-| **参照基准** | 当前元素或父元素的字体大小 | **根元素 (**<code>**html**</code>**)** 的字体大小 |
+| **参照基准** | 当前元素或父元素的字体大小 | **根元素 (**`html`**)** 的字体大小 |
 | **受嵌套影响** | **是**，多层嵌套时计算复杂 | **否**，在任何层级使用，都直接参照根元素字体大小，计算简单且可预测 |
 | **主要用途** | 用于需要**相对于其直接上下文（父元素或自身字体）** 进行缩放的组件内部布局 | 用于需要**全局一致**的布局、间距和字体大小，便于整体控制响应式缩放 |
 
@@ -298,23 +307,23 @@ overflow
 
 #### outline
 
-1. \*\*\*\*<code>**<font style="color:rgb(0, 0, 0);">outline-color</font>**</code>
+1. `outline-color`
 
-* **<font style="color:rgb(0, 0, 0);">描述</font>**<font style="color:rgb(0, 0, 0);">：此属性用于</font>**<font style="color:rgb(0, 0, 0);">规定轮廓的颜色</font>**<font style="color:rgb(0, 0, 0);">。您可以使用颜色名称、十六进制代码、RGB值等来设置颜色。</font>
+***描述**：此属性用于**规定轮廓的颜色**。您可以使用颜色名称、十六进制代码、RGB值等来设置颜色。
 
-2. <code>**<font style="color:rgb(0, 0, 0);">outline-style</font>**</code>
+2. `outline-style`
 
-* **<font style="color:rgb(0, 0, 0);">描述</font>**<font style="color:rgb(0, 0, 0);">：此属性用于</font>**<font style="color:rgb(0, 0, 0);">规定轮廓的样式</font>**<font style="color:rgb(0, 0, 0);">。常见的值包括 </font><code><font style="color:rgb(0, 0, 0);">solid</font></code><font style="color:rgb(0, 0, 0);">（实线）、</font><code><font style="color:rgb(0, 0, 0);">dotted</font></code><font style="color:rgb(0, 0, 0);">（点线）、</font><code><font style="color:rgb(0, 0, 0);">dashed</font></code><font style="color:rgb(0, 0, 0);">（虚线）、</font><code><font style="color:rgb(0, 0, 0);">double</font></code><font style="color:rgb(0, 0, 0);">（双线）等。</font>
+***描述**：此属性用于**规定轮廓的样式**。常见的值包括 `solid`（实线）、`dotted`（点线）、`dashed`（虚线）、`double`（双线）等。
 
-3. \*\*\*\*<code>**<font style="color:rgb(0, 0, 0);">outline-width</font>**</code>
+3. `outline-width`
 
-* **<font style="color:rgb(0, 0, 0);">描述</font>**<font style="color:rgb(0, 0, 0);">：此属性用于</font>**<font style="color:rgb(0, 0, 0);">规定轮廓的宽度</font>**<font style="color:rgb(0, 0, 0);">。您可以使用像 </font><code><font style="color:rgb(0, 0, 0);">thin</font></code><font style="color:rgb(0, 0, 0);">（细）、</font><code><font style="color:rgb(0, 0, 0);">medium</font></code><font style="color:rgb(0, 0, 0);">（中）、</font><code><font style="color:rgb(0, 0, 0);">thick</font></code><font style="color:rgb(0, 0, 0);">（粗）这样的关键字，或者使用具体的尺寸值（如 </font><code><font style="color:rgb(0, 0, 0);">2px</font></code><font style="color:rgb(0, 0, 0);">）。</font>
+***描述**：此属性用于**规定轮廓的宽度**。您可以使用像 `thin`（细）、`medium`（中）、`thick`（粗）这样的关键字，或者使用具体的尺寸值（如 `2px`）。
 
-4. \*\*\*\*<code>**<font style="color:rgb(0, 0, 0);">inherit</font>**</code>
+4. `inherit`
 
-* **<font style="color:rgb(0, 0, 0);">描述</font>**<font style="color:rgb(0, 0, 0);">：这是一个特殊的值，可用于以上任何属性。它规定</font>**<font style="color:rgb(0, 0, 0);">该元素的轮廓属性设置应从其父元素继承</font>**<font style="color:rgb(0, 0, 0);">。</font>
+***描述**：这是一个特殊的值，可用于以上任何属性。它规定**该元素的轮廓属性设置应从其父元素继承**。
 
-#### <code><font style="color:rgb(0, 0, 0);">list-style-type</font></code><font style="color:rgb(0, 0, 0);"></font>
+#### `list-style-type`
 
 | **列表类型** | **属性值** | **说明** |
 | --- | :--- | :--- |
@@ -329,7 +338,7 @@ overflow
 | | `upper-alpha` | 大写英文字母 (A, B) |
 | **通用** | `none` | 不显示项目符号 |
 
-#### <font style="color:#ED740C;">复合属性（选背）</font>
+#### 复合属性（选背）
 
 border-radius是由
 
@@ -359,7 +368,7 @@ transition是由
 * transition-timing-function
 * transition-delay组合而来。
 
-#### <font style="color:#DF2A3F;">position（必会）</font>
+#### position（必会）
 
 position属性的不同值对于实现网页布局非常重要,每种定位方式都有其适用场景
 
@@ -370,36 +379,38 @@ position属性的不同值对于实现网页布局非常重要,每种定位方�
 
 #### id属性
 
-<font style="color:rgb(0, 0, 0);">根据 </font>**<font style="color:rgb(0, 0, 0);">HTML5规范</font>**<font style="color:rgb(0, 0, 0);">，如果一个元素拥有 </font><code><font style="color:rgb(0, 0, 0);">id</font></code><font style="color:rgb(0, 0, 0);">属性，并且 </font><code><font style="color:rgb(0, 0, 0);">window</font></code><font style="color:rgb(0, 0, 0);">对象上尚不存在同名的属性，那么该 </font><code><font style="color:rgb(0, 0, 0);">id</font></code><font style="color:rgb(0, 0, 0);">值就会成为 </font><code><font style="color:rgb(0, 0, 0);">window</font></code><font style="color:rgb(0, 0, 0);">对象的一个属性，其值就是这个DOM元素本身</font>
+根据 **HTML5规范**，如果一个元素拥有 `id`属性，并且 `window`对象上尚不存在同名的属性，那么该 `id`值就会成为 `window`对象的一个属性，其值就是这个DOM元素本身
 
-<font style="color:rgb(0, 0, 0);">例如，有这样的HTML：</font>
+例如，有这样的HTML：
 
 ```javascript
 <div id="myElement">Hello World</div>
+
 ```
 
-<font style="color:rgb(0, 0, 0);">在JavaScript中，你可以直接通过</font><font style="color:rgb(0, 0, 0);"> </font><code><font style="color:rgb(0, 0, 0);">window.myElement</font></code><font style="color:rgb(0, 0, 0);">或全局变量</font><font style="color:rgb(0, 0, 0);"> </font><code><font style="color:rgb(0, 0, 0);">myElement</font></code><font style="color:rgb(0, 0, 0);">来访问这个元素：</font>
+在JavaScript中，你可以直接通过 `window.myElement`或全局变量 `myElement`来访问这个元素：
 
 ```javascript
 console.log(myElement); // 输出: <div id="myElement">Hello World</div>
 console.log(myElement === window.myElement); // 输出: true
+
 ```
 
-<font style="color:rgb(0, 0, 0);">尽管可以直接通过</font><font style="color:rgb(0, 0, 0);"> </font><code><font style="color:rgb(0, 0, 0);">id</font></code><font style="color:rgb(0, 0, 0);">访问元素，但在实际开发中，</font>**<font style="color:rgb(0, 0, 0);">通常建议使用</font>\*\*\*\*<font style="color:rgb(0, 0, 0);"> </font>**<code>**<font style="color:rgb(0, 0, 0);">document.getElementById()</font>**</code><font style="color:rgb(0, 0, 0);"> 等方法。主要原因包括：</font>
+尽管可以直接通过 `id`访问元素，但在实际开发中，**通常建议使用 **`document.getElementById()` 等方法。主要原因包括：
 
-* **<font style="color:rgb(0, 0, 0);">可读性和明确性</font>**<font style="color:rgb(0, 0, 0);">：</font><code><font style="color:rgb(0, 0, 0);">document.getElementById('myId')</font></code><font style="color:rgb(0, 0, 0);">明确表达了意图，代码更容易被他人理解。</font>
-* **<font style="color:rgb(0, 0, 0);">避免意外覆盖</font>**<font style="color:rgb(0, 0, 0);">：防止因全局变量被意外覆盖而导致的难以调试的问题。</font>
-* **<font style="color:rgb(0, 0, 0);">兼容性更一致</font>**<font style="color:rgb(0, 0, 0);">：所有现代浏览器都完全支持此方法，行为一致。</font>
-* **<font style="color:rgb(0, 0, 0);">元素加载时机</font>**<font style="color:rgb(0, 0, 0);">：通过 </font><code><font style="color:rgb(0, 0, 0);">id</font></code><font style="color:rgb(0, 0, 0);">直接访问全局变量时，如果脚本在执行时元素还未被浏览器解析加载，则访问到的可能是 </font><code><font style="color:rgb(0, 0, 0);">undefined</font></code><font style="color:rgb(0, 0, 0);">。而 </font><code><font style="color:rgb(0, 0, 0);">getElementById</font></code><font style="color:rgb(0, 0, 0);">在操作已加载的DOM元素时更安全可靠</font>
+***可读性和明确性**：`document.getElementById('myId')`明确表达了意图，代码更容易被他人理解。
+***避免意外覆盖**：防止因全局变量被意外覆盖而导致的难以调试的问题。
+***兼容性更一致**：所有现代浏览器都完全支持此方法，行为一致。
+***元素加载时机**：通过 `id`直接访问全局变量时，如果脚本在执行时元素还未被浏览器解析加载，则访问到的可能是 `undefined`。而 `getElementById`在操作已加载的DOM元素时更安全可靠
 
 #### <object>（了解即可）
 
-* <font style="color:rgb(0, 0, 0);">在HTML中，</font><code><font style="color:rgb(0, 0, 0);"><object></font></code><font style="color:rgb(0, 0, 0);">元素是一个多功能且强大的容器，主要用于嵌入图像、嵌套浏览上下文（如其他网页），或由浏览器插件处理的资源（如Flash、PDF等）。它提供了一种比早期如 </font><code><font style="color:rgb(0, 0, 0);"><applet></font></code><font style="color:rgb(0, 0, 0);">（用于Java小程序）或 </font><code><font style="color:rgb(0, 0, 0);"><embed></font></code><font style="color:rgb(0, 0, 0);">更标准化和灵活的方式来集成外部内容</font>
-* <code><font style="color:rgb(0, 0, 0);"><object></font></code><font style="color:rgb(0, 0, 0);">元素的核心在于其数据（data）和类型（type），浏览器依靠这些信息来决定如何加载和处理资源。下面我们来看看它的一些关键属性。</font>
+* 在HTML中，`<object>`元素是一个多功能且强大的容器，主要用于嵌入图像、嵌套浏览上下文（如其他网页），或由浏览器插件处理的资源（如Flash、PDF等）。它提供了一种比早期如 `<applet>`（用于Java小程序）或 `<embed>`更标准化和灵活的方式来集成外部内容
+* `<object>`元素的核心在于其数据（data）和类型（type），浏览器依靠这些信息来决定如何加载和处理资源。下面我们来看看它的一些关键属性。
 
 **主要属性**
 
-<code><font style="color:rgb(0, 0, 0);"><object></font></code><font style="color:rgb(0, 0, 0);">元素拥有众多属性，用于精确控制资源的加载和呈现方式。虽然有些属性在现代HTML规范中已不再推荐使用（deprecated），但了解它们仍有其意义。</font>
+`<object>`元素拥有众多属性，用于精确控制资源的加载和呈现方式。虽然有些属性在现代HTML规范中已不再推荐使用（deprecated），但了解它们仍有其意义。
 
 | **属性名** | **类型** | **说明** |
 | :--- | :--- | :--- |
@@ -419,31 +430,33 @@ console.log(myElement === window.myElement); // 输出: true
 | **standby** | 文本 | ~~已废弃~~。指定在对象加载过程中显示的简短提示文本。 |
 | **typemustmatch** | Boolean | 一个布尔属性。如果设置，则要求 `type`属性必须与 data 指向资源的实际 MIME 类型匹配，浏览器才会加载该内容。这增强了安全性，防止插件处理非预期类型的数据。 |
 
-<code><font style="color:rgb(0, 0, 0);"><object></font></code><font style="color:rgb(0, 0, 0);">元素的使用场景多样，以下是一些常见示例：</font>
+`<object>`元素的使用场景多样，以下是一些常见示例：
 
-1. \*\*\*\***<font style="color:rgb(0, 0, 0);">嵌入 PDF 文档</font>**
+1. **嵌入 PDF 文档**
 
-<font style="color:rgb(0, 0, 0);">使用</font><font style="color:rgb(0, 0, 0);"> </font><code><font style="color:rgb(0, 0, 0);">type="application/pdf"</font></code><font style="color:rgb(0, 0, 0);">告知浏览器嵌入的是 PDF 资源。许多现代浏览器（如 Chrome）内置了 PDF 查看器。</font>
+使用 `type="application/pdf"`告知浏览器嵌入的是 PDF 资源。许多现代浏览器（如 Chrome）内置了 PDF 查看器。
 
 ```html
 <object data="/docs/spec.pdf" type="application/pdf" width="100%" height="500px">
   <p>您的浏览器不支持嵌入 PDF。请<a href="/docs/spec.pdf">下载文件</a>查看。</p>
 </object>
+
 ```
 
-2. \*\*\*\***<font style="color:rgb(0, 0, 0);">嵌入图像</font>**
+2. **嵌入图像**
 
-<font style="color:rgb(0, 0, 0);">可以作为</font><font style="color:rgb(0, 0, 0);"> </font><code><font style="color:rgb(0, 0, 0);"><img></font></code><font style="color:rgb(0, 0, 0);">标签的替代方案，尤其是在需要向后兼容或使用图像映射时。</font>
+可以作为 `<img>`标签的替代方案，尤其是在需要向后兼容或使用图像映射时。
 
 ```html
 <object data="chart.svg" type="image/svg+xml" width="400" height="300">
   <img src="chart.png" alt="销售额图表（SVG不支持的备选方案）">
 </object>
+
 ```
 
-3. \*\*\*\***<font style="color:rgb(0, 0, 0);">嵌入由插件处理的内容（如传统 Flash）</font>**
+3. **嵌入由插件处理的内容（如传统 Flash）**
 
-<font style="color:rgb(0, 0, 0);">虽然 Flash 已被淘汰，但其用法是经典案例。</font><code><font style="color:rgb(0, 0, 0);">type</font></code><font style="color:rgb(0, 0, 0);">属性让浏览器知道需要</font><font style="color:rgb(0, 0, 0);"> </font><code><font style="color:rgb(0, 0, 0);">application/x-shockwave-flash</font></code><font style="color:rgb(0, 0, 0);">插件来处理该资源。</font>
+虽然 Flash 已被淘汰，但其用法是经典案例。`type`属性让浏览器知道需要 `application/x-shockwave-flash`插件来处理该资源。
 
 ```html
 <object data="movie.swf" type="application/x-shockwave-flash" width="550" height="400">
@@ -451,6 +464,7 @@ console.log(myElement === window.myElement); // 输出: true
   <param name="quality" value="high">
   <p>您的浏览器未安装 Flash 插件或不再支持。</p>
 </object>
+
 ```
 
 #### 如何表示红色
@@ -460,17 +474,17 @@ console.log(myElement === window.myElement); // 输出: true
 * rgb(100%,0%,0%)
 * hsl(0,100%,50%)
 
-### <font style="color:#F38F39;background-color:rgb(252, 252, 252);">布局与定位技术</font>
+### 布局与定位技术
 
-#### <font style="color:#DF2A3F;">布局模型（必背）</font>
+#### 布局模型（必背）
 
-1. 标准文档流（Flow） <font style="color:rgb(77, 77, 77);">元素自上而下按顺序垂直延伸分布.  </font>
+1. 标准文档流（Flow） 元素自上而下按顺序垂直延伸分布.
 2. 浮动模型 (Float)   浮动
 3. 定位模型 设置position
 4. flexbox弹性盒子
 5. grid网格布局
 
-#### <font style="color:#DF2A3F;">浮动（必背）</font>
+#### 浮动（必背）
 
 * 作用 设置了浮动的图片可以实现**文字环绕图片** 设置浮动的**块级元素可以排列在同一行** 设置浮动的行**内元素可以设置宽高**，并按照浮动方向对齐排列
 * 特点 设置了浮动的**元素脱标不占位置** 浮动可以进行模式转换
@@ -478,25 +492,26 @@ console.log(myElement === window.myElement); // 输出: true
 * 清除浮动的方法
 
 ```css
-1.伪元素清除法
+1. 伪元素清除法
 .clearfix::after {
     content: "";
     display: block;
     clear: both;
   }
-2.父元素触发BFC
+2. 父元素触发BFC
 .parent {
   overflow: hidden; /* 或 auto/scroll */
 }
-3.空元素清除法
+3. 空元素清除法
 <div class="parent">
   <div class="float-left">左浮动</div>
   <div class="float-right">右浮动</div>
   <div style="clear: both;"></div>  <!-- 关键代码 -->
 </div>
+
 ```
 
-#### <font style="color:#DF2A3F;">水平居中的方法（必背）</font>
+#### 水平居中的方法（必背）
 
 元素为行内元素，设置父元素 text-align:center
 
@@ -506,7 +521,7 @@ console.log(myElement === window.myElement); // 输出: true
 
 使用 flex-box 布局，display:flex justify-content:center
 
-#### <font style="color:#DF2A3F;">垂直居中的方法（必背）</font>
+#### 垂直居中的方法（必背）
 
 文本垂直居中设置 line-height 为 height 值
 
@@ -518,65 +533,66 @@ console.log(myElement === window.myElement); // 输出: true
 
 绝对定位 posistion:absoulte  top:50%，transform:translateY(-50%)
 
-#### <font style="color:#DF2A3F;">未知宽高水平居中（必背）</font>
+#### 未知宽高水平居中（必背）
 
 1. 绝对定位+transform
 
 ```javascript
 .parent{
   position:relavite
-}  
+}
 .child{
   position:absolute,
   left:50%,
   top:50%,
   transform:translate(-50%,-50%)
 }
+
 ```
 
 2. Flextable .parent{display:flex,justify-content:center,align-items:center}
 3. Grid .parent{display:flex,justify-content:center,align-items:center}
 4. table .parent{display:table-cell,text-align:center.vertical:middle} .child{display:inline-block}
 
-#### <font style="color:#DF2A3F;">Flex（必背）</font>
+#### Flex（必背）
 
-* **<font style="color:rgb(37, 41, 51);">在 Flexbox 布局中， Flex 容器和 Flex 项目之间的关系永远是父子关系。</font>**
-* <font style="color:rgb(37, 41, 51);">当一个元素变成了 Flex 容器之后，它的子元素，包括其伪元素 </font><font style="color:rgb(255, 80, 44);background-color:rgb(255, 245, 245);">::before</font><font style="color:rgb(37, 41, 51);"> 、</font><font style="color:rgb(255, 80, 44);background-color:rgb(255, 245, 245);">::after</font><font style="color:rgb(37, 41, 51);"> 和 文本节点 都将成为 </font>**<font style="color:rgb(37, 41, 51);">Flex 项目</font>**
-* **<font style="color:rgb(102, 102, 102);background-color:rgb(248, 248, 248);">注意，HTML 中的可替代元素是无法成为 Flex 容器的，比如</font>****<font style="color:rgb(255, 80, 44);background-color:rgb(255, 245, 245);">img</font>****<font style="color:rgb(102, 102, 102);background-color:rgb(248, 248, 248);">、 </font>****<font style="color:rgb(255, 80, 44);background-color:rgb(255, 245, 245);">input</font>****<font style="color:rgb(102, 102, 102);background-color:rgb(248, 248, 248);">、 </font>****<font style="color:rgb(255, 80, 44);background-color:rgb(255, 245, 245);">select</font>****<font style="color:rgb(102, 102, 102);background-color:rgb(248, 248, 248);">等元素！</font>**
+***在 Flexbox 布局中， Flex 容器和 Flex 项目之间的关系永远是父子关系。**
+* 当一个元素变成了 Flex 容器之后，它的子元素，包括其伪元素 ::before 、::after 和 文本节点 都将成为 **Flex 项目**
+***注意，HTML 中的可替代元素是无法成为 Flex 容器的，比如img、 input、 select等元素！**
 
-<font style="color:rgb(37, 41, 51);">Flexbox 中的主轴由 </font><font style="color:rgb(255, 80, 44);background-color:rgb(255, 245, 245);">flex-direction</font><font style="color:rgb(37, 41, 51);"> 属性设置，默认情况下，主轴沿行方向（内联轴 Inline Axis）分布，如果该属性为 </font><font style="color:rgb(255, 80, 44);background-color:rgb(255, 245, 245);">column</font><font style="color:rgb(37, 41, 51);"> ，则主轴沿列方向（块轴 Block Axis）分布：</font>
+Flexbox 中的主轴由 flex-direction 属性设置，默认情况下，主轴沿行方向（内联轴 Inline Axis）分布，如果该属性为 column ，则主轴沿列方向（块轴 Block Axis）分布：
 
-<font style="color:rgb(37, 41, 51);">Flexbox 布局中有一个强大的特性，当 Flex 容器有剩余空间时：</font>
+Flexbox 布局中有一个强大的特性，当 Flex 容器有剩余空间时：
 
-* <font style="color:rgb(37, 41, 51);">可以使用主轴的对齐方式</font><font style="color:rgb(37, 41, 51);"> </font><font style="color:rgb(255, 80, 44);background-color:rgb(255, 245, 245);">justify-content</font><font style="color:rgb(37, 41, 51);"> </font><font style="color:rgb(37, 41, 51);">来分配主尺寸的剩余空间；</font>
-* <font style="color:rgb(37, 41, 51);">可以使用侧轴的对齐方式 </font><font style="color:rgb(255, 80, 44);background-color:rgb(255, 245, 245);">align-items</font><font style="color:rgb(37, 41, 51);"> 来分配侧尺寸的剩余空间。</font>
+* 可以使用主轴的对齐方式 justify-content 来分配主尺寸的剩余空间；
+* 可以使用侧轴的对齐方式 align-items 来分配侧尺寸的剩余空间。
 
-**<font style="color:rgb(37, 41, 51);">Flex 容器属性：</font>**
+**Flex 容器属性：**
 
-* <font style="color:rgb(37, 41, 51);">flex-direction 指定主轴的方向</font>
-* <font style="color:rgb(37, 41, 51);">flex-wrap：控制 flex 项目是否换行 默认 nowrap</font>
-* <font style="color:rgb(37, 41, 51);">需要同时显式设置 </font><font style="color:rgb(255, 80, 44);background-color:rgb(255, 245, 245);">flex-direction</font><font style="color:rgb(37, 41, 51);"> 和 </font><font style="color:rgb(255, 80, 44);background-color:rgb(255, 245, 245);">flex-wrap</font><font style="color:rgb(37, 41, 51);"> 属性时，那么可以使用它们的简写属性 </font>**<font style="color:rgb(255, 80, 44);background-color:rgb(255, 245, 245);">flex-flow</font>**<font style="color:rgb(37, 41, 51);"> </font>
-* <font style="color:rgb(37, 41, 51);">justify-content </font>
-  * justify-content: flex-start;    /\* 左对齐（默认） \*/
-  * justify-content: flex-end;      /\* 右对齐 \*/
-  * justify-content: center;        /\* 居中 \*/
-  * justify-content: space-between; /\* 两端对齐 \*/
-  * justify-content: space-around;  /\* 均匀分布（两侧有间隙） \*/
-  * justify-content: space-evenly;  /\* 完全均匀分布 \*/
-* <font style="color:rgb(37, 41, 51);">align-content </font><font style="color:rgb(63, 74, 84);">控制</font>**<font style="color:rgb(63, 74, 84);">多行</font>**<font style="color:rgb(63, 74, 84);">子项在交叉轴的对齐（需启用 </font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">flex-wrap: wrap</font></code><font style="color:rgb(63, 74, 84);">）。</font>
-* <font style="color:rgb(37, 41, 51);">align-items</font>
-* <font style="color:rgb(37, 41, 51);">gap</font>
+* flex-direction 指定主轴的方向
+* flex-wrap：控制 flex 项目是否换行 默认 nowrap
+* 需要同时显式设置 flex-direction 和 flex-wrap 属性时，那么可以使用它们的简写属性 **flex-flow**
+* justify-content
+  * justify-content: flex-start;    /* 左对齐（默认） */
+  * justify-content: flex-end;      /* 右对齐 */
+  * justify-content: center;        /* 居中 */
+  * justify-content: space-between; /* 两端对齐 */
+  * justify-content: space-around;  /* 均匀分布（两侧有间隙） */
+  * justify-content: space-evenly;  /* 完全均匀分布 */
+* align-content 控制**多行**子项在交叉轴的对齐（需启用 `flex-wrap: wrap`）。
+* align-items
+* gap
 
-**<font style="color:rgb(37, 41, 51);">Flex 项目属性：</font>**
+**Flex 项目属性：**
 
-* <font style="color:rgb(37, 41, 51);">order  </font><font style="color:rgb(63, 74, 84);">控制子项的</font>**<font style="color:rgb(63, 74, 84);">排列顺序</font>**<font style="color:rgb(63, 74, 84);">（数值越小越靠前）</font>
-* <font style="color:rgb(37, 41, 51);"> flex （flex-grow flex-shrink flex-basis） </font>
-* <font style="color:rgb(37, 41, 51);">align-self（</font><font style="color:rgb(63, 74, 84);">覆盖父容器的 </font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">align-items</font></code><font style="color:rgb(63, 74, 84);"> 设置，单独控制子项在</font>**<font style="color:rgb(63, 74, 84);">交叉轴</font>**<font style="color:rgb(63, 74, 84);">的对齐。</font><font style="color:rgb(37, 41, 51);">）</font>
+* order  控制子项的**排列顺序**（数值越小越靠前）
+*  flex （flex-grow flex-shrink flex-basis）
+* align-self（覆盖父容器的 `align-items` 设置，单独控制子项在**交叉轴**的对齐。）
 
-<font style="color:rgb(37, 41, 51);">Flexbox 布局中的 </font><font style="color:rgb(255, 80, 44);background-color:rgb(255, 245, 245);">align-content</font><font style="color:rgb(37, 41, 51);"> 属性值和 </font><font style="color:rgb(255, 80, 44);background-color:rgb(255, 245, 245);">justify-content</font><font style="color:rgb(37, 41, 51);"> 属性值相比多出了一个 </font><font style="color:rgb(255, 80, 44);background-color:rgb(255, 245, 245);">stretch</font><font style="color:rgb(37, 41, 51);"> 值。</font>
+Flexbox 布局中的 align-content 属性值和 justify-content 属性值相比多出了一个 stretch 值。
 
-* <font style="color:rgb(255, 80, 44);background-color:rgb(255, 245, 245);">align-items</font><font style="color:rgb(37, 41, 51);"> </font><font style="color:rgb(37, 41, 51);">用于 Flex 容器上，控制 Flex 行（所有 Flex 项目所在行）在侧轴上对齐方式；</font>
-* <font style="color:rgb(255, 80, 44);background-color:rgb(255, 245, 245);">align-self</font><font style="color:rgb(37, 41, 51);"> 用于 Flex 项目上，控制单个 Flex 项目在侧轴上对齐方式。</font>
+* align-items 用于 Flex 容器上，控制 Flex 行（所有 Flex 项目所在行）在侧轴上对齐方式；
+* align-self 用于 Flex 项目上，控制单个 Flex 项目在侧轴上对齐方式。
 
 #### "flex: auto;“是什么意思（了解）
 
@@ -596,7 +612,7 @@ flex-basis 属性定义了在分配多余空间之前，项目占据的主轴空
 
 flex:auto 多用于内容固定，或者内容可控的布局场景，例如导航数量不固定，每个导航文字数量也不固定的导航效果就适合使用 flex:auto 效果来实现
 
-#### <font style="color:#DF2A3F;">脱离文档流有哪些方法?（必背）</font>
+#### 脱离文档流有哪些方法?（必背）
 
 一、什么是文档流?
 
@@ -630,7 +646,7 @@ absolute称为绝对定位，其实博主觉得应该称为相对定位，因为
 
 块级元素与浮动元素发生重叠，边框、背景会显示在浮动元素之下，内容会显示在浮动元素之上
 
-#### <font style="color:#DF2A3F;">两栏布局 三栏布局（必会）</font>
+#### 两栏布局 三栏布局（必会）
 
 一般两栏布局指的是**左边一栏宽度固定，右边一栏宽度自适应**，两栏布局的具体实现：
 
@@ -688,9 +704,10 @@ absolute称为绝对定位，其实博主觉得应该称为相对定位，因为
   /* 核心代码：左右两栏固定宽度，中间自适应宽度 */
   grid-template-columns: 200px auto 200px;
 }
+
 ```
 
-#### <font style="color:#DF2A3F;">圣杯布局和双飞翼布局（重点 最好手动实现一下）</font>
+#### 圣杯布局和双飞翼布局（重点 最好手动实现一下）
 
 **圣杯布局**
 
@@ -789,6 +806,7 @@ absolute称为绝对定位，其实博主觉得应该称为相对定位，因为
     width: 100px;
   }
 </style>
+
 ```
 
 **参考答案**
@@ -801,19 +819,19 @@ Flex布局会默认：
 * 默认不自动换行
 * 让子项与其内容等宽，并把所有子项的高度变为最高子项的高度
 
-#### <font style="color:#DF2A3F;">清除浮动的几种方式，各自的优缺点（必背）</font>
+#### 清除浮动的几种方式，各自的优缺点（必背）
 
-* <font style="color:rgb(63, 74, 84);">在浮动元素后添加一个空的 </font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">div</font></code><font style="color:rgb(63, 74, 84);"> 并设置 </font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">clear: both</font></code><font style="color:rgb(63, 74, 84);">  </font>
+* 在浮动元素后添加一个空的 `div` 并设置 `clear: both`
 
-<font style="color:rgb(63, 74, 84);"> </font>**<font style="color:rgb(63, 74, 84);">缺点</font>**<font style="color:rgb(63, 74, 84);">：需要添加无意义的空标签，不符合语义化。</font>
+ **缺点**：需要添加无意义的空标签，不符合语义化。
 
-* <font style="color:rgb(63, 74, 84);">伪元素清除法 </font><font style="color:rgb(247, 118, 142);">.parent::after</font><font style="color:rgb(203, 210, 234);background-color:rgb(26, 27, 38);"> { </font><font style="color:rgb(224, 175, 104);">content</font><font style="color:rgb(203, 210, 234);background-color:rgb(26, 27, 38);">: </font><font style="color:rgb(158, 206, 106);">""</font><font style="color:rgb(203, 210, 234);background-color:rgb(26, 27, 38);">; </font><font style="color:rgb(224, 175, 104);">display</font><font style="color:rgb(203, 210, 234);background-color:rgb(26, 27, 38);">: block; </font><font style="color:rgb(224, 175, 104);">clear</font><font style="color:rgb(203, 210, 234);background-color:rgb(26, 27, 38);">: both; }</font>
+* 伪元素清除法 .parent::after { content: ""; display: block; clear: both; }
 
-  **<font style="color:rgb(63, 74, 84);">优点</font>**<font style="color:rgb(63, 74, 84);">：无需额外 HTML 标签，广泛兼容。</font>
+  **优点**：无需额外 HTML 标签，广泛兼容。
 
-* 父级 div 定义 overflow:hidden（<font style="color:rgb(63, 74, 84);">父元素触发 BFC</font>）
+* 父级 div 定义 overflow:hidden（父元素触发 BFC）
 
-**<font style="color:rgb(63, 74, 84);">注意</font>**<font style="color:rgb(63, 74, 84);">：</font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">overflow: hidden</font></code><font style="color:rgb(63, 74, 84);"> 可能会隐藏溢出内容，</font>
+**注意**：`overflow: hidden` 可能会隐藏溢出内容，
 
 #### 常见的CSS布局
 
@@ -833,7 +851,7 @@ Flex布局会默认：
 
 #### position: fixed 一定是相对于浏览器窗口进行定位吗?
 
-<code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">position: fixed</font></code><font style="color:rgb(63, 74, 84);"> </font>**<font style="color:rgb(63, 74, 84);">默认</font>**<font style="color:rgb(63, 74, 84);">是相对于浏览器窗口（视口）进行定位，但它的定位基准可以通过 CSS 的 </font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">transform</font></code><font style="color:rgb(63, 74, 84);">、</font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">perspective</font></code><font style="color:rgb(63, 74, 84);"> 或 </font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">filter</font></code><font style="color:rgb(63, 74, 84);"> 属性被改变。如果 </font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">fixed</font></code><font style="color:rgb(63, 74, 84);"> 元素的</font>**<font style="color:rgb(63, 74, 84);">任意祖先元素</font>**<font style="color:rgb(63, 74, 84);">设置了以上任一属性，该元素的定位基准会变成这个祖先元素（而非视口）</font>
+`position: fixed` **默认**是相对于浏览器窗口（视口）进行定位，但它的定位基准可以通过 CSS 的 `transform`、`perspective` 或 `filter` 属性被改变。如果 `fixed` 元素的**任意祖先元素**设置了以上任一属性，该元素的定位基准会变成这个祖先元素（而非视口）
 
 #### 绝对定位和相对定位
 
@@ -851,44 +869,42 @@ Flex布局会默认：
 * 具有较高z-index值的元素会覆盖具有较低z-index值的元素
 * 当元素没有设置z-index 时，默认按照它们在HTML文档中出现的顺序堆叠，后面的元素会覆盖前面的元素
 
-<font style="color:rgb(0, 0, 0);"></font>
-
-<font style="color:rgb(0, 0, 0);">一旦元素的 </font><code><font style="color:rgb(0, 0, 0);">position</font></code><font style="color:rgb(0, 0, 0);">值被设置为 </font><code><font style="color:rgb(0, 0, 0);">relative</font></code><font style="color:rgb(0, 0, 0);">, </font><code><font style="color:rgb(0, 0, 0);">absolute</font></code><font style="color:rgb(0, 0, 0);">, </font><code><font style="color:rgb(0, 0, 0);">fixed</font></code><font style="color:rgb(0, 0, 0);">, 或 </font><code><font style="color:rgb(0, 0, 0);">sticky</font></code><font style="color:rgb(0, 0, 0);">，它就脱离了默认的文档流规则，</font><code><font style="color:rgb(0, 0, 0);">z-index</font></code><font style="color:rgb(0, 0, 0);">属性便开始发挥作用，允许你精细地控制它们之间的上下覆盖关系</font>
+一旦元素的 `position`值被设置为 `relative`, `absolute`, `fixed`, 或 `sticky`，它就脱离了默认的文档流规则，`z-index`属性便开始发挥作用，允许你精细地控制它们之间的上下覆盖关系
 
 | **定位类型 (Position)** | **脱离文档流** | **z-index 是否生效** | **常见用途** |
 | :--- | :--- | :--- | :--- |
-| <code>**static**</code> (默认) | 否 | **否** | 普通文档流布局 |
-| <code>**relative**</code> | 否（保留原空间） | 是 | 微调元素自身位置，作为绝对定位的容器 |
-| <code>**absolute**</code> | 是 | 是 | 相对于最近定位祖先进行绝对定位 |
-| <code>**fixed**</code> | 是 | 是 | 相对于浏览器视口固定定位 |
-| <code>**sticky**</code> | 否（滚动时表现为 fixed） | 是 | 元素在滚动时达到特定位置后固定 |
+| `static` (默认) | 否 | **否** | 普通文档流布局 |
+| `relative` | 否（保留原空间） | 是 | 微调元素自身位置，作为绝对定位的容器 |
+| `absolute` | 是 | 是 | 相对于最近定位祖先进行绝对定位 |
+| `fixed` | 是 | 是 | 相对于浏览器视口固定定位 |
+| `sticky` | 否（滚动时表现为 fixed） | 是 | 元素在滚动时达到特定位置后固定 |
 
 * 默认层叠顺序
 
-<font style="color:rgb(0, 0, 0);">在同一个层叠上下文中，如果没有设置 </font><code><font style="color:rgb(0, 0, 0);">z-index</font></code><font style="color:rgb(0, 0, 0);">，浏览器会按照以下规则从低到高堆叠元素</font>
+在同一个层叠上下文中，如果没有设置 `z-index`，浏览器会按照以下规则从低到高堆叠元素
 
-1. <font style="color:rgb(0, 0, 0);">根元素 (</font><code><font style="color:rgb(0, 0, 0);"><html></font></code><font style="color:rgb(0, 0, 0);">) 的背景和边框</font>
-2. <font style="color:rgb(0, 0, 0);">定位元素且 </font><code><font style="color:rgb(0, 0, 0);">z-index</font></code><font style="color:rgb(0, 0, 0);">为负值</font>
-3. <font style="color:rgb(0, 0, 0);">正常的块级元素（按 HTML 顺序）</font>
-4. <font style="color:rgb(0, 0, 0);">浮动元素</font>
-5. <font style="color:rgb(0, 0, 0);">正常的行内元素（按 HTML 顺序）</font>
-6. <font style="color:rgb(0, 0, 0);">定位元素且 </font><code><font style="color:rgb(0, 0, 0);">z-index: auto</font></code><font style="color:rgb(0, 0, 0);">或 </font><code><font style="color:rgb(0, 0, 0);">0</font></code><font style="color:rgb(0, 0, 0);">（按 HTML 顺序）</font>
-7. <font style="color:rgb(0, 0, 0);">定位元素且 </font><code><font style="color:rgb(0, 0, 0);">z-index</font></code><font style="color:rgb(0, 0, 0);">为正值（值越大越靠上）</font>
+1. 根元素 (`<html>`) 的背景和边框
+2. 定位元素且 `z-index`为负值
+3. 正常的块级元素（按 HTML 顺序）
+4. 浮动元素
+5. 正常的行内元素（按 HTML 顺序）
+6. 定位元素且 `z-index: auto`或 `0`（按 HTML 顺序）
+7. 定位元素且 `z-index`为正值（值越大越靠上）
 
-### <font style="color:#A58F04;background-color:rgb(252, 252, 252);">响应式与移动适配（了解 不常见）</font>
+### 响应式与移动适配（了解 不常见）
 
-#### <font style="color:#ED740C;">响应式布局如何实现（选背）</font>
+#### 响应式布局如何实现（选背）
 
-1. **<font style="color:rgb(26, 32, 41);">使用CSS框架</font>**<font style="color:rgb(26, 32, 41);">\ </font><font style="color:rgb(26, 32, 41);">Tailwind CSS 是一种流行的实用优先CSS框架，可以帮助开发者快速构建响应式布局。它提供了响应式设计工具类，能够轻松适配不同屏幕尺寸</font>**2**<font style="color:rgb(26, 32, 41);">。</font>
-2. **<font style="color:rgb(26, 32, 41);">媒体查询</font>**<font style="color:rgb(26, 32, 41);">\ </font><font style="color:rgb(26, 32, 41);">媒体查询是CSS3的核心功能之一，允许开发者根据不同的屏幕尺寸或设备特性应用不同的样式规则。例如，可以为小屏幕、平板和桌面设备分别设置不同的布局和样式</font>**2**<font style="color:rgb(26, 32, 41);">。</font>
-3. **<font style="color:rgb(26, 32, 41);">弹性布局（Flexbox）</font>**<font style="color:rgb(26, 32, 41);">\ </font><font style="color:rgb(26, 32, 41);">Flexbox 是一种CSS布局模式，可以更灵活地分配空间和对齐元素，尤其适合响应式设计。它能够自动调整元素的大小和位置，以适应不同的屏幕尺寸</font>**3**<font style="color:rgb(26, 32, 41);">。</font>
-4. **<font style="color:rgb(26, 32, 41);">移动端适配与HTML5</font>**<font style="color:rgb(26, 32, 41);">\ </font><font style="color:rgb(26, 32, 41);">在移动端开发中，可以使用HTML5的viewport元标签来控制页面的缩放和布局。同时，结合CSS媒体查询，可以确保页面在各种设备上都能正常显示。</font>
-5. **<font style="color:rgb(26, 32, 41);">网格布局（Grid）</font>**<font style="color:rgb(26, 32, 41);">\ </font><font style="color:rgb(26, 32, 41);">CSS Grid 提供了一种二维布局系统，适合创建复杂的响应式布局。它可以同时处理行和列，非常适合需要精确控制元素位置的场景</font>**2**<font style="color:rgb(26, 32, 41);">。</font>
-6. **<font style="color:rgb(26, 32, 41);">使用CSS的</font>**<code>**<font style="color:rgb(26, 32, 41);">if()</font>**</code>**<font style="color:rgb(26, 32, 41);">函数</font>**<font style="color:rgb(26, 32, 41);">\ </font><font style="color:rgb(26, 32, 41);">从Chrome 137开始，CSS引入了</font><code><font style="color:rgb(26, 32, 41);">if()</font></code><font style="color:rgb(26, 32, 41);">函数，允许在样式中直接编写条件逻辑，进一步简化了响应式设计的复杂性。</font>
+1. **使用CSS框架**\ Tailwind CSS 是一种流行的实用优先CSS框架，可以帮助开发者快速构建响应式布局。它提供了响应式设计工具类，能够轻松适配不同屏幕尺寸**2**。
+2. **媒体查询**\ 媒体查询是CSS3的核心功能之一，允许开发者根据不同的屏幕尺寸或设备特性应用不同的样式规则。例如，可以为小屏幕、平板和桌面设备分别设置不同的布局和样式**2**。
+3. **弹性布局（Flexbox）**\ Flexbox 是一种CSS布局模式，可以更灵活地分配空间和对齐元素，尤其适合响应式设计。它能够自动调整元素的大小和位置，以适应不同的屏幕尺寸**3**。
+4. **移动端适配与HTML5**\ 在移动端开发中，可以使用HTML5的viewport元标签来控制页面的缩放和布局。同时，结合CSS媒体查询，可以确保页面在各种设备上都能正常显示。
+5. **网格布局（Grid）**\ CSS Grid 提供了一种二维布局系统，适合创建复杂的响应式布局。它可以同时处理行和列，非常适合需要精确控制元素位置的场景**2**。
+6. **使用CSS的**`if()`**函数**\ 从Chrome 137开始，CSS引入了`if()`函数，允许在样式中直接编写条件逻辑，进一步简化了响应式设计的复杂性。
 
-#### <font style="color:rgb(0, 0, 0);">CSS Container Queries</font>
+#### CSS Container Queries
 
-<font style="color:rgb(0, 0, 0);">CSS Container Queries是 CSS 的一项强大新特性，它允许你根据组件父容器自身的尺寸（而非浏览器视口或设备屏幕尺寸）来应用样式规则。这为实现真正模块化和自适应的组件级响应式设计提供了可能</font>
+CSS Container Queries是 CSS 的一项强大新特性，它允许你根据组件父容器自身的尺寸（而非浏览器视口或设备屏幕尺寸）来应用样式规则。这为实现真正模块化和自适应的组件级响应式设计提供了可能
 
 | **特性** | **CSS Container Queries (容器查询)** | **Media Queries (媒体查询)** |
 | :--- | :--- | :--- |
@@ -900,16 +916,16 @@ Flex布局会默认：
 
 ##### 核心价值与解决的问题
 
-<font style="color:rgb(0, 0, 0);">容器查询的核心价值在于实现了 </font>**<font style="color:rgb(0, 0, 0);">“组件级”</font>**<font style="color:rgb(0, 0, 0);"> 或 </font>**<font style="color:rgb(0, 0, 0);">“容器级”</font>**<font style="color:rgb(0, 0, 0);"> 的响应式设计。</font>它解决了传统媒体查询在复杂布局和组件化开发中的一些痛点：
+容器查询的核心价值在于实现了 **“组件级”** 或 **“容器级”** 的响应式设计。它解决了传统媒体查询在复杂布局和组件化开发中的一些痛点：
 
-1. \*\*\*\***<font style="color:rgb(0, 0, 0);">组件复用性</font>**<font style="color:rgb(0, 0, 0);">：一个设计良好的组件（如一个卡片、一个导航栏），只需编写一次容器查询逻辑，就可以被放置在任何尺寸的容器中并自动适配，无需因为其在不同页面或不同位置而重复编写媒体查询代码。这使得组件真正实现了 </font>**<font style="color:rgb(0, 0, 0);">“一次编写，随处自适应”</font>**
-2. **<font style="color:rgb(0, 0, 0);">布局灵活性</font>**<font style="color:rgb(0, 0, 0);">：在传统的媒体查询中，如果一个组件被嵌套在侧边栏、栅格列或弹窗等不同尺寸的容器内部，媒体查询无法感知这些容器的具体尺寸，可能导致布局错乱或空白空间浪费。容器查询则能精准地根据其直接父容器的尺寸进行调整，布局更加精细和合理</font>
+1. **组件复用性**：一个设计良好的组件（如一个卡片、一个导航栏），只需编写一次容器查询逻辑，就可以被放置在任何尺寸的容器中并自动适配，无需因为其在不同页面或不同位置而重复编写媒体查询代码。这使得组件真正实现了 **“一次编写，随处自适应”**
+2. **布局灵活性**：在传统的媒体查询中，如果一个组件被嵌套在侧边栏、栅格列或弹窗等不同尺寸的容器内部，媒体查询无法感知这些容器的具体尺寸，可能导致布局错乱或空白空间浪费。容器查询则能精准地根据其直接父容器的尺寸进行调整，布局更加精细和合理
 
 ##### 基本使用方法
 
-<font style="color:rgb(0, 0, 0);">使用容器查询通常需要两个步骤</font>
+使用容器查询通常需要两个步骤
 
-1. **<font style="color:rgb(0, 0, 0);">定义容器</font>**<font style="color:rgb(0, 0, 0);">：使用 </font><code><font style="color:rgb(0, 0, 0);">container-type</font></code><font style="color:rgb(0, 0, 0);">属性将一个元素声明为查询容器。最常用的是 </font><code><font style="color:rgb(0, 0, 0);">inline-size</font></code><font style="color:rgb(0, 0, 0);">，表示基于容器的内联方向尺寸（通常指宽度）进行查询</font>
+1. **定义容器**：使用 `container-type`属性将一个元素声明为查询容器。最常用的是 `inline-size`，表示基于容器的内联方向尺寸（通常指宽度）进行查询
 
 ```css
 .card-container {
@@ -919,9 +935,10 @@ Flex布局会默认：
   /* 也可使用简写属性 */
   /* container: my-container / inline-size; */
 }
+
 ```
 
-2. \*\*\*\***<font style="color:rgb(0, 0, 0);">编写查询规则</font>**<font style="color:rgb(0, 0, 0);">：使用 </font><code><font style="color:rgb(0, 0, 0);">@container</font></code><font style="color:rgb(0, 0, 0);">规则，根据容器的尺寸条件来修改其内部元素的样式。</font>
+2. **编写查询规则**：使用 `@container`规则，根据容器的尺寸条件来修改其内部元素的样式。
 
 ```css
 @container my-container (min-width: 600px) {
@@ -938,25 +955,26 @@ Flex布局会默认：
     flex-direction: column;
   }
 }
+
 ```
 
 ##### 常见应用场景
 
-* **<font style="color:rgb(0, 0, 0);">自适应卡片组件</font>**<font style="color:rgb(0, 0, 0);">：同一卡片在主页大图区、侧边栏小图区或搜索结果的紧凑列表中，能自动调整布局和内容显示方式</font>
-* **<font style="background-color:rgba(0, 0, 0, 0.05);"></font>\*\*\*\*<font style="color:rgb(0, 0, 0);">响应式导航菜单</font>**<font style="color:rgb(0, 0, 0);">：导航菜单在顶部通栏、侧边抽屉或移动端折叠时，能根据其容器尺寸改变排列方向或显隐样式</font>
-* **<font style="background-color:rgba(0, 0, 0, 0.05);"></font>\*\*\*\*<font style="color:rgb(0, 0, 0);">动态字体大小</font>**<font style="color:rgb(0, 0, 0);">：让容器内的字号或行高随容器宽度变化，提升可读性</font>
-* **<font style="color:rgb(0, 0, 0);">设计系统与组件库</font>**<font style="color:rgb(0, 0, 0);">：构建高度自适应的组件，使其在不同集成环境中都能良好运作</font>
+***自适应卡片组件**：同一卡片在主页大图区、侧边栏小图区或搜索结果的紧凑列表中，能自动调整布局和内容显示方式
+***响应式导航菜单**：导航菜单在顶部通栏、侧边抽屉或移动端折叠时，能根据其容器尺寸改变排列方向或显隐样式
+***动态字体大小**：让容器内的字号或行高随容器宽度变化，提升可读性
+***设计系统与组件库**：构建高度自适应的组件，使其在不同集成环境中都能良好运作
 
 #### 媒体查询
 
-* <code>**<font style="color:rgb(0, 0, 0);">all</font>**</code><font style="color:rgb(0, 0, 0);">: 适用于所有设备</font>
-* <code>**<font style="color:rgb(0, 0, 0);">screen</font>**</code><font style="color:rgb(0, 0, 0);">: 这是我们最常用的类型，针对电脑屏幕、平板、智能手机等带有屏幕的设备。我们写的绝大部分 CSS 默认就是应用于屏幕</font>
-* <code>**<font style="color:rgb(0, 0, 0);">print</font>**</code><font style="color:rgb(0, 0, 0);">: 专门针对打印机或打印预览模式。你可以使用 </font><code><font style="color:rgb(0, 0, 0);">@media print { ... }</font></code><font style="color:rgb(0, 0, 0);">来定义只在打印文档时生效的样式，比如隐藏不必要的按钮、将背景色设置为白色以节省墨水、调整文字颜色为纯黑等</font>
-* <code>**<font style="color:rgb(0, 0, 0);">speech</font>**</code><font style="color:rgb(0, 0, 0);">: 适用于屏幕阅读器等朗读内容的发声设备</font>
+* `all`: 适用于所有设备
+* `screen`: 这是我们最常用的类型，针对电脑屏幕、平板、智能手机等带有屏幕的设备。我们写的绝大部分 CSS 默认就是应用于屏幕
+* `print`: 专门针对打印机或打印预览模式。你可以使用 `@media print { ... }`来定义只在打印文档时生效的样式，比如隐藏不必要的按钮、将背景色设置为白色以节省墨水、调整文字颜色为纯黑等
+* `speech`: 适用于屏幕阅读器等朗读内容的发声设备
 
-### <font style="color:#01B2BC;background-color:rgb(252, 252, 252);">动画与变换</font>
+### 动画与变换
 
-#### <font style="color:#DF2A3F;">css 中的animation、transition、transform 有什么区别?（必背）</font>
+#### css 中的animation、transition、transform 有什么区别?（必背）
 
 在 CSS 中，animation、transition 和 transform 是用来创建动画效果的关键属性，它们各自具有不同的作用和特点。
 
@@ -982,18 +1000,18 @@ Flex布局会默认：
 * transition 属性用于在状态变化时平滑过渡
 * transform 属性用于对元素进行变形
 
-#### <font style="color:#DF2A3F;">CSS3 中transition 和 animation 的属性分别有哪些?（手动实现一下）</font>
+#### CSS3 中transition 和 animation 的属性分别有哪些?（手动实现一下）
 
-#### <code><font style="color:rgb(0, 0, 0);">animation-fill-mode</font></code><font style="color:rgb(0, 0, 0);">的主要属性值</font>
+#### `animation-fill-mode`的主要属性值
 
-| **属性值** | **中文含义** | **动画开始前 (during**\*\* **<code>**animation-delay**</code>**)\*\* | **动画结束后** | **简单理解** |
+| **属性值** | **中文含义** | **动画开始前 (during **`animation-delay`**)** | **动画结束后** | **简单理解** |
 | :--- | :--- | :--- | :--- | :--- |
-| <code>**none**</code> | **无** | 使用元素自身的样式 | 恢复元素自身的样式 | **默认行为**。动画结束后元素会跳回初始状态。 |
-| <code>**forwards**</code> | **forwards** | 使用元素自身的样式 | **保持**动画**最后一帧**的样式 | **播完就停**在结束状态。 |
-| <code>**backwards**</code> | **向后** | **立即应用**动画**第一帧**的样式 | 恢复元素自身的样式 | **延迟期间**就显示**开始状态**。 |
-| <code>**both**</code> | **两者** | **立即应用**动画**第一帧**的样式 | **保持**动画**最后一帧**的样式 | **兼顾** `backwards`和 `forwards`的效果。 |
+| `none` | **无** | 使用元素自身的样式 | 恢复元素自身的样式 | **默认行为**。动画结束后元素会跳回初始状态。 |
+| `forwards` | **forwards** | 使用元素自身的样式 | **保持**动画**最后一帧**的样式 | **播完就停**在结束状态。 |
+| `backwards` | **向后** | **立即应用**动画**第一帧**的样式 | 恢复元素自身的样式 | **延迟期间**就显示**开始状态**。 |
+| `both` | **两者** | **立即应用**动画**第一帧**的样式 | **保持**动画**最后一帧**的样式 | **兼顾** `backwards`和 `forwards`的效果。 |
 
-#### <code><font style="color:rgb(0, 0, 0);">animation-timing-function</font></code><font style="color:rgb(0, 0, 0);">的主要取值</font>
+#### `animation-timing-function`的主要取值
 
 | **类型** | **属性值** | **效果描述** | **适用场景** |
 | --- | :--- | :--- | :--- |
@@ -1057,7 +1075,7 @@ animation-duration: 1s; // 动画完成时间
 3. **兼容性问题**：某些高级特性（如 `animation-composition`）可能需要考虑浏览器支持。
 4. **调试困难**：动画曲线或关键帧的调试不如 JS 直观。
 
-***
+---
 
 ##### **JavaScript 动画（例如使用 **`requestAnimationFrame`** 或 GSAP 等库）**
 
@@ -1074,23 +1092,23 @@ animation-duration: 1s; // 动画完成时间
 2. **代码复杂度高**：需要编写更多逻辑，维护成本较高。
 3. **依赖执行环境**：在 JavaScript 被禁用或执行缓慢的设备上可能失效。
 
-#### <font style="color:#DF2A3F;">CSS3实现幻灯片效果（手敲）</font>
+#### CSS3实现幻灯片效果（手敲）
 
 ![1754381649737-e62b1d6e-70a6-4a73-ac67-55dad1c67e09.png](./img/A4OC9L3lCpWSDH5g/1754381649737-e62b1d6e-70a6-4a73-ac67-55dad1c67e09-464305.png)![1754381660116-f02390b0-fabb-44e1-87e3-3a7b87ce8a2b.png](./img/A4OC9L3lCpWSDH5g/1754381660116-f02390b0-fabb-44e1-87e3-3a7b87ce8a2b-005170.png)
 
-#### <code><font style="color:rgb(0, 0, 0);">transition-timing-function</font></code><font style="color:rgb(0, 0, 0);"></font>
+#### `transition-timing-function`
 
 | **时间函数** | **等效 cubic-bezier 值** | **运动特点** | **常见应用场景** |
 | :--- | :--- | :--- | :--- |
-| <code>**ease**</code> | `cubic-bezier(0.25,0.1,0.25,1)` | **慢-快-慢**（开始稍快，中间加速，末尾减速） | 多数元素的默认过渡效果，如按钮悬停、淡入淡出 |
-| <code>**linear**</code> | `cubic-bezier(0,0,1,1)` | **匀速运动** | 进度条加载、匀速旋转的动画 |
-| <code>**ease-in**</code> | `cubic-bezier(0.42,0,1,1)` | **慢速开始，加速结束**（起步慢，结尾快） | 元素从屏幕外加速进入、需要强调离开动作的场景 |
-| <code>**ease-out**</code> | `cubic-bezier(0,0,0.58,1)` | **快速开始，减速结束**（起步快，结尾慢） | 元素减速进入屏幕、弹窗出现 |
-| <code>**ease-in-out**</code> | `cubic-bezier(0.42,0,0.58,1)` | **慢速开始和结束**，中间加速（对称的缓动） | 页面内元素的移动、状态切换 |
+| `ease` | `cubic-bezier(0.25,0.1,0.25,1)` | **慢-快-慢**（开始稍快，中间加速，末尾减速） | 多数元素的默认过渡效果，如按钮悬停、淡入淡出 |
+| `linear` | `cubic-bezier(0,0,1,1)` | **匀速运动** | 进度条加载、匀速旋转的动画 |
+| `ease-in` | `cubic-bezier(0.42,0,1,1)` | **慢速开始，加速结束**（起步慢，结尾快） | 元素从屏幕外加速进入、需要强调离开动作的场景 |
+| `ease-out` | `cubic-bezier(0,0,0.58,1)` | **快速开始，减速结束**（起步快，结尾慢） | 元素减速进入屏幕、弹窗出现 |
+| `ease-in-out` | `cubic-bezier(0.42,0,0.58,1)` | **慢速开始和结束**，中间加速（对称的缓动） | 页面内元素的移动、状态切换 |
 
-### <font style="color:#2F8EF4;background-color:rgb(252, 252, 252);">元素样式与视觉效果</font>
+### 元素样式与视觉效果
 
-#### <font style="color:#DF2A3F;">display:none;与visibility:hidden;的区别（必背）</font>
+#### display:none;与visibility:hidden;的区别（必背）
 
 联系:它们都能让元素不可见
 
@@ -1101,7 +1119,7 @@ animation-duration: 1s; // 动画完成时间
 * 修改常规流中元素的 **display 通常会造成文档重排** 。修改 visibility 属性只会造成本元素的重绘。
 * 读屏器不会读取 display:none 元素内容;会读取 visibility:hidden元素内容
 
-#### <font style="color:#DF2A3F;">行内元素和块级元素有什么区别（必背）</font>
+#### 行内元素和块级元素有什么区别（必背）
 
 **行内元素(Inline Elements):**
 
@@ -1141,12 +1159,12 @@ animation-duration: 1s; // 动画完成时间
 
 #### ::before 和::after 中双冒号和单冒号有什么区别、作用?
 
-<font style="color:rgb(63, 74, 84);">在 CSS 中，</font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">::before</font></code><font style="color:rgb(63, 74, 84);"> 和 </font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">::after</font></code><font style="color:rgb(63, 74, 84);"> 是</font>**<font style="color:rgb(63, 74, 84);">伪元素（Pseudo-elements）</font>**<font style="color:rgb(63, 74, 84);">，用于在元素的内容前或后插入生成的内容。而单冒号（</font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">:</font></code><font style="color:rgb(63, 74, 84);">）和双冒号（</font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">::</font></code><font style="color:rgb(63, 74, 84);">）的区别主要在于 </font>**<font style="color:rgb(63, 74, 84);">CSS 规范的历史演变</font>**<font style="color:rgb(63, 74, 84);">和</font>**<font style="color:rgb(63, 74, 84);">语法明确性</font>**<font style="color:rgb(63, 74, 84);">。</font>
+在 CSS 中，`::before` 和 `::after` 是**伪元素（Pseudo-elements）**，用于在元素的内容前或后插入生成的内容。而单冒号（`:`）和双冒号（`::`）的区别主要在于 **CSS 规范的历史演变**和**语法明确性**。
 
 * 单冒号(:) 	css2
 * 双冒号(::)	css3
 
-#### <font style="color:#DF2A3F;">:伪类  ::伪元素（必背）</font>
+#### :伪类  ::伪元素（必背）
 
 另外，伪类与伪元素的区别有:
 
@@ -1162,7 +1180,7 @@ css的 content 属性专门应用在 before/after 伪元素上， 用于来插�
 
 ![1754381719050-320beab7-4911-4ff4-a7cf-1325823f8529.png](./img/A4OC9L3lCpWSDH5g/1754381719050-320beab7-4911-4ff4-a7cf-1325823f8529-613972.png)
 
-#### <font style="color:#DF2A3F;">CSS中，有哪些方式可以隐藏页面元素?有什么区别?（必背）</font>
+#### CSS中，有哪些方式可以隐藏页面元素?有什么区别?（必背）
 
 通过 css实现隐藏元素方法有如下:
 
@@ -1177,19 +1195,19 @@ css的 content 属性专门应用在 before/after 伪元素上， 用于来插�
 
 a :link、a:hover、a:visited、a:active中，定义CSS时候的顺序不同，也会直接导致链接显示的效果不同。为了保证每个效果都能正确的触发定义时的顺序应该为:link、visited、hover、active
 
-<font style="color:rgb(0, 0, 0);">这主要与 </font>**<font style="color:rgb(0, 0, 0);">CSS 的层叠规则</font>**<font style="color:rgb(0, 0, 0);">有关。当多个规则拥有相同的特异性（specificity）时，</font>**<font style="color:rgb(0, 0, 0);">后出现的规则会覆盖先出现的规则</font>**
+这主要与 **CSS 的层叠规则**有关。当多个规则拥有相同的特异性（specificity）时，**后出现的规则会覆盖先出现的规则**
 
-<font style="color:rgb(0, 0, 0);">链接的不同状态可能会同时满足多个条件。例如：</font>
+链接的不同状态可能会同时满足多个条件。例如：
 
-* <font style="color:rgb(0, 0, 0);">一个</font>**<font style="color:rgb(0, 0, 0);">未访问的链接</font>**<font style="color:rgb(0, 0, 0);">在被鼠标悬停时，同时匹配 </font><code><font style="color:rgb(0, 0, 0);">a:link</font></code><font style="color:rgb(0, 0, 0);">和 </font><code><font style="color:rgb(0, 0, 0);">a:hover</font></code><font style="color:rgb(0, 0, 0);">。</font>
-* <font style="color:rgb(0, 0, 0);">一个</font>**<font style="color:rgb(0, 0, 0);">已访问的链接</font>**<font style="color:rgb(0, 0, 0);">在被鼠标悬停时，同时匹配 </font><code><font style="color:rgb(0, 0, 0);">a:visited</font></code><font style="color:rgb(0, 0, 0);">和 </font><code><font style="color:rgb(0, 0, 0);">a:hover</font></code><font style="color:rgb(0, 0, 0);">。</font>
-* <font style="color:rgb(0, 0, 0);">一个链接在被</font>**<font style="color:rgb(0, 0, 0);">点击的瞬间</font>**<font style="color:rgb(0, 0, 0);">，同时匹配 </font><code><font style="color:rgb(0, 0, 0);">a:link</font></code><font style="color:rgb(0, 0, 0);">(或 </font><code><font style="color:rgb(0, 0, 0);">a:visited</font></code><font style="color:rgb(0, 0, 0);">) 和 </font><code><font style="color:rgb(0, 0, 0);">a:active</font></code><font style="color:rgb(0, 0, 0);">。</font>
+* 一个**未访问的链接**在被鼠标悬停时，同时匹配 `a:link`和 `a:hover`。
+* 一个**已访问的链接**在被鼠标悬停时，同时匹配 `a:visited`和 `a:hover`。
+* 一个链接在被**点击的瞬间**，同时匹配 `a:link`(或 `a:visited`) 和 `a:active`。
 
-<font style="color:rgb(0, 0, 0);">如果顺序不正确，例如把</font><font style="color:rgb(0, 0, 0);"> </font><code><font style="color:rgb(0, 0, 0);">a:hover</font></code><font style="color:rgb(0, 0, 0);">放在了</font><font style="color:rgb(0, 0, 0);"> </font><code><font style="color:rgb(0, 0, 0);">a:link</font></code><font style="color:rgb(0, 0, 0);">和</font><font style="color:rgb(0, 0, 0);"> </font><code><font style="color:rgb(0, 0, 0);">a:visited</font></code><font style="color:rgb(0, 0, 0);">前面，那么后面定义的</font><font style="color:rgb(0, 0, 0);"> </font><code><font style="color:rgb(0, 0, 0);">a:link</font></code><font style="color:rgb(0, 0, 0);">/</font><font style="color:rgb(0, 0, 0);"> </font><code><font style="color:rgb(0, 0, 0);">a:visited</font></code><font style="color:rgb(0, 0, 0);">就会覆盖掉</font><font style="color:rgb(0, 0, 0);"> </font><code><font style="color:rgb(0, 0, 0);">a:hover</font></code><font style="color:rgb(0, 0, 0);">的样式，导致悬停效果看不见</font>**<font style="background-color:rgba(0, 0, 0, 0.05);">6</font>\*\*\*\*<font style="background-color:rgba(0, 0, 0, 0.05);">7</font>**<font style="color:rgb(0, 0, 0);">。</font>
+如果顺序不正确，例如把 `a:hover`放在了 `a:link`和 `a:visited`前面，那么后面定义的 `a:link`/ `a:visited`就会覆盖掉 `a:hover`的样式，导致悬停效果看不见**67**。
 
 **最佳实践**
 
-1. **<font style="color:rgb(0, 0, 0);">合并相同样式</font>**<font style="color:rgb(0, 0, 0);">：如果某些状态的样式相同，可以合并它们以简化代码</font>
+1. **合并相同样式**：如果某些状态的样式相同，可以合并它们以简化代码
 
 ```css
 /* 合并未访问和已访问的样式 */
@@ -1204,9 +1222,10 @@ a:active {
   color: #ff0000;
   text-decoration: none;
 }
+
 ```
 
-2. **<font style="color:rgb(0, 0, 0);">提升可访问性</font>**<font style="color:rgb(0, 0, 0);">：确保悬停和激活状态的样式变化足够明显，并且始终为聚焦状态 </font><code><font style="color:rgb(0, 0, 0);">:focus</font></code><font style="color:rgb(0, 0, 0);">定义样式（通常与 </font><code><font style="color:rgb(0, 0, 0);">:hover</font></code><font style="color:rgb(0, 0, 0);">相同），这对于键盘导航的用户至关重要</font>
+2. **提升可访问性**：确保悬停和激活状态的样式变化足够明显，并且始终为聚焦状态 `:focus`定义样式（通常与 `:hover`相同），这对于键盘导航的用户至关重要
 
 ```css
 a:hover,
@@ -1217,9 +1236,10 @@ a:focus { /* 把 :focus 和 :hover 放在一起 */
 a:active {
   /* ... */
 }
+
 ```
 
-3. **<font style="color:rgb(0, 0, 0);">作用域控制</font>**<font style="color:rgb(0, 0, 0);">：你可以为页面中不同区域的链接指定不同的样式，只需加上更具体的选择器</font>
+3. **作用域控制**：你可以为页面中不同区域的链接指定不同的样式，只需加上更具体的选择器
 
 ```css
 /* 只改变主导航内的链接颜色 */
@@ -1230,9 +1250,10 @@ a:active {
   color: #eeeeee;
 }
 /* 页脚的链接保持默认样式 */
+
 ```
 
-<font style="color:rgb(0, 0, 0);">遵循 </font>**<font style="color:rgb(0, 0, 0);">LVHA</font>**<font style="color:rgb(0, 0, 0);"> 顺序是编写可靠 CSS 的一个小但重要的细节</font>
+遵循 **LVHA** 顺序是编写可靠 CSS 的一个小但重要的细节
 
 #### rgba()和opacity的透明效果有什么不同?（了解）
 
@@ -1251,6 +1272,7 @@ rgba()和 opacity 都能实现透明效果，但最大的不同是 opacity 作�
   transform: scaleY(0.5);
   transform-origin: 0 0;
 }
+
 ```
 
 2. **使用线性渐变**
@@ -1260,6 +1282,7 @@ rgba()和 opacity 都能实现透明效果，但最大的不同是 opacity 作�
   height: 1px;
   background: linear-gradient(to bottom, #333, #333 50%, transparent 50%);
 }
+
 ```
 
 3. **使用box-shadow**
@@ -1269,6 +1292,7 @@ rgba()和 opacity 都能实现透明效果，但最大的不同是 opacity 作�
   height: 1px;
   box-shadow: 0 0.5px 0 0 #333;
 }
+
 ```
 
 4. **使用伪元素**
@@ -1285,6 +1309,7 @@ rgba()和 opacity 都能实现透明效果，但最大的不同是 opacity 作�
   transform: scaleY(0.5);
   transform-origin: 0 0;
 }
+
 ```
 
 5. **使用SVG（适合复杂图形）**
@@ -1293,6 +1318,7 @@ rgba()和 opacity 都能实现透明效果，但最大的不同是 opacity 作�
 <svg height="1.5" width="100%">
   <line x1="0" y1="0.75" x2="100%" y2="0.75" stroke="#333" stroke-width="1.5" />
 </svg>
+
 ```
 
 #### CSS 如何使用服务端的字体?
@@ -1327,9 +1353,9 @@ src: url(<http://www.example.c>om/font.eot);
 
 }
 
-### <font style="color:#96A7FD;background-color:rgb(252, 252, 252);">性能优化与工程化（了解）</font>
+### 性能优化与工程化（了解）
 
-#### <font style="color:#DF2A3F;">如果使用CSS提高页面性能?（必背）</font>
+#### 如果使用CSS提高页面性能?（必背）
 
 实现方式有很多种，主要有如下:
 
@@ -1362,7 +1388,7 @@ css 预处理器为 css 增加一些编程特性，无需考虑浏览器的兼�
 * 可以轻松实现多重继承
 * 完美的兼容了csS 代码，可以应用到老项目中
 
-#### <font style="color:#DF2A3F;">为什么有时候用translate来改变位置而不是使用position进行定位?（必备）</font>
+#### 为什么有时候用translate来改变位置而不是使用position进行定位?（必备）
 
 translate 是 transform 属性的一个值。
 
@@ -1413,11 +1439,11 @@ CSS 预编语言是一种基于 CSS 的扩展语言，可以更加方便和高�
 
 总之，CSS 预编语言是一种非常有用的工具，可以提高 CSS 开发的效率和可维护性。选择哪种预编语言取决于项目需求和个人喜好，需要根据具体情况来进行选择。
 
-### <font style="color:#7E45E8;background-color:rgb(252, 252, 252);">特殊问题解决方案</font>
+### 特殊问题解决方案
 
-#### <font style="color:#DF2A3F;">BFC（必背）</font>
+#### BFC（必背）
 
-> <font style="color:rgb(119, 119, 119);">块格式化上下文（Block Formatting Context）</font>
+> 块格式化上下文（Block Formatting Context）
 
 有几种方法可以为元素生成BFC：
 
@@ -1490,37 +1516,38 @@ BFC基本概念：块级格式化上下文，独立的渲染区域。
 
 #### margin重叠（了解）
 
-**<font style="background-color:rgb(247, 247, 248);">Margin 重叠</font>**<font style="color:rgb(55, 65, 81);background-color:rgb(247, 247, 248);">是指在某些情况下，两个或更多相邻元素的外边距（margin）可能会合并成一个较大的外边距，而不是简单地相加。这种现象可能会在垂直方向上发生，导致元素之间的间距比预期的要大。</font>
+**Margin 重叠**是指在某些情况下，两个或更多相邻元素的外边距（margin）可能会合并成一个较大的外边距，而不是简单地相加。这种现象可能会在垂直方向上发生，导致元素之间的间距比预期的要大。
 
-<font style="color:rgb(55, 65, 81);background-color:rgb(247, 247, 248);">Margin 重叠是由 CSS 规范定义的行为，通常会在以下情况下发生：</font>
+Margin 重叠是由 CSS 规范定义的行为，通常会在以下情况下发生：
 
-1. **<font style="background-color:rgb(247, 247, 248);">相邻兄弟元素重叠</font>**<font style="color:rgb(55, 65, 81);background-color:rgb(247, 247, 248);">：当两个相邻的兄弟元素之间没有任何内容、边框或填充来分隔它们时，它们的上下外边距可能会重叠。例如：</font>
+1. **相邻兄弟元素重叠**：当两个相邻的兄弟元素之间没有任何内容、边框或填充来分隔它们时，它们的上下外边距可能会重叠。例如：
 
 ```plain
 htmlCopy code
 <div class="box"></div>
 <div class="box"></div>
+
 ```
 
-<font style="color:rgb(55, 65, 81);background-color:rgb(247, 247, 248);">上面的代码中，两个相邻的 </font>**<font style="background-color:rgb(247, 247, 248);">.box</font>**<font style="color:rgb(55, 65, 81);background-color:rgb(247, 247, 248);"> 元素之间的外边距会重叠，实际的间距可能是 20px 而不是 40px。</font>
+上面的代码中，两个相邻的 **.box** 元素之间的外边距会重叠，实际的间距可能是 20px 而不是 40px。
 
-2. **<font style="background-color:rgb(247, 247, 248);">父元素与第一个/最后一个子元素重叠</font>**<font style="color:rgb(55, 65, 81);background-color:rgb(247, 247, 248);">：当父元素的外边距与它的第一个或最后一个子元素的外边距重叠时，可能会导致外边距合并。这种情况通常发生在没有边框、填充或内联内容来分隔父元素和子元素时。</font>
+2. **父元素与第一个/最后一个子元素重叠**：当父元素的外边距与它的第一个或最后一个子元素的外边距重叠时，可能会导致外边距合并。这种情况通常发生在没有边框、填充或内联内容来分隔父元素和子元素时。
 
 ```plain
 htmlCopy code
 <div class="parent">
   <div class="child"></div>
 </div>
+
 ```
 
-<font style="color:rgb(55, 65, 81);background-color:rgb(247, 247, 248);">在上面的例子中，父元素和子元素之间的外边距可能会重叠，导致实际的间距可能是 30px 而不是 50px。</font>
+在上面的例子中，父元素和子元素之间的外边距可能会重叠，导致实际的间距可能是 30px 而不是 50px。
 
-<font style="color:rgb(55, 65, 81);background-color:rgb(247, 247, 248);">Margin 重叠是一种正常的 CSS 行为，但有时可能会引起布局上的困惑。为了避免不希望的 Margin 重叠，可以考虑以下方法：</font>
+Margin 重叠是一种正常的 CSS 行为，但有时可能会引起布局上的困惑。为了避免不希望的 Margin 重叠，可以考虑以下方法：
 
-* <font style="color:rgb(55, 65, 81);background-color:rgb(247, 247, 248);">使用内边距（padding）来代替外边距，避免元素之间直接相邻。</font>
-* <font style="color:rgb(55, 65, 81);background-color:rgb(247, 247, 248);">使用 </font>**<font style="background-color:rgb(247, 247, 248);">overflow: hidden;</font>**<font style="color:rgb(55, 65, 81);background-color:rgb(247, 247, 248);"> 或 </font>**<font style="background-color:rgb(247, 247, 248);">overflow: auto;</font>**<font style="color:rgb(55, 65, 81);background-color:rgb(247, 247, 248);"> 触发 BFC（块级格式化上下文），从而阻止 Margin 重叠。</font>
-* <font style="color:rgb(55, 65, 81);background-color:rgb(247, 247, 248);">使用空的或透明的边框来分隔相邻元素，以阻止 Margin 重叠。</font>
+* 使用内边距（padding）来代替外边距，避免元素之间直接相邻。
+* 使用 **overflow: hidden;** 或 **overflow: auto;** 触发 BFC（块级格式化上下文），从而阻止 Margin 重叠。
+* 使用空的或透明的边框来分隔相邻元素，以阻止 Margin 重叠。
 
-
-> 更新: 2025-12-15 03:53:02  
+> 更新: 2025-12-15 03:53:02
 > 原文: <https://www.yuque.com/u56987424/lwyx/wuacfysct5s3esba>

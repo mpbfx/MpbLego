@@ -1,8 +1,17 @@
+---
+tags:
+  - 前端
+  - 八股
+  - React
+  - 框架
+  - Hooks
+---
+
 # React
 
-### <font style="color:#5C8D07;">核心概念与基础</font>
+### 核心概念与基础
 
-#### <font style="color:#DF2A3F;">说说对受控组件和非受控组件的理解，以及应用场景？（必背）</font>
+#### 说说对受控组件和非受控组件的理解，以及应用场景？（必背）
 
 ##### 一、受控组件
 
@@ -20,6 +29,7 @@ class TestComponent extends React.Component {
     return <input name="username" value={this.state.username} />
   }
 }
+
 ```
 
 这时候当我们在输入框输入内容的时候，会发现输入的内容并无法显示出来，也就是input标签是一个可读的状态
@@ -59,6 +69,7 @@ export class UnControll extends Component {
     )
   }
 }
+
 ```
 
 ##### 三、应用场景
@@ -71,7 +82,7 @@ export class UnControll extends Component {
 
 ![1758826183373-4635c3f1-0dee-4e65-909c-7fdc61aa9855.png](./img/nZtOW9UADNIPh4j1/1758826183373-4635c3f1-0dee-4e65-909c-7fdc61aa9855-441887.png)
 
-#### <font style="color:#DF2A3F;">setState 是同步，还是异步的？（必背）</font>
+#### setState 是同步，还是异步的？（必背）
 
 ##### react18之前
 
@@ -140,18 +151,18 @@ export default App;
 
 在上面的例子中，MyPortalComponent 中的内容会被渲染到具有 id 为 'portal-root' 的 DOM 元素外。
 
-#### <font style="color:#DF2A3F;">React 事件绑定的方式有哪些？区别是什么？（必背） </font>
+#### React 事件绑定的方式有哪些？区别是什么？（必背）
 
-* **三种方式**：
+***三种方式**：
   1. 构造函数中绑定：`this.handleClick = this.handleClick.bind(this)`
   2. 箭头函数绑定：`onClick={() => this.handleClick()}`
   3. 类属性箭头函数：`handleClick = () => { ... }`
-* **区别**：
+***区别**：
   * 性能：方式3最好，方式2每次渲染都创建新函数
   * 简洁性：方式3最简洁
   * 推荐：方式3（类属性箭头函数）或函数组件+Hooks
 
-#### <font style="color:#DF2A3F;">React 中的 ref 有什么用？（必背）</font>
+#### React 中的 ref 有什么用？（必背）
 
 使用 refs 获取。组件被调用时会新建一个该组件的实例。refs 会指向这个实例，可以是一个回调函数，回调函数会在组件被挂载后立即执行
 
@@ -159,7 +170,7 @@ export default App;
 
 refs 无法用于无状态组件，无状态组件挂载时只是方法调用，没有新建实例。在 v16 之后，可以使用 useRef。
 
-#### <font style="color:#DF2A3F;">说说React Jsx转换成真实DOM过程？（必背）</font>
+#### 说说React Jsx转换成真实DOM过程？（必背）
 
 ##### 一、是什么
 
@@ -172,6 +183,7 @@ react通过将组件编写的JSX映射到屏幕，以及组件中的状态发生
   <img src="avatar.png" className="profile" />
   <Hello />
 </div>
+
 ```
 
 会被babel转化成如下：
@@ -186,6 +198,7 @@ React.createElement(
   }),
   React.createElement(Hello, null)
 );
+
 ```
 
 在转化过程中，babel在编译时会判断 JSX 中组件的首字母：
@@ -197,6 +210,7 @@ React.createElement(
 
 ```javascript
 ReactDOM.render(<App />,  document.getElementById("root"));
+
 ```
 
 ##### 二、过程
@@ -242,6 +256,7 @@ const jsx = (
     <ClassComponent name="类组件" color="red" />
   </div>
 );
+
 ```
 
 这些类别最终都会被转化成React.createElement这种形式
@@ -278,6 +293,7 @@ function createTextNode(text) {
 export default {
     createElement
 };
+
 ```
 
 createElement会根据传入的节点信息进行一个判断：
@@ -291,6 +307,7 @@ createElement会根据传入的节点信息进行一个判断：
 
 ```javascript
 ReactDOM.render(element, container[, callback])
+
 ```
 
 当首次调用时，容器节点里的所有 DOM 元素都会被替换，后续的调用则会使用 React 的 diff算法进行高效的更新
@@ -374,6 +391,7 @@ function updateClassComponent(vnode, parentNode) {
 export default {
     render
 };
+
 ```
 
 ##### 三、总结
@@ -386,7 +404,7 @@ export default {
 * createElement函数对key和ref等特殊的props进行处理，并获取defaultProps对默认props进行赋值，并且对传入的孩子节点进行处理，最终构造成一个虚拟DOM对象
 * ReactDOM.render将生成好的虚拟DOM渲染到指定容器上，其中采用了批处理、事务等机制并且对特定浏览器进行了性能优化，最终转换为真实DOM
 
-#### <font style="color:#DF2A3F;">简述下 React 的事件代理机制？（必背）</font>
+#### 简述下 React 的事件代理机制？（必背）
 
 React 并不会把所有的处理函数直接绑定在真实的节点上。而是把所有的事件绑定到结构的最外层，使用一个统一的事件监听器，这个事件监听器上维持了一个映射来保存所有组件内部的事件监听和处理函数。
 
@@ -407,12 +425,12 @@ React 并不会把所有的处理函数直接绑定在真实的节点上。而�
 
 之所以会将事件委托从document中移到id = root的DOM元素，是为了可以更加安全地进行新旧版本 React 树的嵌套。
 
-#### <font style="color:#DF2A3F;">state 和 props 有什么区别？（必背）</font>
+#### state 和 props 有什么区别？（必背）
 
-* **定义**：state 是组件内部状态，props 是父组件传入的参数
-* **可变性**：state 可修改（通过 setState），props 只读
-* **作用域**：state 是组件私有，props 是外部传入
-* **通信**：父组件通过 props 向子组件传值，子组件通过回调函数向父组件通信
+***定义**：state 是组件内部状态，props 是父组件传入的参数
+***可变性**：state 可修改（通过 setState），props 只读
+***作用域**：state 是组件私有，props 是外部传入
+***通信**：父组件通过 props 向子组件传值，子组件通过回调函数向父组件通信
 
 #### 讲讲 React.memo 和 JS 的 memorize 函数的区别
 
@@ -442,6 +460,7 @@ const elem = <MyComponent />;
 
 console.log(React.isValidElement(elem)); // true
 console.log(React.isValidElement({}));   // false
+
 ```
 
 在上述代码中，定义了一个简单的组件 MyComponent，并通过 JSX 语法创建了一个 React 元素 elem。然后，使用 React.isValidElement() 方法对 elem 和一个普通对象 {} 进行判断，并输出结果。
@@ -477,6 +496,7 @@ const App = () => {
 };
 
 ReactDOM.render(<App />, document.getElementById('root'));
+
 ```
 
 在上面的例子中，react 库提供了 App 组件的定义，而 react-dom 库提供了 ReactDOM.render 方法，用于将组件渲染到 HTML 页面中。这种分工让 React 在不同平台上能够更灵活地适应各种渲染目标。
@@ -511,6 +531,7 @@ eventTarget.addEventListener('click', () => {});
 
 eventTarget.onclick = function () {};
 eventTarget.onclick = function () {}; // 第二个会把第一个覆盖
+
 ```
 
 事件执行顺序
@@ -519,6 +540,7 @@ eventTarget.onclick = function () {}; // 第二个会把第一个覆盖
 <div>
   <span>点我</span>
 </div>
+
 ```
 
 当我们点击span标签的时候会经过这么三个过程，在路径内的元素绑定的事件都会进行触发
@@ -543,7 +565,7 @@ import "./styles.css";
 const logFunc = (target, isSynthesizer, isCapture = false) => {
     const info = `${isSynthesizer ? "合成" : "原生"}事件，${
         isCapture ? "捕获" : "冒泡"}阶段，${target}元素执行了`;
-    
+
     console.log(info);
 };
 
@@ -563,7 +585,7 @@ export default function App() {
     const divDom = useRef();
     const h1Dom = useRef();
     useEffect(() => {
-    
+
         const docClickCapFunc = () => logFunc("document", false, true);
         const divClickCapFunc = () => logFunc("div", false, true);
         const h1ClickCapFunc = () => logFunc("h1", false, true);
@@ -610,6 +632,7 @@ export default function App() {
         </div>
     );
 }
+
 ```
 
 当我们点击h1的时候
@@ -625,6 +648,7 @@ const divClickCapFunc = (e) => {
     logFunc("div", false, true);
 };
 // ...
+
 ```
 
 模拟阶段
@@ -691,6 +715,7 @@ const divClickCapFunc = (e) => {
     contentDom.onClickCapture = () => logFunc('h1', true, true);
   </script>
 </html>
+
 ```
 
 点击h1可以看到一路上的注册的所有事件已经执行了
@@ -737,6 +762,7 @@ function App() {
   );
 }
 export default App;
+
 ```
 
 写完之后点击按钮Modal被弹出来, 但是点击modal里面的内容modal就隐藏了，添加阻止事件流函数还是不行
@@ -793,6 +819,7 @@ stopImmediatePropagation和stopPropagation的区别就是，前者会阻止当�
     contentDom.onClickCapture = () => logFunc('h1', true, true);
   </script>
 </html>
+
 ```
 
 区别就是在外层增加了一个root模拟根节点，修改了dispatchEvent的逻辑
@@ -832,6 +859,7 @@ const MyClassComponent = class extends React.Component {
 
 console.log(isClassComponent(MyComponent)); // false
 console.log(isClassComponent(MyClassComponent)); // true
+
 ```
 
 上面定义了一个名为isClassComponent的函数，它接受一个组件作为参数。函数内部使用typeof运算符来判断该组件是否为函数类型，并通过检查component.prototype.isReactComponent属性来确定是否为Class组件。
@@ -875,7 +903,7 @@ componentWillMount、componentWillReceiveProps、componentWillUpdate 这三个�
 
 用一个静态函数 getDerivedStateFromProps 来取代被废弃的几个生命周期函数，这样开发者就无法通过 this 获取到组件的实例，也不能发送网络请求以及调用 this.setState。它就是强制开发者在 render 之前只做无副作用的操作，间接强制我们无法进行这些不合理不规范的操作，从而避免对生命周期的滥用。
 
-#### <font style="color:#ED740C;">简述下 React 的生命周期？每个生命周期都做了什么？（选背）</font>
+#### 简述下 React 的生命周期？每个生命周期都做了什么？（选背）
 
 ![1758991420845-3f5fabb5-d176-4a27-adff-af13d8277e63.png](./img/nZtOW9UADNIPh4j1/1758991420845-3f5fabb5-d176-4a27-adff-af13d8277e63-693283.png)
 
@@ -967,6 +995,7 @@ componentDidUpdate(prevProps) {
     this.fetchData(this.props.userID);
   }
 }
+
 ```
 
 你也可以在 componentDidUpdate() 中直接调用 setState()，但请注意它必须被包裹在一个条件语句里，正如上述的例子那样进行处理，否则会导致死循环。它还会导致额外的重新渲染，虽然用户不可见，但会影响组件性能。不要将 props “镜像”给 state，请考虑直接使用 props。 欲了解更多有关内容，请参阅为什么 props 复制给 state 会产生 bug。
@@ -1044,9 +1073,9 @@ React 的开发和生产构建版本在 componentDidCatch() 的方式上有轻�
 
 相反，在生产模式下，错误不会冒泡，这意味着任何根错误处理器只会接受那些没有显式地被 componentDidCatch() 捕获的错误。
 
-### <font style="color:#C75C00;">Hooks</font>
+### Hooks
 
-#### <font style="color:#DF2A3F;">为什么不能在循环、条件或嵌套函数中调用 Hooks？（必背）</font>
+#### 为什么不能在循环、条件或嵌套函数中调用 Hooks？（必背）
 
 如果在条件语句中使用hooks，React会抛出 error。
 
@@ -1060,6 +1089,7 @@ const [name,setName] = useState('leo');
 ......
 
 setName('Lily');
+
 ```
 
 简而言之，这个初始化了一个hooks，并且将其追加到链表结尾。
@@ -1105,6 +1135,7 @@ function mountState(initialState) {
 
   return [hook.memoizedState, dispatch];
 }
+
 ```
 
 从这段源码中我们可以看出，mounState 的主要工作是初始化 Hooks。在整段源码中，最需要关注的是 mountWorkInProgressHook 方法，它为我们道出了 Hooks 背后的数据结构组织形式。以下是 mountWorkInProgressHook 方法的源码：
@@ -1137,6 +1168,7 @@ function mountWorkInProgressHook() {
   // 返回当前的 hook
   return workInProgressHook;
 }
+
 ```
 
 到这里可以看出，hook 相关的所有信息收敛在一个 hook 对象里，而 hook 对象之间以单向链表的形式相互串联。
@@ -1153,7 +1185,7 @@ hooks 的渲染是通过“依次遍历”来定位每个 hooks 内容的。如�
 
 ```javascript
 let mounted = false;
-    
+
     if(!mounted){
         // eslint-disable-next-line
         const [name,setName] = useState('leo');
@@ -1163,10 +1195,11 @@ let mounted = false;
     const [career,setCareer] = useState('码农');
     console.log('career',career);
     ......
-    
+
     <div onClick={()=>setName('Lily')}>
     点我点我点我
     <div>
+
 ```
 
 点击div后，我们期望的输出是 "码农"，然而事实上(尽管会error，但是打印还是执行)打印的为 "Lily"
@@ -1244,6 +1277,7 @@ const Child = (props) => {
     </div>
   );
 };
+
 ```
 
 拿到读写接口的组件就可以控制state数据
@@ -1258,7 +1292,7 @@ const Child = (props) => {
 * 设置provider并通过value接口传递state数据
 * 局部组件从value接口中传递的数据对象中获取读写接口
 
-#### <font style="color:#DF2A3F;">说说你对 useMemo 的理解（必背）</font>
+#### 说说你对 useMemo 的理解（必背）
 
 ##### Memo
 
@@ -1308,14 +1342,16 @@ function Child2(props) {
 
 const rootElement = document.getElementById("root");
 ReactDOM.render(<App />, rootElement);
+
 ```
 
 上面的代码我设置了两个子组件，分别读取父组件上的n跟m，然后父组件上面设置两个点击按钮，当点击后分别让设置的n、m加1。以下是第一次渲染时log控制台的结果
 
 ```javascript
-执行最外层盒子了 
-执行子组件1了 
+执行最外层盒子了
+执行子组件1了
 执行子组件2了
+
 ```
 
 跟想象中一样，render时先进入App函数，执行，发现里面的两个child函数，执行，创建虚拟dom，创建实体dom，最后将画面渲染到页面上。
@@ -1352,6 +1388,7 @@ const Child2 = React.memo((props) => {
   console.log("执行子组件2了");
   return <div>子组件2上的m：{props.value}</div>;
 });
+
 ```
 
 再重新点击试试？
@@ -1378,6 +1415,7 @@ const Child2 = React.memo((props) => {
 
 ```javascript
 <Child2 value={m} onClick={addM} /> //addM是修改M的函数
+
 ```
 
 点击按钮让n+1
@@ -1414,6 +1452,7 @@ const addM = useMemo(() => {
       setM({ m: m.m + 1 });
     };
   }, [m]); //表示监控m变化
+
 ```
 
 使用方式就跟useEffect似的。
@@ -1428,6 +1467,7 @@ useMemo(() => {
       setM({ m: m.m + 1 });
     };
   }, [m])
+
 ```
 
 react就给我们准备了语法糖，useCallback。它是这样写的
@@ -1436,6 +1476,7 @@ react就给我们准备了语法糖，useCallback。它是这样写的
   const addM = useCallback(() => {
     setM({ m: m.m + 1 });
   }, [m]);
+
 ```
 
 是不是看上去正常多了？
@@ -1482,6 +1523,7 @@ const Child2 = React.memo((props) => {
 
 const rootElement = document.getElementById("root");
 ReactDOM.render(<App />, rootElement);
+
 ```
 
 总结
@@ -1510,6 +1552,7 @@ const initialState = [
   { id: 2, name: "yan" },
   { id: 2, name: "xi" }
 ];
+
 ```
 
 创建一个App组件并渲染它
@@ -1548,6 +1591,7 @@ function App(props) {
     </>
   );
 }
+
 ```
 
 上面的代码，我对一个数组进行渲染+删除操作，当点击按钮时，就会删除数组的对应index的数据，从而执行页面更新
@@ -1566,6 +1610,7 @@ const useList = () => {
   };
   return { state, setState, deleteLi };//返回查、改、删
 };
+
 ```
 
 我把上面的业务逻辑都放在useList这个函数中，并将查、改、删的API给放在一个对象中return出去。这样就形成了一个自定义Hook
@@ -1576,6 +1621,7 @@ const useList = () => {
 
 ```javascript
 + import useList from \"./useList\";
+
 ```
 
 在需要使用的App组件中执行自定义Hook并接收API
@@ -1587,6 +1633,7 @@ function App(props) {
          ... //这里跟最开始的App组件里是一样的，为了页面整洁，就不贴代码了
   );
 }
+
 ```
 
 ##### 总结
@@ -1599,7 +1646,7 @@ function App(props) {
 
 ![1758993314758-1d06b3e3-6ca7-496a-9517-d776843c1fb5.png](./img/nZtOW9UADNIPh4j1/1758993314758-1d06b3e3-6ca7-496a-9517-d776843c1fb5-507364.png)
 
-看报错，我们知道 effect function 应该返回一个销毁函数（return返回的 cleanup 函数），如果 useEffect 第一个参数传入 async，返回值则变成了 Promise，会导致 react 在调用销毁函数的时候报错\*\*。
+看报错，我们知道 effect function 应该返回一个销毁函数（return返回的 cleanup 函数），如果 useEffect 第一个参数传入 async，返回值则变成了 Promise，会导致 react 在调用销毁函数的时候报错**。
 
 ##### React 为什么要这么做？
 
@@ -1627,6 +1674,7 @@ useEffect(() => {
   };
   asyncFun();
 }, []);
+
 ```
 
 法二：也可以使用 IIFE，如下所示：
@@ -1637,6 +1685,7 @@ useEffect(() => {
     setPass(await mockCheck());
   })();
 }, []);
+
 ```
 
 ##### 自定义 hooks
@@ -1687,6 +1736,7 @@ function useAsyncEffect(
     };
   }, deps);
 }
+
 ```
 
 async...await 我们之前已经提到了，重点看看实现中变量 cancelled 的实现的功能。 它的作用是中断执行。
@@ -1704,6 +1754,7 @@ return () => {
   // 当前 effect 已经被清理
   cancelled = true;
 };
+
 ```
 
 这说明，你通过 useAsyncEffect 没有 useEffect 返回函数中执行清除副作用的功能。
@@ -1719,6 +1770,7 @@ function useAsyncEffect(effect: () => Promise<void | (() => void)>, dependencies
     return () => { cleanupPromise.then(cleanup => cleanup && cleanup()) }
   }, dependencies)
 }
+
 ```
 
 这种做法在github上也有讨论，上面有个大神的说法我表示很赞同：
@@ -1737,6 +1789,7 @@ function useAsyncEffect(effect: (isCanceled: () => boolean) => Promise<void>, de
     return () => { canceled = true; }
   }, dependencies)
 }
+
 ```
 
 Demo:
@@ -1748,6 +1801,7 @@ useAsyncEffect(async (isCanceled) => {
     // TODO: Still OK to do some effect, useEffect hasn't been canceled yet.
   }
 }, [stuffId]);
+
 ```
 
 其实归根结底，我们的清除机制不应该依赖于异步函数，否则很容易出现难以定位的 bug。
@@ -1758,7 +1812,7 @@ useAsyncEffect(async (isCanceled) => {
 
 我们可以将 async...await 的逻辑封装在 useEffect 回调函数的内部，这就是 ahooks useAsyncEffect 的实现思路，而且它的范围更加广，它支持的是所有的异步函数，包括 generator function。
 
-#### <font style="color:#DF2A3F;">我们应该在什么场景下使用 useMemo 和 useCallback ？（必背）</font>
+#### 我们应该在什么场景下使用 useMemo 和 useCallback ？（必背）
 
 ##### 前言
 
@@ -1794,6 +1848,7 @@ const Component = () => {
 
   // the rest of the code
 };
+
 ```
 
 useCallback 同理：
@@ -1813,6 +1868,7 @@ const Component = () => {
   // the rest of the code
 
 };
+
 ```
 
 当变量直接或者通过依赖链成为 useEffect 的依赖项时，那它可能需要被缓存。这是 useMemo 和 useCallback 最基本的用法。
@@ -1845,10 +1901,11 @@ const App = () => {
   }, []);
 
   return (
-        // 无论 onClick 是否被缓存，Page 都会 re-render 
+        // 无论 onClick 是否被缓存，Page 都会 re-render
     <Page onClick={onClick} />
   );
 };
+
 ```
 
 当使用 setState 改变 state 时，App 会 re-render，作为子组件的 Page 也会跟着 re-render。这里 useCallback 是完全无效的，它并不能阻止 Page 的 re-render。
@@ -1872,6 +1929,7 @@ const App = () => {
     <PageMemoized onClick={onClick} />
   );
 };
+
 ```
 
 由于使用了React.memo，PageMemoized 会浅比较 props 的变化后再决定是否 re-render。onClick 被缓存后不会再变化，所以 PageMemoized 不再 re-render。
@@ -1893,6 +1951,7 @@ const App = () => {
     <PageMemoized onClick={onClick} value={[1, 2, 3]} />
   );
 };
+
 ```
 
 由于 value 会随着 App 的 re-render 重新定义，引用值发生变化，导致 PageMemoized 仍然会触发 re-render。
@@ -1943,6 +2002,7 @@ const List = ({ countries }) => {
     // same
   )
 };
+
 ```
 
 大部分情况下，我们的计算量要比这个 250 个 item 的数组少，而组件渲染要比这个 List 组件复杂的多，所以真实程序中，计算和渲染的性能差距会更大。
@@ -1992,6 +2052,7 @@ function App(){
         }, 1000)
     }, [])
 }
+
 ```
 
 在这个定时器里面去打印 count 的值，会发现，不管在这个组件中的其他地方使用 setCount 将 count 设置为任何值，还是设置多少次，打印的都是1。是不是有一种，尽管历经千帆，我记得的还是你当初的模样的感觉？ hhh... 接下来，我将尽力的尝试将我理解的，为什么会发生这么个情况说清楚，并且浅谈一些hooks其他的特性。如果有错误，希望各位同学能救救孩子，不要让我带着错误的认知活下去了。。。
@@ -2012,6 +2073,7 @@ class ChildComponent extends React.Component {
     // 子组件的渲染逻辑
   }
 }
+
 ```
 
 * 如果是函数式组件，可以使用 useImperativeHandle Hook 将指定的方法暴露给父组件。例如：
@@ -2030,6 +2092,7 @@ function ChildComponent(props, ref) {
 }
 
 export default forwardRef(ChildComponent);
+
 ```
 
 ##### 在父组件中，首先引用或创建对子组件的引用。可以使用 ref 对象来保存对子组件的引用。
@@ -2057,6 +2120,7 @@ class ParentComponent extends React.Component {
     );
   }
 }
+
 ```
 
 * 如果是函数式组件，可以使用 useRef 创建一个 ref 对象，并将其传递给子组件的 ref prop。例如：
@@ -2077,6 +2141,7 @@ function ParentComponent() {
     </div>
   );
 }
+
 ```
 
 通过以上步骤，父组件就能够成功调用子组件中暴露的方法了。请注意，在函数式组件中，需要使用 forwardRef 来包裹子组件，并通过 ref 参数来定义暴露的方法。
@@ -2143,6 +2208,7 @@ function Counter() {
     </div>
   );
 }
+
 ```
 
 上面的代码定义了一个初始状态对象 initialState 和一个 reducer 函数 reducer。reducer 接收当前状态和动作类型，然后根据动作类型返回新的状态对象。
@@ -2153,7 +2219,7 @@ function Counter() {
 
 相比于 useState，useReducer 在处理复杂状态逻辑时更有优势，因为它允许我们将状态更新的逻辑封装在 reducer 函数中，并根据不同的动作类型执行相应的逻辑。这样可以使代码更具可读性和可维护性，并且更容易进行状态追踪和调试。
 
-#### <font style="color:#DF2A3F;">useMemo 和 useCallback 有什么区别？（必背）</font>
+#### useMemo 和 useCallback 有什么区别？（必背）
 
 在 React 中，useMemo 和 useCallback 都是用来优化性能的钩子函数，但它们的用途和作用稍有不同。
 
@@ -2164,6 +2230,7 @@ const memoizedValue = useMemo(() => {
   // 进行耗时的计算
   return someValue;
 }, [dependency1, dependency2]);
+
 ```
 
 在上面的示例中，只有当 dependency1 或者 dependency2 发生变化时，useMemo 才会重新计算并返回新的值，否则会复用之前的值。
@@ -2174,6 +2241,7 @@ const memoizedValue = useMemo(() => {
 const memoizedCallback = useCallback(() => {
   // 处理事件的回调函数
 }, [dependency1, dependency2]);
+
 ```
 
 在这个示例中，只有当 dependency1 或者 dependency2 发生变化时，useCallback 才会返回一个新的回调函数，否则会返回之前的回调函数。
@@ -2200,7 +2268,7 @@ useRef 和 ref 都是 React 中用于操作 DOM 元素或自定义组件实例�
 
 综上所述，useRef 和 ref 都是用于操作 DOM 元素或自定义组件实例的工具，与之相比，forwardRef 则是一个更高级的工具，用于处理专门的情况，即访问嵌套子组件中的 DOM 元素或自定义组件实例。
 
-#### <font style="color:#DF2A3F;">useEffect 的第二个参数, 传空数组和传依赖数组有什么区别（必背）</font>
+#### useEffect 的第二个参数, 传空数组和传依赖数组有什么区别（必背）
 
 在 React 中，useEffect 是一个常用的 Hook，它用于处理组件生命周期中的副作用。
 
@@ -2212,6 +2280,7 @@ useEffect 接收两个参数，第一个是要执行的函数，第二个是依�
 useEffect(() => {
   // 只在挂载和卸载时执行
 }, []);
+
 ```
 
 当传递依赖数组时，useEffect 会在组件挂载和依赖项更新时调用。当依赖项中的任何一个值发生变化时，useEffect 都将被重新调用。如果依赖数组为空，则每次组件重新渲染时都会调用 useEffect。
@@ -2220,6 +2289,7 @@ useEffect(() => {
 useEffect(() => {
   // 在挂载、依赖列表变化及卸载时执行
 }, [dep1, dep2]);
+
 ```
 
 下面是这两种情况的总结：
@@ -2240,9 +2310,10 @@ setTest(prevState => ([
         ...prevState,
     newValue
 ]))
+
 ```
 
-#### <font style="color:#DF2A3F;">如果在 useEffect 的第一个参数中 return 了一个函数，那么第二个参数分别传空数组和传依赖数组，该函数分别是在什么时候执行？（必背）</font>
+#### 如果在 useEffect 的第一个参数中 return 了一个函数，那么第二个参数分别传空数组和传依赖数组，该函数分别是在什么时候执行？（必背）
 
 在 React 中，当 useEffect 第一个参数中返回一个函数时，这个函数会在组件卸载时执行。当传递空数组 \[] 时，useEffect 只会在组件挂载和卸载时调用一次，因此返回的函数也只会在组件卸载时执行一次。
 
@@ -2254,6 +2325,7 @@ useEffect(() => {
     // 在卸载时执行
   }
 }, []);
+
 ```
 
 当传递依赖数组时，useEffect 会在组件挂载和依赖项更新时调用，因此返回的函数也会随着组件更新而执行。每次组件重新渲染时都会检查依赖项列表是否有变化，如果有变化则重新执行 useEffect，并在执行新的 useEffect 前先执行上一个 useEffect 返回的函数（如果存在）。
@@ -2266,6 +2338,7 @@ useEffect(() => {
     // 在下一次 useEffect 执行前执行
   }
 }, [dep1, dep2]);
+
 ```
 
 需要注意，这个函数的作用通常是清除 effect 留下的副作用，例如取消定时器、取消订阅等等。在函数中应该清理掉之前设置的任何 effect，在组件卸载时避免不必要的内存泄漏和资源浪费。
@@ -2284,6 +2357,7 @@ export default function useUpdate(): () => void {
 
   return update;
 }
+
 ```
 
 #### 实现一个 useTimeout Hook
@@ -2297,39 +2371,41 @@ useTimeout 是可以在函数式组件中，处理 setTimeout 计时器函数
 ###### 多次调用setTimeout
 
 ```javascript
-function App() {  
-    const [state, setState] = useState(1);  
-    setTimeout(() => {  
-        setState(state + 1);  
-    }, 3000);  
-    return (  
-        // 我们原本的目的是在页面渲染完3s后修改一下state，但是你会发现当state+1后，触发了页面的重新渲染，就会重新有一个3s的定时器出现来给state+1，既而变成了每3秒+1。  
-        <div> {state} </div>  
-    );  
+function App() {
+    const [state, setState] = useState(1);
+    setTimeout(() => {
+        setState(state + 1);
+    }, 3000);
+    return (
+        // 我们原本的目的是在页面渲染完3s后修改一下state，但是你会发现当state+1后，触发了页面的重新渲染，就会重新有一个3s的定时器出现来给state+1，既而变成了每3秒+1。
+        <div> {state} </div>
+    );
   };
+
 ```
 
 ###### hooks 的闭包缺陷
 
 ```javascript
-function App() {  
-  const [count, setCount] = useState(0)  
-  const [countTimeout, setCountTimeout] = useState(0)  
-  useEffect(() => {  
-      setTimeout(() => {  
-          setCountTimeout(count)  
-      }, 3000)  
-      setCount(5)  
-  }, [])  
-  return (  
-       //count发生了变化，但是3s后setTimout的count却还是0  
-      <div>  
-          Count: {count}  
-          <br />  
-          setTimeout Count: {countTimeout}  
-      </div>  
-  )  
+function App() {
+  const [count, setCount] = useState(0)
+  const [countTimeout, setCountTimeout] = useState(0)
+  useEffect(() => {
+      setTimeout(() => {
+          setCountTimeout(count)
+      }, 3000)
+      setCount(5)
+  }, [])
+  return (
+       //count发生了变化，但是3s后setTimout的count却还是0
+      <div>
+          Count: {count}
+
+          setTimeout Count: {countTimeout}
+      </div>
+  )
 }
+
 ```
 
 ###### useTimeout 实现
@@ -2353,6 +2429,7 @@ function useTimeout(callback, delay) {
     }
   }, [delay]);
 };
+
 ```
 
 如何使用
@@ -2360,9 +2437,10 @@ function useTimeout(callback, delay) {
 ```javascript
   // callback 回调函数， delay 延迟时间
   useTimeout(callback, delay);
+
 ```
 
-### <font style="color:#07787E;">原理与架构</font>
+### 原理与架构
 
 #### React 中为什么不直接使用 requestIdleCallback？
 
@@ -2376,7 +2454,7 @@ function useTimeout(callback, delay) {
 
 虽然requestIdleCallback是一个有趣的浏览器API，但在React这样的复杂UI库中，需要更高度的控制和一致性，因此React选择了自己实现任务调度和执行的机制。
 
-#### <font style="color:#DF2A3F;">为什么 react 需要 fiber 架构，而 Vue 却不需要？（必背）</font>
+#### 为什么 react 需要 fiber 架构，而 Vue 却不需要？（必背）
 
 React引入Fiber架构的主要原因是为了实现更好的异步渲染和更高效的任务调度。Fiber架构使得React能够更细粒度地控制和中断渲染过程，以便更好地响应用户交互、实现懒加载等功能。Vue在设计上采用了不同的策略，因此并不需要类似于Fiber的架构。
 
@@ -2388,37 +2466,37 @@ React引入Fiber架构的主要原因是为了实现更好的异步渲染和更�
 
 Vue在设计上采用了一种不同的响应式系统和渲染机制，不需要像React那样进行复杂的中断和任务调度。Vue的设计目标可能更注重简洁性和开发体验，而React的目标之一是提供更灵活和强大的性能优化工具。每个框架在设计上都有权衡和取舍，选择适合其目标和使用场景的策略。
 
-#### <font style="color:#DF2A3F;">Fiber 架构的核心概念（必背）</font>
+#### Fiber 架构的核心概念（必背）
 
-1. \*\*\*\***<font style="color:rgb(0, 0, 0);">Fiber 是什么？</font>**
+1. **Fiber 是什么？**
 
-* **<font style="color:rgb(0, 0, 0);">数据结构</font>**<font style="color:rgb(0, 0, 0);">：Fiber 是一个 JavaScript 对象，代表一个工作单元。每个 React 组件对应一个 Fiber 节点，它包含了组件的类型、props、state、子节点、兄弟节点等指针信息，形成一个</font>**<font style="color:rgb(0, 0, 0);">链表树结构</font>**<font style="color:rgb(0, 0, 0);">，而非传统的递归树。这使得遍历过程可以暂停和恢复。</font>
-* **<font style="color:rgb(0, 0, 0);">调度单位</font>**<font style="color:rgb(0, 0, 0);">：Fiber 是 React 调度的最小任务单元。React 可以按优先级处理这些单元，高优先级任务（如用户输入）可以中断低优先级任务（如数据渲染）。</font>
+***数据结构**：Fiber 是一个 JavaScript 对象，代表一个工作单元。每个 React 组件对应一个 Fiber 节点，它包含了组件的类型、props、state、子节点、兄弟节点等指针信息，形成一个**链表树结构**，而非传统的递归树。这使得遍历过程可以暂停和恢复。
+***调度单位**：Fiber 是 React 调度的最小任务单元。React 可以按优先级处理这些单元，高优先级任务（如用户输入）可以中断低优先级任务（如数据渲染）。
 
-2. \*\*\*\***<font style="color:rgb(0, 0, 0);">核心特性</font>**
+2. **核心特性**
 
-* **<font style="color:rgb(0, 0, 0);">增量渲染</font>**<font style="color:rgb(0, 0, 0);">：将整个渲染过程分割成多个小任务（时间分片），在浏览器的多个空闲帧中分批完成，避免长时间占用主线程。</font>
-* **<font style="color:rgb(0, 0, 0);">优先级调度</font>**<font style="color:rgb(0, 0, 0);">：为不同的更新任务分配优先级（如 Immediate, User-blocking, Normal, Low, Idle），确保用户交互等关键任务能立即响应。</font>
-* **<font style="color:rgb(0, 0, 0);">可中断与恢复</font>**<font style="color:rgb(0, 0, 0);">：渲染过程可以被更高优先级的任务中断，待高优先级任务完成后，再从中断处恢复执行。</font>
-* **<font style="color:rgb(0, 0, 0);">双缓冲机制</font>**<font style="color:rgb(0, 0, 0);">：React 在内存中同时维护两棵 Fiber 树。当前显示在屏幕上的称为 </font>**<font style="color:rgb(0, 0, 0);">Current Tree</font>**<font style="color:rgb(0, 0, 0);">，正在后台构建的称为 </font>**<font style="color:rgb(0, 0, 0);">WorkInProgress Tree</font>**<font style="color:rgb(0, 0, 0);">。更新完成后，WorkInProgress Tree 会一次性切换为新的 Current Tree，此过程称为“提交”。这能有效减少视觉上的不一致。</font>
+***增量渲染**：将整个渲染过程分割成多个小任务（时间分片），在浏览器的多个空闲帧中分批完成，避免长时间占用主线程。
+***优先级调度**：为不同的更新任务分配优先级（如 Immediate, User-blocking, Normal, Low, Idle），确保用户交互等关键任务能立即响应。
+***可中断与恢复**：渲染过程可以被更高优先级的任务中断，待高优先级任务完成后，再从中断处恢复执行。
+***双缓冲机制**：React 在内存中同时维护两棵 Fiber 树。当前显示在屏幕上的称为 **Current Tree**，正在后台构建的称为 **WorkInProgress Tree**。更新完成后，WorkInProgress Tree 会一次性切换为新的 Current Tree，此过程称为“提交”。这能有效减少视觉上的不一致。
 
 ##### Fiber 的工作流程
 
-<font style="color:rgb(0, 0, 0);">Fiber 的更新过程主要分为两个阶段：</font>
+Fiber 的更新过程主要分为两个阶段：
 
-1. \*\*\*\***<font style="color:rgb(0, 0, 0);">协调阶段</font>**<font style="color:rgb(0, 0, 0);">：此阶段是</font>**<font style="color:rgb(0, 0, 0);">可中断</font>**<font style="color:rgb(0, 0, 0);">的。</font>
+1. **协调阶段**：此阶段是**可中断**的。
 
-* **<font style="color:rgb(0, 0, 0);">目标</font>**<font style="color:rgb(0, 0, 0);">：通过 Diff 算法找出需要更新的组件，并标记变更（如 Placement-插入, Update-更新, Deletion-删除）。</font>
-* **<font style="color:rgb(0, 0, 0);">过程</font>**<font style="color:rgb(0, 0, 0);">：React 会遍历 Fiber 树，创建或更新 Fiber 节点，构建出完整的 WorkInProgress Tree。此阶段可能会因为更高优先级任务的到来而暂停。</font>
+***目标**：通过 Diff 算法找出需要更新的组件，并标记变更（如 Placement-插入, Update-更新, Deletion-删除）。
+***过程**：React 会遍历 Fiber 树，创建或更新 Fiber 节点，构建出完整的 WorkInProgress Tree。此阶段可能会因为更高优先级任务的到来而暂停。
 
-2. \*\*\*\***<font style="color:rgb(0, 0, 0);">提交阶段</font>**<font style="color:rgb(0, 0, 0);">：此阶段是</font>**<font style="color:rgb(0, 0, 0);">同步且不可中断</font>**<font style="color:rgb(0, 0, 0);">的。</font>
+2. **提交阶段**：此阶段是**同步且不可中断**的。
 
-* **<font style="color:rgb(0, 0, 0);">目标</font>**<font style="color:rgb(0, 0, 0);">：将协调阶段计算出的所有变更一次性应用到真实 DOM 上。</font>
-* **<font style="color:rgb(0, 0, 0);">过程</font>**<font style="color:rgb(0, 0, 0);">：React 会执行所有标记的副作用（Side Effects），包括 DOM 的增删改以及生命周期函数（如 </font><code><font style="color:rgb(0, 0, 0);">componentDidUpdate</font></code><font style="color:rgb(0, 0, 0);">）的调用。</font>
+***目标**：将协调阶段计算出的所有变更一次性应用到真实 DOM 上。
+***过程**：React 会执行所有标记的副作用（Side Effects），包括 DOM 的增删改以及生命周期函数（如 `componentDidUpdate`）的调用。
 
 ##### 总结与影响
 
-<font style="color:rgb(0, 0, 0);">Fiber 架构是 React 演进中的一次根本性变革。它通过引入</font>**<font style="color:rgb(0, 0, 0);">可中断的异步渲染</font>**<font style="color:rgb(0, 0, 0);">和</font>**<font style="color:rgb(0, 0, 0);">优先级调度</font>**<font style="color:rgb(0, 0, 0);">，极大地提升了复杂应用的流畅度和用户体验。这项底层革新也为 React 18 的</font>**<font style="color:rgb(0, 0, 0);">并发特性</font>**<font style="color:rgb(0, 0, 0);">（如 </font><code><font style="color:rgb(0, 0, 0);">useTransition</font></code><font style="color:rgb(0, 0, 0);">、</font><code><font style="color:rgb(0, 0, 0);">Suspense</font></code><font style="color:rgb(0, 0, 0);">）奠定了坚实的基础。</font>
+Fiber 架构是 React 演进中的一次根本性变革。它通过引入**可中断的异步渲染**和**优先级调度**，极大地提升了复杂应用的流畅度和用户体验。这项底层革新也为 React 18 的**并发特性**（如 `useTransition`、`Suspense`）奠定了坚实的基础。
 
 #### 说说React render方法的原理？在什么时候会被触发？
 
@@ -2434,6 +2512,7 @@ class Foo extends React.Component {
         return <h1> Foo </h1>;
     }
 }
+
 ```
 
 在函数组件中，指的是函数组件本身：
@@ -2442,6 +2521,7 @@ class Foo extends React.Component {
 function Foo() {
     return <h1> Foo </h1>;
 }
+
 ```
 
 在render中，我们会编写jsx，jsx通过babel编译后就会转化成我们熟悉的js格式，如下：
@@ -2454,6 +2534,7 @@ return (
     Right Reserve
   </div>
 )
+
 ```
 
 babel编译后：
@@ -2478,6 +2559,7 @@ return (
     'Right Reserve'
   )
 )
+
 ```
 
 从名字上来看，createElement方法用来创建元素的。
@@ -2522,6 +2604,7 @@ class Foo extends React.Component {
     );
   }
 }
+
 ```
 
 点击按钮，则调用setState方法，无论count是否发生变化，控制台都会输出Foo render，这就证明render执行了
@@ -2540,7 +2623,7 @@ function Foo() {
   }
 
   console.log("Foo render");
-  
+
   return (
     <div>
       <h1> {count} </h1>
@@ -2548,6 +2631,7 @@ function Foo() {
     </div>
   );
 }
+
 ```
 
 函数组件通过useState这种形式更新数据，当数组的值不发生改变了，就不会触发render
@@ -2579,6 +2663,7 @@ functionFFoo() {
     //div>
   );
 }
+
 ```
 
 只要点击了 App 组件内的 Change name 按钮，不管 Foo 具体实现是什么，都会被重新render渲染
@@ -2608,6 +2693,7 @@ function Foo() {
     </div>
   );
 }
+
 ```
 
 可以发现，使用useState来更新状态的时候，只有首次会触发Foo render，后面并不会导致Foo render
@@ -2717,6 +2803,7 @@ A1
   B2
 </div>
 </div>
+
 ```
 
 ![1758991255724-fff64c8d-cf76-407d-a7c5-4c11cd97c868.png](./img/nZtOW9UADNIPh4j1/1758991255724-fff64c8d-cf76-407d-a7c5-4c11cd97c868-033527.png)
@@ -2743,9 +2830,9 @@ A1
 
 React 用空间换时间，更高效的操作可以方便根据优先级进行操作。同时可以根据当前节点找到其他节点，在下面提到的挂起和恢复过程中起到了关键作用。
 
-### <font style="color:#0C68CA;">生态与工程实践</font>
+### 生态与工程实践
 
-#### <font style="color:#DF2A3F;">你在React项目中是如何使用Redux的? 项目结构是如何划分的？（必背）</font>
+#### 你在React项目中是如何使用Redux的? 项目结构是如何划分的？（必背）
 
 ##### 一、背景
 
@@ -2781,6 +2868,7 @@ react-redux将组件分成：
 <Provider store = {store}>
     <App />
 <Provider>
+
 ```
 
 ###### connection
@@ -2791,6 +2879,7 @@ connect方法将store上的getState 和 dispatch 包装成组件的props
 import { connect } from "react-redux";
 
 connect(mapStateToProps, mapDispatchToProps)(MyComponent)
+
 ```
 
 可以传递两个参数：
@@ -2809,6 +2898,7 @@ const mapStateToProps = (state) => {
         foo: state.bar
     }
 }
+
 ```
 
 组件内部就能够通过props获取到store中的数据
@@ -2827,6 +2917,7 @@ class Foo extends Component {
 }
 Foo = connect()(Foo)
 export default Foo
+
 ```
 
 mapDispatchToProps
@@ -2843,6 +2934,7 @@ const mapDispatchToProps = (dispatch) => { // 默认传递参数就是dispatch
     }
   };
 }
+
 ```
 
 ```javascript
@@ -2852,13 +2944,14 @@ class Foo extends Component {
     }
     render(){
         return(
-         
+
              <button onClick = {this.props.onClick}>点击increase</button>
         )
     }
 }
 Foo = connect()(Foo);
 export default Foo;
+
 ```
 
 ![1758826423973-fb97ef51-bbfa-4386-b9be-45e4765e7702.png](./img/nZtOW9UADNIPh4j1/1758826423973-fb97ef51-bbfa-4386-b9be-45e4765e7702-122822.png)
@@ -2891,6 +2984,7 @@ containers/
   todoListContainer.js
   todoItemContainer.js
   filterContainer.js
+
 ```
 
 按功能组织
@@ -2916,6 +3010,7 @@ filter/
   views/
     components.js
     container.js
+
 ```
 
 每个功能模块对应一个目录，每个目录下包含同样的角色文件：
@@ -2934,22 +3029,24 @@ import reducer from './reducer.js';
 import view from './views/container.js';
 
 export { actions, reducer, view };
+
 ```
 
 导入方法如下：
 
 ```javascript
 import { actions, reducer, view as TodoList } from './xxxx'
+
 ```
 
-#### <font style="color:#DF2A3F;">React 构建组件的方式有哪些？区别是什么？ （必背）</font>
+#### React 构建组件的方式有哪些？区别是什么？ （必背）
 
-* **构建方式**：
+***构建方式**：
   1. 类组件：`class MyComponent extends React.Component`
   2. 函数组件：`function MyComponent()`
   3. 高阶组件：`const EnhancedComponent = hoc(MyComponent)`
   4. 自定义 Hooks：`const useMyHook = () => { ... }`
-* **区别**：
+***区别**：
   * 类组件功能全面但复杂
   * 函数组件简洁，配合 Hooks 功能完整
   * 高阶组件用于逻辑复用
@@ -2994,6 +3091,7 @@ immutable.js 是一个完全独立的库，无论基于什么框架都可以用�
 
 ```javascript
 const obj = Immutable.fromJS({a:'123',b:'234'})
+
 ```
 
 * toJS()：将一个Immutable数据转换为JS类型的数据
@@ -3006,6 +3104,7 @@ const map2 = Map({ a: 1, b: 1, c: 1 })
 map1 === map2   //false
 Object.is(map1, map2) // false
 is(map1, map2) // true
+
 ```
 
 * get(key)：对数据或对象取值
@@ -3019,6 +3118,7 @@ abs.getIn(['a', 'c']) // 子级没有值
 let arr = Immutable.fromJS([1 ,2, 3, {a: 5}]);
 arr.getIn([3, 'a']); // 5
 arr.getIn([3, 'c']); // 子级没有值
+
 ```
 
 如下例子：使用方法如下：
@@ -3029,6 +3129,7 @@ foo = Immutable.fromJS({a: {b: 1}});
 bar = foo.setIn(['a', 'b'], 2);   // 使用 setIn 赋值
 console.log(foo.getIn(['a', 'b']));  // 使用 getIn 取值，打印 1
 console.log(foo === bar);  //  打印 false
+
 ```
 
 如果换到原生的js，则对应如下：
@@ -3039,6 +3140,7 @@ let bar = foo;
 bar.a.b = 2;
 console.log(foo.a.b);  // 打印 2
 console.log(foo === bar);  //  打印 true
+
 ```
 
 ##### 三、在React中应用
@@ -3065,6 +3167,7 @@ const Component = React.createClass({
     this.setState({ data: data });
   }
 }
+
 ```
 
 使用 Immutable 后：
@@ -3080,6 +3183,7 @@ getInitialState() {
     // 这时的 times 并不会改变
     console.log(this.state.data.get('times'));
   }
+
 ```
 
 同理，在redux中也可以将数据进行fromJS处理
@@ -3120,9 +3224,10 @@ export default(state=defaultState,action)=>{
             return state
     }
 }
+
 ```
 
-#### <font style="color:#DF2A3F;">说说你在React项目是如何捕获错误的？（必背）</font>
+#### 说说你在React项目是如何捕获错误的？（必背）
 
 ##### 一、是什么
 
@@ -3171,9 +3276,10 @@ class ErrorBoundary extends React.Component {
       return <h1>Something went wrong.</h1>;
     }
 
-    return this.props.children; 
+    return this.props.children;
   }
 }
+
 ```
 
 然后就可以把自身组件的作为错误边界的子组件，如下：
@@ -3182,6 +3288,7 @@ class ErrorBoundary extends React.Component {
 <ErrorBoundary>
   <MyWidget />
 </ErrorBoundary>
+
 ```
 
 下面这些情况无法捕获到异常：
@@ -3226,12 +3333,14 @@ class MyComponent extends React.Component {
     return <button onClick={this.handleClick}>Click Me</button>
   }
 }
+
 ```
 
 除此之外还可以通过监听onerror事件
 
 ```javascript
 window.addEventListener('error', function(event) { ... })
+
 ```
 
 #### 说说React服务端渲染怎么做？原理是什么？
@@ -3273,6 +3382,7 @@ app.get('/', (req,res) => res.send(`
 `))
 
 app.listen(3000, () => console.log('Exampleapp listening on port 3000!'))
+
 ```
 
 然后再服务器中编写react代码，在app.js中进行应引用
@@ -3287,6 +3397,7 @@ const Home = () =>{
 }
 
 export default Home
+
 ```
 
 为了让服务器能够识别JSX，这里需要使用webpakc对项目进行打包转换，创建一个配置文件webpack.server.js并进行相关配置，如下：
@@ -3310,7 +3421,7 @@ module.exports = {
            loader:'babel-loader',  //使用babel-loader进行打包
            exclude: /node_modules/,//不打包node_modules中的js文件
            options: {
-               presets: ['react','stage-0',['env', { 
+               presets: ['react','stage-0',['env', {
                                   //loader时额外的打包规则,对react,JSX，ES6进行转换
                     targets: {
                         browsers: ['last 2versions']   //对主流浏览器最近两个版本进行兼容
@@ -3320,6 +3431,7 @@ module.exports = {
        }]
     }
 }
+
 ```
 
 接着借助react-dom提供了服务端渲染的 renderToString方法，负责把React组件解析成html
@@ -3344,6 +3456,7 @@ app.get('/',(req,res) => res.send(`
 `))
 
 app.listen(3001, () => console.log('Exampleapp listening on port 3001!'))
+
 ```
 
 上面的过程中，已经能够成功将组件渲染到了页面上
@@ -3364,12 +3477,12 @@ import express from 'express'
 import React from 'react'//引入React以支持JSX的语法
 import { renderToString } from'react-dom/server'//引入renderToString方法
 import Home from './src/containers/Home'
- 
+
 const app = express()
 app.use(express.static('public'));
 //使用express提供的static中间件,中间件会将所有静态文件的路由指向public文件夹
  const content = renderToString(<Home/>)
- 
+
 app.get('/',(req,res)=>res.send(`
 <html>
    <head>
@@ -3383,6 +3496,7 @@ app.get('/',(req,res)=>res.send(`
 `))
 
  app.listen(3001, () =>console.log('Example app listening on port 3001!'))
+
 ```
 
 然后再客户端执行以下react代码，新建webpack.client.js作为客户端React代码的webpack配置文件如下：
@@ -3403,7 +3517,7 @@ module.exports = {
            loader:'babel-loader',               //使用babel-loader进行打包
            exclude: /node_modules/,             //不打包node_modules中的js文件
            options: {
-               presets: ['react','stage-0',['env', {     
+               presets: ['react','stage-0',['env', {
                     //loader时额外的打包规则,这里对react,JSX进行转换
                     targets: {
                         browsers: ['last 2versions']   //对主流浏览器最近两个版本进行兼容
@@ -3413,6 +3527,7 @@ module.exports = {
        }]
     }
 }
+
 ```
 
 这种方法就能够简单实现首页的react服务端渲染，过程对应如下图：
@@ -3431,6 +3546,7 @@ export default (
         <Route path="/" exact component={Home}></Route>
     </div>
 )
+
 ```
 
 然后可以通过index.js引用路由信息，如下：
@@ -3450,6 +3566,7 @@ const App= () => {
 }
 
 ReactDom.hydrate(<App/>, document.getElementById('root'))
+
 ```
 
 这时候控制台会存在报错信息，原因在于每个Route组件外面包裹着一层div，但服务端返回的代码中并没有这个div
@@ -3462,7 +3579,7 @@ import React from 'react'//引入React以支持JSX的语法
 import { renderToString } from 'react-dom/server'//引入renderToString方法
 import { StaticRouter } from 'react-router-dom'
 import Router from '../Routers'
- 
+
 const app = express()
 app.use(express.static('public'));
 //使用express提供的static中间件,中间件会将所有静态文件的路由指向public文件夹
@@ -3488,8 +3605,8 @@ app.get('/',(req,res)=>{
     `)
 })
 
-
 app.listen(3001, () => console.log('Exampleapp listening on port 3001!'))
+
 ```
 
 这样也就完成了路由的服务端渲染
@@ -3578,6 +3695,7 @@ export default function App() {
     </Router>
   );
 }
+
 ```
 
 ###### Route
@@ -3614,6 +3732,7 @@ export default function App() {
     </Router>
   );
 }
+
 ```
 
 ###### Link、NavLink
@@ -3631,6 +3750,7 @@ NavLink是在Link基础之上增加了一些样式属性，例如组件被选中
 <NavLink to="/" exact activeStyle={{color: "red"}}>首页</NavLink>
 <NavLink to="/about" activeStyle={{color: "red"}}>关于</NavLink>
 <NavLink to="/profile" activeStyle={{color: "red"}}>我的</NavLink>
+
 ```
 
 如果需要实现js实现页面的跳转，那么可以通过下面的形式：
@@ -3645,6 +3765,7 @@ const Contact = ({ history }) => (
     <FakeText />
   </Fragment>
 );
+
 ```
 
 props 中接收到的history对象具有一些方便的方法，如goBack，goForward,push
@@ -3666,6 +3787,7 @@ const About = ({
     <FakeText />
   </Fragment>
 )
+
 ```
 
 上述组件当接收到的路由参数name 不等于 tom 的时候，将会自动重定向到首页
@@ -3684,6 +3806,7 @@ swich组件的作用适用于当匹配到第一个组件的时候，后面的组
   <Route path="/:userid" component={User} />
   <Route component={NoMatch} />
 </Switch>
+
 ```
 
 如果不使用switch组件进行包裹，相同 path 的就会被匹配到，然后一起展示。
@@ -3710,6 +3833,7 @@ const Contact = () => {
     </Fragment>
   );
 };
+
 ```
 
 ###### useParams
@@ -3726,6 +3850,7 @@ const About = () => {
     </Fragment>
   );
 };
+
 ```
 
 ###### useLocation
@@ -3740,6 +3865,7 @@ useLocation 会返回当前 URL 的 location 对象
     <Route path="/detail/:id" component={Detail}/>
     <Route component={NoMatch} />
 </Switch>
+
 ```
 
 ##### 三、参数传递
@@ -3762,12 +3888,14 @@ useLocation 会返回当前 URL 的 location 对象
     <Route path="/detail/:id" component={Detail}/>
     <Route component={NoMatch} />
 </Switch>
+
 ```
 
 获取参数方式如下：
 
 ```javascript
 console.log(props.match.params.xxx)
+
 ```
 
 search传递参数
@@ -3780,12 +3908,14 @@ search传递参数
 <Switch>
   <Route path="/detail2" component={Detail2}/>
 </Switch>
+
 ```
 
 获取形式如下：
 
 ```javascript
 console.log(props.location.search)
+
 ```
 
 to传入对象
@@ -3794,19 +3924,21 @@ to传入对象
 
 ```javascript
 <NavLink to={{
-    pathname: "/detail2", 
+    pathname: "/detail2",
     query: {name: "kobe", age: 30},
     state: {height: 1.98, address: "洛杉矶"},
     search: "?apikey=123"
   }}>
   详情2
 </NavLink>
+
 ```
 
 获取参数的形式如下：
 
 ```javascript
 console.log(props.location)
+
 ```
 
 #### 说说React Router有几种模式，以及实现原理？
@@ -3839,7 +3971,7 @@ React Router对应的hash模式和history模式对应的组件为：
 import React from 'react';
 import {
   BrowserRouter as Router,
-  // HashRouter as Router  
+  // HashRouter as Router
   Switch,
   Route,
 } from "react-router-dom";
@@ -3847,7 +3979,6 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Backend from './pages/Backend';
 import Admin from './pages/Admin';
-
 
 function App() {
   return (
@@ -3861,6 +3992,7 @@ function App() {
 }
 
 export default App;
+
 ```
 
 ##### 三、实现原理
@@ -3923,6 +4055,7 @@ class HashRouter extends Component {
 }
 
 export default HashRouter;
+
 ```
 
 ###### Router
@@ -3955,11 +4088,12 @@ class Route extends Component {
   }
 }
 export default Route;
+
 ```
 
-### <font style="color:#4C16B1;">综合与对比</font>
+### 综合与对比
 
-#### <font style="color:#ED740C;">React 和 Vue 在技术层面有哪些区别？（选背）</font>
+#### React 和 Vue 在技术层面有哪些区别？（选背）
 
 React 和 Vue 是当前比较流行的前端框架，它们在技术层面有以下区别：
 
@@ -4035,6 +4169,7 @@ function Person(firstName, lastName) {
 console.log(new Person("战场", "小包"));
 // 当作普通函数调用
 console.log(Person("战场", "小包"))
+
 ```
 
 输出结果:
@@ -4053,6 +4188,7 @@ instanceof 运算符用于检测构造函数的 prototype 属性是否出现在�
 
 ```javascript
 object instanceof constructor
+
 ```
 
 我们可以使用 instanceof 检测某个对象是不是另一个对象的实例，例如 new Person() instanceof Person --> true
@@ -4070,6 +4206,7 @@ function Test() {
 console.log(Test())
 // Test {}
 console.log(new Test())
+
 ```
 
 使用 new 调用函数和普通调用函数最大的区别在于函数内部 this 指向不同: new 调用后 this 指向实例，普通调用则会指向 window。
@@ -4093,6 +4230,7 @@ function Person(firstName, lastName) {
 // 当作普通函数调用
 // Uncaught TypeError: Function constructor A cannot be invoked without "new"
 console.log(Person("战场", "小包"));
+
 ```
 
 通过输出结果，我们可以发现，定义的 Person 构造函数已经无法被普通调用了。撒花~~~
@@ -4104,6 +4242,7 @@ console.log(Person("战场", "小包"));
 ```javascript
 // 输出结果 undefined
 console.log(Person.call(new Person(), "战场", "小包"));
+
 ```
 
 这点瑕疵虽说无伤大雅，但经过小包的学习，ES6 中提供了更好的方案。
@@ -4124,6 +4263,7 @@ function Person() {
 console.log("new: ",new Person())
 // not new: undefined
 console.log("not new:", Person())
+
 ```
 
 所以我们就可以使用 new.target 来非常简单的实现对构造函数的限制。
@@ -4136,6 +4276,7 @@ function Person() {
 }
 // Uncaught TypeError: Function constructor A cannot be invoked without "new"
 console.log("not new:", Person())
+
 ```
 
 使用ES6 Class
@@ -4154,6 +4295,7 @@ class Person {
 }
 // Uncaught TypeError: Class constructor Person cannot be invoked without 'new'
 console.log(Person())
+
 ```
 
 学到这里我就不由得好奇了，既然 Class 必须使用 new 来调用，那提供 new.target 属性的意义在哪里？
@@ -4170,6 +4312,7 @@ class Person {
     }
 }
 new Person()
+
 ```
 
 输出结果:
@@ -4196,6 +4339,7 @@ class Dog extends Animal {
     }
 }
 const dog = new Dog()
+
 ```
 
 输出结果:
@@ -4235,6 +4379,7 @@ class Dog extends Animal {
 }
 // Uncaught TypeError: abstract class cannot new
 const dog = new Animal("dog", "baobao", 18)
+
 ```
 
 ##### 总结
@@ -4245,6 +4390,5 @@ const dog = new Animal("dog", "baobao", 18)
 * 借助 new.target 属性，可与 class 配合定义抽象类
 * 面向对象编程使用 ES6 class——最佳方案
 
-
-> 更新: 2025-12-15 04:07:42  
+> 更新: 2025-12-15 04:07:42
 > 原文: <https://www.yuque.com/u56987424/lwyx/fed2uiwd0g8xrbza>

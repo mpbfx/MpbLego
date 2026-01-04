@@ -1,45 +1,54 @@
+---
+tags:
+  - 前端
+  - 八股
+  - Vue
+  - 框架
+  - 响应式
+---
+
 # VUE
 
 > 笔者将从以下方面展开Vue八股的学习
 >
-> 1. <font style="color:rgba(0, 0, 0, 0.6);background-color:rgb(252, 252, 252);">响应式系统</font>
-> 2. <font style="color:rgba(0, 0, 0, 0.6);background-color:rgb(252, 252, 252);">虚拟DOM与渲染机制</font>
-> 3. <font style="color:rgba(0, 0, 0, 0.6);background-color:rgb(252, 252, 252);">组件系统</font>
-> 4. <font style="color:rgba(0, 0, 0, 0.6);background-color:rgb(252, 252, 252);">状态管理与路由</font>
-> 5. <font style="color:rgba(0, 0, 0, 0.6);background-color:rgb(252, 252, 252);">指令、模板与编译</font>
-> 6. <font style="color:rgba(0, 0, 0, 0.6);background-color:rgb(252, 252, 252);">高级特性与API</font>
-> 7. <font style="color:rgba(0, 0, 0, 0.6);background-color:rgb(252, 252, 252);">工程实践与架构</font>
+> 1. 响应式系统
+> 2. 虚拟DOM与渲染机制
+> 3. 组件系统
+> 4. 状态管理与路由
+> 5. 指令、模板与编译
+> 6. 高级特性与API
+> 7. 工程实践与架构
 
-### <font style="color:#E4495B;background-color:rgb(252, 252, 252);">响应式系统</font>
+### 响应式系统
 
-#### <font style="color:#DF2A3F;">ref和reactivate的区别（必背）</font>
+#### ref和reactivate的区别（必背）
 
-|   **<font style="background-color:rgb(252, 252, 252);">特性</font>**   |                                                                               **<font style="background-color:rgb(252, 252, 252);">ref</font>**                                                                                |                                          **<font style="background-color:rgb(252, 252, 252);">reactive</font>**                                           |
+|   **特性**   |                                                                               **ref**                                                                                |                                          **reactive**                                           |
 | :--------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------: |
-|   **<font style="background-color:rgb(252, 252, 252);">用途</font>**   |                                                               <font style="background-color:rgb(252, 252, 252);">定义基本类型（字符串、数字等）或对象类型</font>                                                               |                                 <font style="background-color:rgb(252, 252, 252);">仅定义对象类型（对象、数组等）</font>                                  |
-|  **<font style="background-color:rgb(252, 252, 252);">返回值</font>**  | <font style="background-color:rgb(252, 252, 252);">包含</font><code><font style="background-color:rgb(252, 252, 252);">.value</font></code><br/><font style="background-color:rgb(252, 252, 252);">属性的响应式引用对象</font> |                                     <font style="background-color:rgb(252, 252, 252);">原始对象的Proxy代理对象</font>                                     |
-| **<font style="background-color:rgb(252, 252, 252);">数据类型</font>** |                                                                    <font style="background-color:rgb(252, 252, 252);">支持所有类型（基本类型+对象）</font>                                                                     |                                        <font style="background-color:rgb(252, 252, 252);">仅支持对象或数组</font>                                         |
-| **<font style="background-color:rgb(252, 252, 252);">访问方式</font>** |                                       <font style="background-color:rgb(252, 252, 252);">操作数据需</font><code><font style="background-color:rgb(252, 252, 252);">.value</font></code>                                        | <font style="background-color:rgb(252, 252, 252);">直接访问属性，无需</font><code><font style="background-color:rgb(252, 252, 252);">.value</font></code> |
+|   **用途**   |                                                               定义基本类型（字符串、数字等）或对象类型                                                               |                                 仅定义对象类型（对象、数组等）                                  |
+|  **返回值**  | 包含`.value` 属性的响应式引用对象 |                                     原始对象的Proxy代理对象                                     |
+| **数据类型** |                                                                    支持所有类型（基本类型+对象）                                                                     |                                        仅支持对象或数组                                         |
+| **访问方式** |                                       操作数据需`.value`                                        | 直接访问属性，无需`.value` |
 
-**<font style="color:rgb(26, 32, 41);">ref 的实现机制</font>**
+**ref 的实现机制**
 
-<font style="color:rgb(26, 32, 41);">ref 内部创建一个包含 value 属性的对象，通过 Object.defineProperty 或 Proxy 对 value 属性进行拦截。</font>
+ref 内部创建一个包含 value 属性的对象，通过 Object.defineProperty 或 Proxy 对 value 属性进行拦截。
 
-<font style="color:rgb(26, 32, 41);">当访问 value 时，触发依赖收集；当修改 value 时，触发派发更新。</font>
+当访问 value 时，触发依赖收集；当修改 value 时，触发派发更新。
 
-<font style="color:rgb(26, 32, 41);">如果传入的是对象或数组，ref 内部会调用 reactive 将其转换为响应式代理对象</font>
+如果传入的是对象或数组，ref 内部会调用 reactive 将其转换为响应式代理对象
 
-**<font style="color:rgb(26, 32, 41);">reactive 的实现机制</font>**
+**reactive 的实现机制**
 
-<font style="color:rgb(26, 32, 41);">reactive 使用 Proxy 对目标对象进行代理，拦截对象的读取、赋值、删除等操作。</font>
+reactive 使用 Proxy 对目标对象进行代理，拦截对象的读取、赋值、删除等操作。
 
-<font style="color:rgb(26, 32, 41);">当访问对象属性时，触发依赖收集；当修改对象属性时，触发派发更新。</font>
+当访问对象属性时，触发依赖收集；当修改对象属性时，触发派发更新。
 
-<font style="color:rgb(26, 32, 41);">Proxy 可以监听动态新增的属性和数组变化，无需额外处理</font>
+Proxy 可以监听动态新增的属性和数组变化，无需额外处理
 
-***
+---
 
-**<font style="color:rgb(26, 32, 41);">LEGO 编辑器项目实战讲解</font>**
+**LEGO 编辑器项目实战讲解**
 
 在 **LEGO 编辑器** 项目中，遵循 **"基本类型/需整体替换用 `ref`，逻辑聚合对象用 `reactive`"** 的原则：
 
@@ -66,7 +75,7 @@ Vue.js使用`WeakMap`来存储每个组件实例到其渲染函数的映射。�
 
 在Vue的响应式系统中，每个组件实例都可能有一些依赖，这些依赖需要在组件的数据变化时被通知。`WeakMap`用于存储组件实例与这些依赖之间的映射。这样，当组件实例不再被需要时，依赖也可以被垃圾回收。
 
-***
+---
 
 **Set的使用场景**
 
@@ -86,8 +95,8 @@ Vue.js使用`WeakMap`来存储每个组件实例到其渲染函数的映射。�
 
 在Vue.js的早期版本中，依赖收集是使用`Array`来实现的。然而，使用`Set`代替`Array`有以下几个理由：
 
-* **性能**：`Set`在添加和删除元素时通常比`Array`更高效，因为它不需要检查元素是否已存在。
-* **简洁性**：使用`Set`可以简化依赖收集的代码，因为`Set`提供了更直接的API来处理集合操作。
+***性能**：`Set`在添加和删除元素时通常比`Array`更高效，因为它不需要检查元素是否已存在。
+***简洁性**：使用`Set`可以简化依赖收集的代码，因为`Set`提供了更直接的API来处理集合操作。
 
 **怎么清除依赖**
 
@@ -101,14 +110,14 @@ Vue.js使用`WeakMap`来存储每个组件实例到其渲染函数的映射。�
 
 当观察者（watcher）被通知更新时，它可能会从其依赖集合中移除自己，特别是如果它是一个一次性观察者或者在某些条件下不再需要该依赖。
 
-#### <font style="color:#DF2A3F;">响应式数据系统（必背）</font>
+#### 响应式数据系统（必背）
 
 Vue 的数据响应式系统通过 object.defineProperty或者ES6的 Proxy 来实现，主要解决了以下问题:
 
 * 数据绑定:保证了视图与数据的同步更新，当数据发生变化时，视图会自动更新，避免了手动操作 DOM 的繁琐和易出错性。
 * 依赖追踪:Vue 能够追踪每个数据的依赖关系，即哪些组件或者计算属性依赖于某个数据。当数据变化时，自动更新依赖的组件或者计算属性
 
-#### <font style="color:#DF2A3F;">vue2双向绑定原理（必背）</font>
+#### vue2双向绑定原理（必背）
 
 1. 采用数据劫持 结合 发布者-订阅者模式的方式
 2. data数据在初始化的时候，会实例化一个Observe类，它会将data数据进行递归遍历，并通过Object.defineProperty方法，给每个值添加上一个getter和一个setter
@@ -116,26 +125,26 @@ Vue 的数据响应式系统通过 object.defineProperty或者ES6的 Proxy 来�
 4. 该方法只能监听到数据的修改，监听不到数据的新增和删除，从而不能触发组件更新渲染
 5. vue2中会对数组的新增删除方法push、pop、shift、unshift、splice、sort、reserve通过重写的形式，在拦截里面进行手动收集触发依赖更新
 
-#### <font style="color:#DF2A3F;">vue3双向绑定原理（必背）</font>
+#### vue3双向绑定原理（必背）
 
 1. Vue3采用了Proxy代理的方式，Proxy是ES6引入的一个新特性，它提供了一个用于创建代理对象的构造函数。
 2. 它是对整个对象的监听和拦截，可以对对象所有操作进行处理。
 3. 而Object.defineProperty只能监听单个属性的读写，无法监听新增、删除等操作
 
-#### <font style="color:#DF2A3F;">proxy有什么缺点（必背）</font>
+#### proxy有什么缺点（必背）
 
-**<font style="color:rgb(0, 0, 0);">性能开销</font>**<font style="color:rgb(0, 0, 0);">：Proxy 的拦截操作（get、set等）本身会比直接操作对象属性稍慢。在处理</font>**<font style="color:rgb(0, 0, 0);">大量数据</font>**<font style="color:rgb(0, 0, 0);">或</font>**<font style="color:rgb(0, 0, 0);">频繁更新</font>**<font style="color:rgb(0, 0, 0);">的场景下，这种开销可能会累积，从而影响性能</font>
+**性能开销**：Proxy 的拦截操作（get、set等）本身会比直接操作对象属性稍慢。在处理**大量数据**或**频繁更新**的场景下，这种开销可能会累积，从而影响性能
 
-* **<font style="background-color:rgba(0, 0, 0, 0.05);"></font>**<font style="color:rgb(0, 0, 0);">Vue 3 的响应式系统对嵌套对象采用</font>**<font style="color:rgb(0, 0, 0);">惰性代理</font>**<font style="color:rgb(0, 0, 0);">，即只有在访问深层属性时才会递归地将其转换为响应式对象。虽然这避免了初始化时不必要的性能消耗，但也意味着</font>**<font style="color:rgb(0, 0, 0);">首次访问深度嵌套属性时，会逐层创建 Proxy</font>**<font style="color:rgb(0, 0, 0);">，对于嵌套层级非常深的大型数据结构（如复杂的树状数据），这可能带来一定的性能压力</font>**<font style="background-color:rgba(0, 0, 0, 0.05);">5</font>**<font style="color:rgb(0, 0, 0);">。</font>
+* Vue 3 的响应式系统对嵌套对象采用**惰性代理**，即只有在访问深层属性时才会递归地将其转换为响应式对象。虽然这避免了初始化时不必要的性能消耗，但也意味着**首次访问深度嵌套属性时，会逐层创建 Proxy**，对于嵌套层级非常深的大型数据结构（如复杂的树状数据），这可能带来一定的性能压力**5**。
 
-**<font style="color:rgb(0, 0, 0);">依赖收集是行为驱动的</font>**<font style="color:rgb(0, 0, 0);">：Vue 3 的响应式系统</font>**<font style="color:rgb(0, 0, 0);">只在副作用函数（如渲染函数、</font>**<code>**<font style="color:rgb(0, 0, 0);">watchEffect</font>**</code>**<font style="color:rgb(0, 0, 0);">）实际执行并访问到具体属性时，才会建立依赖关系</font>**
+**依赖收集是行为驱动的**：Vue 3 的响应式系统**只在副作用函数（如渲染函数、**`watchEffect`**）实际执行并访问到具体属性时，才会建立依赖关系**
 
-* <font style="color:rgb(0, 0, 0);">这意味着如果某个属性存在于对象中，但在当前的函数执行路径下未被访问（例如在 </font><code><font style="color:rgb(0, 0, 0);">if/else</font></code><font style="color:rgb(0, 0, 0);">的条件分支中），那么该属性的变化</font>**<font style="color:rgb(0, 0, 0);">不会</font>**<font style="color:rgb(0, 0, 0);">触发副作用函数的重新执行。这要求开发者对依赖收集的时机有清晰的认识，否则可能遇到“数据变了但视图没更新”的情况。</font>
+* 这意味着如果某个属性存在于对象中，但在当前的函数执行路径下未被访问（例如在 `if/else`的条件分支中），那么该属性的变化**不会**触发副作用函数的重新执行。这要求开发者对依赖收集的时机有清晰的认识，否则可能遇到“数据变了但视图没更新”的情况。
 
-**<font style="color:rgb(0, 0, 0);">特定操作无法代理</font>**<font style="color:rgb(0, 0, 0);">：</font>
+**特定操作无法代理**：
 
-* **<font style="color:rgb(0, 0, 0);">存在性检查 (</font>**<code>**<font style="color:rgb(0, 0, 0);">in</font>**</code>**<font style="color:rgb(0, 0, 0);">操作符) 和属性枚举 (</font>**<code>**<font style="color:rgb(0, 0, 0);">Object.keys</font>**</code>**<font style="color:rgb(0, 0, 0);">)</font>**<font style="color:rgb(0, 0, 0);">: Proxy 可以拦截 </font><code><font style="color:rgb(0, 0, 0);">in</font></code><font style="color:rgb(0, 0, 0);">和 </font><code><font style="color:rgb(0, 0, 0);">Object.keys</font></code><font style="color:rgb(0, 0, 0);">操作，但其响应性在这些方面可能不如直接的属性访问和设置那么直观和强健</font>
-* **<font style="color:rgb(0, 0, 0);">原型链属性无法追踪</font>**<font style="color:rgb(0, 0, 0);">: 如果对象继承自另一个对象，那么访问其原型链上的属性</font>**<font style="color:rgb(0, 0, 0);">不会</font>**<font style="color:rgb(0, 0, 0);">被当前对象的 Proxy 拦截，因此也无法建立响应式依赖</font>
+***存在性检查 (**`in`**操作符) 和属性枚举 (**`Object.keys`**)**: Proxy 可以拦截 `in`和 `Object.keys`操作，但其响应性在这些方面可能不如直接的属性访问和设置那么直观和强健
+***原型链属性无法追踪**: 如果对象继承自另一个对象，那么访问其原型链上的属性**不会**被当前对象的 Proxy 拦截，因此也无法建立响应式依赖
 
 #### vue如何进行依赖收集
 
@@ -158,41 +167,41 @@ defineReactive 方法定义对象属性为响应式，主要步骤:
 
 data为一个函数，每个组件都会有自己的私有数据空间，不会干扰其他组件的运行
 
-#### <font style="color:#DF2A3F;background-color:rgb(252, 252, 252);">vue的单向数据流</font><font style="color:#DF2A3F;">（必背）</font>
+#### vue的单向数据流（必背）
 
-* **<font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">核心原理：单向数据流的设计</font>**
+***核心原理：单向数据流的设计**
 
-**<font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">数据流向规则</font>**
+**数据流向规则**
 
-**<font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">父 → 子</font>**<font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">：父组件通过 </font><code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">props</font></code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">向下传递数据，子组件只能读取无法直接修改</font>
+**父 → 子**：父组件通过 `props`向下传递数据，子组件只能读取无法直接修改
 
-**<font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">子 → 父</font>**<font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">：子组件通过 </font><code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">$emit</font></code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">触发事件，父组件监听事件后自行更新数据</font>
+**子 → 父**：子组件通过 `$emit`触发事件，父组件监听事件后自行更新数据
 
-**<font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">底层机制</font>**<font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">：Vue 的响应式系统（基于 </font><code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">Object.defineProperty</font></code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">或 </font><code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">Proxy</font></code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">）自动追踪依赖，父组件数据变化时触发子组件更新</font>
+**底层机制**：Vue 的响应式系统（基于 `Object.defineProperty`或 `Proxy`）自动追踪依赖，父组件数据变化时触发子组件更新
 
-**<font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">强制规则：Props 不可变性</font>**
+**强制规则：Props 不可变性**
 
-<font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">直接修改 </font><code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">props</font></code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">会触发警告，因为这会破坏单向流（例：子组件中 </font><code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">this.message = 'new'</font></code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">无效）</font>
+直接修改 `props`会触发警告，因为这会破坏单向流（例：子组件中 `this.message = 'new'`无效）
 
-**<font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">正确修改方式</font>**<font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">：</font>
+**正确修改方式**：
 
-* **<font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">本地化</font>**<font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">：将 </font><code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">props</font></code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">复制到子组件的 </font><code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">data</font></code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">或 </font><code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">computed</font></code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">属性</font>
+***本地化**：将 `props`复制到子组件的 `data`或 `computed`属性
 
-* **<font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">事件通知</font>**<font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">：子组件 </font><code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">$emit</font></code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">事件，父组件接收后更新原始数据</font>
+***事件通知**：子组件 `$emit`事件，父组件接收后更新原始数据
 
-* **<font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">优势与设计价值</font>**
+***优势与设计价值**
 
-**<font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">可预测性：</font>**<font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">数据流动路径固定（父→子→父），状态变更来源清晰，调试时易追溯问题</font>
+**可预测性：**数据流动路径固定（父→子→父），状态变更来源清晰，调试时易追溯问题
 
-**<font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">组件解耦：</font>**<font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">子组件不依赖父组件的内部实现，仅通过接口（props/events）交互，提升复用性</font>
+**组件解耦：**子组件不依赖父组件的内部实现，仅通过接口（props/events）交互，提升复用性
 
-**<font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">性能优化：</font>**<font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">响应式系统精确追踪依赖关系，避免不必要的子组件渲染</font>
+**性能优化：**响应式系统精确追踪依赖关系，避免不必要的子组件渲染
 
-**<font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">维护性：</font>**<font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">强制规范数据修改入口，减少隐蔽的副作用（如子组件意外修改父状态）</font>
+**维护性：**强制规范数据修改入口，减少隐蔽的副作用（如子组件意外修改父状态）
 
-***
+---
 
-**<font style="color:rgb(26, 32, 41);">LEGO 编辑器项目实战讲解</font>**
+**LEGO 编辑器项目实战讲解**
 
 在 **LEGO 编辑器** 项目中，我们通过 **"Data Down, Events Up"** 构建了清晰的数据闭环：
 
@@ -219,14 +228,14 @@ data为一个函数，每个组件都会有自己的私有数据空间，不会�
 
 | **方法**                                    | **适用场景**                                                                                    | **优点**                                | **缺点**                               | **Vue 版本** |
 | :------------------------------------------ | :---------------------------------------------------------------------------------------------- | :-------------------------------------- | :------------------------------------- | :----------- |
-| <code>**this.$forceUpdate()**</code>        | 数据变化未被 Vue 检测到（如非响应式数据变化），但仍需更新视图时                                 | 使用简单，可强制当前组件重新渲染        | 可能造成性能浪费，不推荐频繁使用       | 2.x, 3.x     |
-| **修改**\*\* **<code>**key**</code>**属性** | 需要**完全重置组件状态\*\*（如表单重置）、强制组件完全重新创建时                                | 能彻底重新渲染组件，确保状态全新        | 组件会完全销毁并重建，可能略有性能开销 | 2.x, 3.x     |
+| `this.$forceUpdate()`        | 数据变化未被 Vue 检测到（如非响应式数据变化），但仍需更新视图时                                 | 使用简单，可强制当前组件重新渲染        | 可能造成性能浪费，不推荐频繁使用       | 2.x, 3.x     |
+| **修改 **`key`**属性** | 需要**完全重置组件状态**（如表单重置）、强制组件完全重新创建时                                | 能彻底重新渲染组件，确保状态全新        | 组件会完全销毁并重建，可能略有性能开销 | 2.x, 3.x     |
 | **变更响应式数据**                          | **最推荐**的方式。通过修改 Vue 管理的响应式数据（如 `data`、`ref`、`reactive`等）来自然触发更新 | 符合 Vue 设计理念，性能最佳，可维护性高 | 无                                     | 2.x, 3.x     |
-| <code>**triggerRef()**</code>               | 在 Vue 3 中，手动通知由 `ref`创建的响应式数据更新，即使其值未变                                 | 针对 `ref`数据提供更细粒度的控制        | 仅适用于 Vue 3 的 `ref`                | 3.x          |
+| `triggerRef()`               | 在 Vue 3 中，手动通知由 `ref`创建的响应式数据更新，即使其值未变                                 | 针对 `ref`数据提供更细粒度的控制        | 仅适用于 Vue 3 的 `ref`                | 3.x          |
 
-***
+---
 
-**<font style="color:rgb(26, 32, 41);">LEGO 编辑器项目实战讲解</font>**
+**LEGO 编辑器项目实战讲解**
 
 在项目中，我们极少使用 `$forceUpdate`，而是通过以下策略确保数据与视图同步：
 
@@ -235,9 +244,9 @@ data为一个函数，每个组件都会有自己的私有数据空间，不会�
 3.  **v-if 强制重置**：对于复杂的预览弹窗组件（`PreviewForm`），我们利用 `v-if` 的切换特性来手动触发组件的生命周期重置，确保每次打开时内部表单状态都是初始值。
 4.  **异步等待**：在发布截图等需要即时 DOM 状态的场景下，配合 `nextTick()` 使用，手动确保在数据变更后的“下一帧”进行 DOM 残留操作。
 
-### <font style="color:#F38F39;background-color:rgb(252, 252, 252);">虚拟DOM与渲染机制</font>
+### 虚拟DOM与渲染机制
 
-#### <font style="color:#DF2A3F;">虚拟 DOM 和 Diff 算法优势（必背）</font>
+#### 虚拟 DOM 和 Diff 算法优势（必背）
 
 虚拟 DOM 是一种内存中的表示结构，它是对真实 DOM 的抽象。Diff 算法是一种高效更新 DOM 的策略，它通过比较新旧虚拟 DOM 树的差异，最小化了更新操作，提高了页面的渲染效率
 
@@ -246,7 +255,7 @@ data为一个函数，每个组件都会有自己的私有数据空间，不会�
 * 跨平台兼容:虚拟 DOM 和 Diff 算法使得 Vue 可以运行在不同的平台上，例如浏览器、Weex 等，统一了渲染逻辑和数据响应式的实现。
 * 更新效率:即使是响应式系统可以自动更新视图，但是如果每次数据变化都直接操作真实 DOM，可能会带来性能问题。Diff 算法可以智能地比较新旧 DOM 树的变化，只更新必要的部分，从而提高了更新效率。
 
-#### <font style="color:#DF2A3F;">虚拟dom渲染到页面的时候，框架会做哪些处理?（必背）</font>
+#### 虚拟dom渲染到页面的时候，框架会做哪些处理?（必背）
 
 当虚拟DOM渲染到页面时，框架通常会执行以下动作:
 
@@ -261,7 +270,7 @@ Diff算法的目标是通过最小化操作次数来更新真实DOM，以提高�
 
 发人员可以在适当的时机执行自定义操作
 
-#### <font style="color:#ED740C;">vue3、vue2在虚拟dom上的算法区别（加分）</font>
+#### vue3、vue2在虚拟dom上的算法区别（加分）
 
 1. Diff 算法的优化\
    Vue 2：采用双端比较算法，通过同时对比新旧虚拟 DOM 的首尾节点来高效更新。但在处理大规模数据或复杂嵌套结构时，仍可能存在不必要的 DOM 操作。\
@@ -313,22 +322,22 @@ Vue3 的更新机制基于单次异步队列，它确保在同一事件循环中
 
 Vue3实现了自动批处理机制，在同一个事件循环中对多次数据更新进行合并，从而减少了渲染次数。这种机制在避免频繁重绘的同时，保证了界面的流畅性。
 
-#### <font style="color:#DF2A3F;">vue的treeSahking（必背）</font>
+#### vue的treeSahking（必背）
 
-* <font style="color:rgb(26, 32, 41);">Vue3的Tree Shaking是一种优化技术，主要用于减少打包体积并提升应用性能。</font>
-* <font style="color:rgb(26, 32, 41);">在前端开发中，Tree Shaking通过移除未使用的代码来实现这一目标</font>\*\*\*\*<font style="color:rgb(26, 32, 41);">。</font>
-* <font style="color:rgb(26, 32, 41);">具体来说，当Vue3项目进行打包时，Tree Shaking会分析代码中的依赖关系，仅保留实际被引用的部分，而未被使用的功能模块（如某些组件、指令或工具函数）则会被排除在最终打包文件之外。这种机制特别适用于Vue3的模块化架构，因为其核心库和功能均以ES模块形式组织，为静态分析提供了便利</font>\*\*\*\*<font style="color:rgb(26, 32, 41);">。</font>
-* <font style="color:rgb(26, 32, 41);">通过Tree Shaking优化，开发者可以显著降低应用的初始加载时间，尤其在大型项目中效果更为明显。例如，若项目中未使用Vue3的某些内置指令（如v-model或v-show），相关代码便不会被打包进最终产物，从而减少冗余资源。</font>
+* Vue3的Tree Shaking是一种优化技术，主要用于减少打包体积并提升应用性能。
+* 在前端开发中，Tree Shaking通过移除未使用的代码来实现这一目标。
+* 具体来说，当Vue3项目进行打包时，Tree Shaking会分析代码中的依赖关系，仅保留实际被引用的部分，而未被使用的功能模块（如某些组件、指令或工具函数）则会被排除在最终打包文件之外。这种机制特别适用于Vue3的模块化架构，因为其核心库和功能均以ES模块形式组织，为静态分析提供了便利。
+* 通过Tree Shaking优化，开发者可以显著降低应用的初始加载时间，尤其在大型项目中效果更为明显。例如，若项目中未使用Vue3的某些内置指令（如v-model或v-show），相关代码便不会被打包进最终产物，从而减少冗余资源。
 
-#### <font style="color:#DF2A3F;">v-if和v-show（必背）</font>
+#### v-if和v-show（必背）
 
 1. 都通过条件来控制元素的显示或隐藏
 2. 渲染机制 - DOM操作 - 初始渲染开销 - 切换开销 - 使用场景
 3. 页面中的复杂组件 只在特定情况下显示/tab切换 下拉菜单等频繁显示或隐藏的组件
 
-***
+---
 
-**<font style="color:rgb(26, 32, 41);">LEGO 编辑器项目实战讲解</font>**
+**LEGO 编辑器项目实战讲解**
 
 在 **LEGO 编辑器** 项目中，我们根据逻辑复杂度与性能平衡，灵活运用 `v-if` 与 `v-show`：
 
@@ -358,6 +367,7 @@ v-for指令基于一个数组来渲染一个列表。v-for 指令需要使用 it
 <li v-for="item in items" :key="item.id">
     {{ item.label }}
 </li>
+
 ```
 
 **二、优先级**
@@ -372,13 +382,13 @@ v-if与v-for 都是 vue 模板系统中的指令
 
 **三、注意事项**
 
-1.永远不要把 v-if 和 v-for 同时用在同一个元素上，带来性能方面的浪费(每次渲染都会先循环再进行条件判断)
+1. 永远不要把 v-if 和 v-for 同时用在同一个元素上，带来性能方面的浪费(每次渲染都会先循环再进行条件判断)
 
-2.如果避免出现这种情况，则在外层嵌套 template(页面渲染不生成 dom 节点)，在这一层进行v-if判断，然后在内部进行v-for循环
+2. 如果避免出现这种情况，则在外层嵌套 template(页面渲染不生成 dom 节点)，在这一层进行v-if判断，然后在内部进行v-for循环
 
-***
+---
 
-**<font style="color:rgb(26, 32, 41);">LEGO 编辑器项目实战讲解</font>**
+**LEGO 编辑器项目实战讲解**
 
 在 **LEGO 编辑器** 项目中，我们严格遵守不将 `v-if` 与 `v-for` 写在同一标签上的原则，主要采用以下两种方案：
 
@@ -395,6 +405,7 @@ v-if与v-for 都是 vue 模板系统中的指令
         })
         // 模板中直接循环 visibleComponents
         ```
+
     -   **优点**：性能最高，逻辑清晰。Vue 只需遍历最终显示的项，避免了渲染过程中的无效判断。
 
 2.  **template 标签包裹**：
@@ -404,11 +415,11 @@ v-if与v-for 都是 vue 模板系统中的指令
 **避坑指南**：
 -   在 Vue 3 中，由于 `v-if` 优先级高于 `v-for`，在同一标签写两者会导致 `v-if` 拿不到循环中的 `item` 变量，从而直接报错。一定要养成 **“先过滤数据，后循环渲染”** 的好习惯。
 
-#### <font style="color:#DF2A3F;">template 标签的作用（重要）</font>
+#### template 标签的作用（重要）
 
 `<template>` 是 Vue 中的一个一个**不可见的包装元素**。它本身不会被渲染到真实 DOM 中，但在编译后能承载各种指令和插槽逻辑。
 
-**<font style="color:rgb(26, 32, 41);">LEGO 编辑器项目实战讲解</font>**
+**LEGO 编辑器项目实战讲解**
 
 在项目中，逻辑容器 `<template>` 是保持 DOM 树简洁、解决布局冲突的利器：
 
@@ -421,6 +432,7 @@ v-if与v-for 都是 vue 模板系统中的指令
       <edit-wrapper v-for="item in components" :key="item.id" ... />
     </template>
     ```
+
 3.  **具名插槽的精准分发**：
     在 `Uploader.vue`（自定义上传组件）中，我们大量使用 `<template>` 来定义不同的显示状态（加载中、已上传、默认状态）：
     ```html
@@ -429,6 +441,7 @@ v-if与v-for 都是 vue 模板系统中的指令
       <template #uploaded="{ uploadedData }"> <img :src="uploadedData.url" /> </template>
     </uploader>
     ```
+
     这里使用 `template` 可以优雅地接收插槽作用域参数（Scroped Slots），且不额外产生 DOM 节点。
 
 **避坑指南**：
@@ -446,9 +459,9 @@ v-if与v-for 都是 vue 模板系统中的指令
 
 2. 不能使用index，列表发生变化时，index会重新分配，导致key变化 使用唯一且稳定的值
 
-***
+---
 
-**<font style="color:rgb(26, 32, 41);">LEGO 编辑器项目实战讲解</font>**
+**LEGO 编辑器项目实战讲解**
 
 在 **LEGO 编辑器** 的核心画布区域（`Editor.vue`），我们对 `key` 的使用极其严格：
 
@@ -456,45 +469,46 @@ v-if与v-for 都是 vue 模板系统中的指令
     ```html
     <edit-wrapper
       v-for="component in components"
-      :key="component.id" 
+      :key="component.id"
       ...
     />
     ```
+
 2.  **为什么必须用 `id` 而非 `index`？**
     -   **拖拽排序时的状态保持**：编辑器支持组件的上下层级调整（拖动排序）。如果使用 `index`，当数组顺序变化时，Vue 可能会错误地复用旧位置的 DOM 节点，导致组件内部的状态（如选中的高亮框、临时的编辑状态）并没有跟随组件移动，而是留在了原来的位置。
     -   **删除时的正确性**：当用户删除中间某个组件时，如果用 `index`，后面组件的 `index` 会前移，导致 Diff 算法识别错误，可能导致删除动画异常甚至数据错位。
 3.  **唯一性保障**：
     我们在添加组件时（`store/editor.ts` 中的 `addComponent`），会生成一个 UUID（如 `uuidv4()`）作为 `id`，从源头保证了 Keys 在整个应用生命周期中的全局唯一性和稳定性。
 
-#### <font style="color:#DF2A3F;">长列表渲染怎么优化（必背）</font>
+#### 长列表渲染怎么优化（必背）
 
-**<font style="color:rgb(26, 32, 41);">一、懒加载</font>**
+**一、懒加载**
 
-<font style="color:rgb(26, 32, 41);">懒加载是一种按需加载数据的方式，适用于长列表场景。通过仅渲染当前可见区域的数据，可以显著减少初始加载时间和内存占用。例如，当用户滚动到列表底部时，再加载下一部分数据。</font>
+懒加载是一种按需加载数据的方式，适用于长列表场景。通过仅渲染当前可见区域的数据，可以显著减少初始加载时间和内存占用。例如，当用户滚动到列表底部时，再加载下一部分数据。
 
-**<font style="color:rgb(26, 32, 41);">二、虚拟列表</font>**
+**二、虚拟列表**
 
-<font style="color:rgb(26, 32, 41);">虚拟列表（或称“窗口化”）是一种高效的渲染优化技术，它只渲染当前可视区域内的列表项，而不是整个列表。这种方法大幅减少了DOM操作和渲染负担，尤其适合数据量极大的场景。</font>
+虚拟列表（或称“窗口化”）是一种高效的渲染优化技术，它只渲染当前可视区域内的列表项，而不是整个列表。这种方法大幅减少了DOM操作和渲染负担，尤其适合数据量极大的场景。
 
-**<font style="color:rgb(26, 32, 41);">三、分页加载</font>**
+**三、分页加载**
 
-<font style="color:rgb(26, 32, 41);">分页加载将数据分成多个页面，用户每次只加载和渲染一部分数据。这种方式可以平衡性能与用户体验，适合电商商品列表、新闻资讯等场景。</font>
+分页加载将数据分成多个页面，用户每次只加载和渲染一部分数据。这种方式可以平衡性能与用户体验，适合电商商品列表、新闻资讯等场景。
 
-**<font style="color:rgb(26, 32, 41);">四、减少DOM操作</font>**
+**四、减少DOM操作**
 
-<font style="color:rgb(26, 32, 41);">在长列表中，频繁的DOM操作会导致性能下降。可以通过以下方式优化：</font>
+在长列表中，频繁的DOM操作会导致性能下降。可以通过以下方式优化：
 
-<font style="color:rgb(26, 32, 41);">使用文档片段（DocumentFragment）批量更新DOM。</font>
+使用文档片段（DocumentFragment）批量更新DOM。
 
-<font style="color:rgb(26, 32, 41);">避免在滚动事件中直接操作DOM，改用防抖（debounce）或节流（throttle）技术。</font>
+避免在滚动事件中直接操作DOM，改用防抖（debounce）或节流（throttle）技术。
 
-**<font style="color:rgb(26, 32, 41);">五、使用轻量级组件</font>**
+**五、使用轻量级组件**
 
-<font style="color:rgb(26, 32, 41);">在开发长列表时，尽量使用轻量级的组件，避免复杂的嵌套结构和冗余的样式。这样可以减少渲染时间和内存占用。</font>
+在开发长列表时，尽量使用轻量级的组件，避免复杂的嵌套结构和冗余的样式。这样可以减少渲染时间和内存占用。
 
-***
+---
 
-**<font style="color:rgb(26, 32, 41);">LEGO 编辑器项目实战讲解</font>**
+**LEGO 编辑器项目实战讲解**
 
 在 LEGO 项目的首页模版列表（`Home.vue`）中，我们并没有盲目使用虚拟列表，而是基于**业务场景**选择了更轻量的**“分页懒加载”**策略：
 
@@ -506,27 +520,28 @@ v-if与v-for 都是 vue 模板系统中的指令
     // Home.vue 中的应用
     const { loadMorePage, isLastPage } = useLoadMore('fetchTemplates', total, { pageSize: 8 })
     ```
+
 3.  **性能收益**：
     首屏仅渲染 8 个复杂的卡片组件，DOM 节点数量极少，确保了首页秒开（LCP 极低）。只有当用户明确需要更多内容时，才会请求并追加新的 DOM 节点。
 
-### <font style="color:#EDCE02;background-color:rgb(252, 252, 252);">组件系统</font>
+### 组件系统
 
-#### <font style="color:#DF2A3F;">vue生命周期（必背）</font>
+#### vue生命周期（必背）
 
-<font style="color:rgb(26, 32, 41);">Vue生命周期钩子函数描述了组件从创建到销毁的执行过程，开发者可以利用来在组件不同时期指定特定逻辑，</font>
+Vue生命周期钩子函数描述了组件从创建到销毁的执行过程，开发者可以利用来在组件不同时期指定特定逻辑，
 
-* <font style="color:rgb(26, 32, 41);">beforeCreate：实例初始化之后，数据观测和事件配置之前，无法访问data，methods，初始化非响应式变量</font>
-* <font style="color:rgb(26, 32, 41);">created：实例创建完成，但DOM树未挂载，简单ajax，页面初始化</font>
-* <font style="color:rgb(26, 32, 41);">beforeMount：挂载前，首次调用render函数</font>
-* <font style="color:rgb(26, 32, 41);">mounted：实例挂载到dom上后调用、可以访问dom节点，$ref属性可用,获取vnode节点，操作dom，发ajax</font>
-* <font style="color:rgb(26, 32, 41);">beforeUpdate：响应式数据更新时，虚拟dom重新调用前，可以在更新前访问现有dom，移除事件监听器</font>
-* <font style="color:rgb(26, 32, 41);">updated：虚拟dom重新渲染和打补丁之后，组件dom已经更新，可以进行基于dom的操作，避免进行数据操作，以免造成死循环</font>
-* <font style="color:rgb(26, 32, 41);">beforeDestory：实例销毁之前可以调用，实例仍然可用，this可以获取到实例，销毁定时器，解绑全局事件，销毁插件对象</font>
-* <font style="color:rgb(26, 32, 41);">destoryed：实例销毁后调用，所有的事件监听器和子实例都被移除，清理工作</font>
+* beforeCreate：实例初始化之后，数据观测和事件配置之前，无法访问data，methods，初始化非响应式变量
+* created：实例创建完成，但DOM树未挂载，简单ajax，页面初始化
+* beforeMount：挂载前，首次调用render函数
+* mounted：实例挂载到dom上后调用、可以访问dom节点，$ref属性可用,获取vnode节点，操作dom，发ajax
+* beforeUpdate：响应式数据更新时，虚拟dom重新调用前，可以在更新前访问现有dom，移除事件监听器
+* updated：虚拟dom重新渲染和打补丁之后，组件dom已经更新，可以进行基于dom的操作，避免进行数据操作，以免造成死循环
+* beforeDestory：实例销毁之前可以调用，实例仍然可用，this可以获取到实例，销毁定时器，解绑全局事件，销毁插件对象
+* destoryed：实例销毁后调用，所有的事件监听器和子实例都被移除，清理工作
 
-***
+---
 
-**<font style="color:rgb(26, 32, 41);">LEGO 编辑器项目实战讲解</font>**
+**LEGO 编辑器项目实战讲解**
 
 在 **LEGO 编辑器** (`Editor.vue`) 中，我们对生命周期的运用非常典型：
 
@@ -538,19 +553,19 @@ v-if与v-for 都是 vue 模板系统中的指令
 3.  **销毁清理（`onUnmounted`）**：
     -   **防止内存泄漏**：离开编辑器时，必须移除快捷键监听和右键菜单事件，否则这些全局事件会在其他页面继续生效，引发 Bug。
 
-#### <font style="color:#DF2A3F;background-color:rgb(252, 252, 252);">组件通信最佳实践总结</font><font style="color:#DF2A3F;">（必背）</font>
+#### 组件通信最佳实践总结（必背）
 
-|       **<font style="background-color:rgb(252, 252, 252);">场景</font>**        |                                                                     **<font style="background-color:rgb(252, 252, 252);">推荐方案</font>**                                                                      |                                                                                                         **<font style="background-color:rgb(252, 252, 252);">示例/说明</font>**                                                                                                         |
+|       **场景**        |                                                                     **推荐方案**                                                                      |                                                                                                         **示例/说明**                                                                                                         |
 | :-----------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-|     <font style="background-color:rgb(252, 252, 252);">父子组件通信</font>      |                                                                    <font style="background-color:rgb(252, 252, 252);">Props + Events</font>                                                                     |                                                                                                     <font style="background-color:rgb(252, 252, 252);">父传数据、子触发事件</font>                                                                                                      |
-| <font style="background-color:rgb(252, 252, 252);">跨层级/多组件共享状态</font> |                                                                     <font style="background-color:rgb(252, 252, 252);">Vuex (Pinia)</font>                                                                      |                                                                                                         <font style="background-color:rgb(252, 252, 252);">集中管理状态</font>                                                                                                          |
-| <font style="background-color:rgb(252, 252, 252);">避免直接修改引用类型</font>  |                                                                   <font style="background-color:rgb(252, 252, 252);">深拷贝或事件通知</font>                                                                    |                                                                                                       <font style="background-color:rgb(252, 252, 252);">保持 Props 只读性</font>                                                                                                       |
-|   <font style="background-color:rgb(252, 252, 252);">表单控件双向绑定</font>    |                               <code><font style="background-color:rgb(252, 252, 252);">v-model</font></code><font style="background-color:rgb(252, 252, 252);">（语法糖）</font>                                | <font style="background-color:rgb(252, 252, 252);">等价于 </font><code><font style="background-color:rgb(252, 252, 252);">:value</font></code><font style="background-color:rgb(252, 252, 252);">+ </font><code><font style="background-color:rgb(252, 252, 252);">@input</font></code> |
-|     <font style="background-color:rgb(252, 252, 252);">复杂数据处理</font>      | <font style="background-color:rgb(252, 252, 252);">计算属性（</font><code><font style="background-color:rgb(252, 252, 252);">computed</font></code><font style="background-color:rgb(252, 252, 252);">）</font> |                                                                                                     <font style="background-color:rgb(252, 252, 252);">基于 props 派生新数据</font>                                                                                                     |
+|     父子组件通信      |                                                                    Props + Events                                                                     |                                                                                                     父传数据、子触发事件                                                                                                      |
+| 跨层级/多组件共享状态 |                                                                     Vuex (Pinia)                                                                      |                                                                                                         集中管理状态                                                                                                          |
+| 避免直接修改引用类型  |                                                                   深拷贝或事件通知                                                                    |                                                                                                       保持 Props 只读性                                                                                                       |
+|   表单控件双向绑定    |                               `v-model`（语法糖）                                | 等价于 `:value`+ `@input` |
+|     复杂数据处理      | 计算属性（`computed`） |                                                                                                     基于 props 派生新数据                                                                                                     |
 
-***
+---
 
-**<font style="color:rgb(26, 32, 41);">LEGO 编辑器项目实战讲解</font>**
+**LEGO 编辑器项目实战讲解**
 
 在庞大的编辑器架构中，我们根据场景严格限制了通信方式的选择，避免数据流向混乱：
 
@@ -564,14 +579,14 @@ v-if与v-for 都是 vue 模板系统中的指令
     使用 **全局事件总线（EventBus）** 或 **回调函数**。
     -   右键菜单插件是独立于 Vue 组件树之外的 DOM 元素，它无法通过 Props 通信。我们通过在全局注册回调函数，让普通的 JS 脚本也能触发 Vue 组件内部的逻辑（如删除、复制）。
 
-#### <font style="color:#DF2A3F;">动态组件和异步组件（必背）</font>
+#### 动态组件和异步组件（必背）
 
 1. 动态组件：通过\<component is:"currentComponent"> 动态切换组件
 2. 异步组件：通过defineAsyncComponent或者路由懒加载(()=>import('./Component.vue'))优化首屏加载性能
 
-***
+---
 
-**<font style="color:rgb(26, 32, 41);">LEGO 编辑器项目实战讲解</font>**
+**LEGO 编辑器项目实战讲解**
 
 我们在项目中大量使用了这两种机制，是低代码架构的核心：
 
@@ -579,17 +594,18 @@ v-if与v-for 都是 vue 模板系统中的指令
     在 `PropsTable.vue`（属性编辑面板）中，我们通过映射表将不同的属性（字体颜色、阴影、背景）映射为不同的表单组件名。
     ```html
     <!-- 只需要一行代码，即可渲染几十种不同的编辑器组件 -->
-    <component 
-      :is="value.component" 
-      v-bind="value.extraProps" 
+    <component
+      :is="value.component"
+      v-bind="value.extraProps"
     />
     ```
+
     这使得我们新增一种属性编辑器（如“渐变色选择器”）时，只需注册组件并修改配置，无需触碰 UI 模板代码，符合**开闭原则**。
 
 2.  **异步组件（Perf）**：
     对于非首屏必须的重型组件（如 `ImageProcesser` 图片裁剪器），或者路由页面，我们使用 `defineAsyncComponent` 或 `import()` 语法进行懒加载，将打包后的 JS 文件拆分（Code Splitting），保证首页加载速度。
 
-#### <font style="color:#DF2A3F;">vue的keep-alive（必背）</font>
+#### vue的keep-alive（必背）
 
 1. vue提供的一个内置组件，用于缓存组件实例，避免重复渲染和销毁，从而提升性能，适用于复杂内容多且无需频繁切换的组件
 2. 被包括的组件会被缓存，切换时会从缓存中加载，而不是重新创建和销毁
@@ -598,9 +614,9 @@ v-if与v-for 都是 vue 模板系统中的指令
 5. 固定数据的组件、频繁切换的组件、性能优化
 6. 组件状态保持、内存占用、动态组件
 
-***
+---
 
-**<font style="color:rgb(26, 32, 41);">LEGO 编辑器项目实战讲解</font>**
+**LEGO 编辑器项目实战讲解**
 
 在项目中，我们主要在 **路由层级** 使用 `keep-alive` 来优化用户体验：
 
@@ -616,17 +632,18 @@ v-if与v-for 都是 vue 模板系统中的指令
       <component :is="Component" v-if="!$route.meta.keepAlive" />
     </router-view>
     ```
+
     这种**“按需缓存”**的模式，既保证了重型页面（如编辑器）每次进入都是全新的状态（避免数据污染），又让展示型页面（如模板列表）拥有了“秒回”的流畅体验。
 
-#### <font style="color:#DF2A3F;">keep-alive的原理（必背）</font>
+#### keep-alive的原理（必背）
 
 ![1765631846397-aac4eb23-6e20-43b1-b088-7d835bf88d22.png](./img/ImE9M0ZPvPZdgDeK/1765631846397-aac4eb23-6e20-43b1-b088-7d835bf88d22-912947.png)
 
-#### <font style="color:#DF2A3F;">keepalive如何移除缓存（必背）</font>
+#### keepalive如何移除缓存（必背）
 
 如果使用 Vue Router 的 `<keep-alive>` 缓存页面，可以通过以下方式移除或禁用缓存：
 
-**1. 全局移除：直接删除模板中的 **<code>**<keep-alive>**</code>** 标签**
+**1. 全局移除：直接删除模板中的 **`<keep-alive>`** 标签**
 
 ```javascript
 <!-- Before -->
@@ -640,9 +657,10 @@ v-if与v-for 都是 vue 模板系统中的指令
   <template>
   <router-view /> <!-- 移除 keep-alive -->
   </template>
+
 ```
 
-\*\*2. 局部禁用缓存：在路由配置中设置 \*\*<code>**noCache: true**</code>
+**2. 局部禁用缓存：在路由配置中设置 **`noCache: true`
 
 ```javascript
 // router/index.js
@@ -653,6 +671,7 @@ const routes = [
     meta: { noCache: true } // 禁用该路由的缓存
   }
 ];
+
 ```
 
 **3. 动态清除缓存：在组件内手动销毁缓存**
@@ -667,11 +686,12 @@ export default {
     next();
   }
 };
+
 ```
 
 #### keep-alive会遇到哪些问题
 
-1.<code>**<font style="color:rgb(26, 32, 41);">keep-alive</font>**</code>**<font style="color:rgb(26, 32, 41);"> 不生效</font>**
+1. `keep-alive`** 不生效**
 
 问题描述：当使用 keep-alive 包裹组件时，组件状态未保留或未缓存。\
 可能原因：\
@@ -686,7 +706,7 @@ export default {
 问题描述：长期使用 keep-alive 可能导致内存占用过高，尤其是在频繁切换组件时。\
 可能原因：未及时清理不再需要的组件实例，或未合理设置 max 属性限制缓存数量。\
 解决方法：通过 include 和 exclude 精确控制缓存范围，或使用 max 属性限制缓存实例数量。\
-4.\*\* 组件状态异常\*\*\
+4. ** 组件状态异常**\
 问题描述：组件在切换后状态未正确恢复或显示异常。\
 可能原因：组件内部依赖全局状态或外部数据，而这些数据在缓存期间发生了变化。\
 解决方法：在 activated 钩子中重新请求数据或重置状态，确保组件显示正确。\
@@ -699,9 +719,9 @@ export default {
 可能原因：缓存了过多大型组件或复杂组件，导致渲染性能下降。\
 解决方法：合理配置缓存范围，避免缓存不必要的组件，或使用 v-if 和 v-show 结合优化渲染
 
-***
+---
 
-**<font style="color:rgb(26, 32, 41);">LEGO 编辑器项目实战讲解</font>**
+**LEGO 编辑器项目实战讲解**
 
 我们在项目实战中，曾因 `keep-alive` 缓存机制而遇到**数据不更新**的“坑”，最终通过精准的生命周期控制解决了它：
 
@@ -721,6 +741,7 @@ export default {
       }
     })
     ```
+
     这确保了页面既保留了流畅的“秒开”体验（DOM 缓存），又不会因为缓存而展示严重的脏数据。
 
 #### vue组件里写的原生addEventListeners监听事件，要手动去销毁吗?为什么?
@@ -729,9 +750,9 @@ export default {
 
 原因如下:
 
-* **内存泄漏**: 如果不手动移除事件监听器，监听器会继续存在于内存中，即使对应的 DOM 元素已经被移除。这会导致内存泄漏，因为监听器持有对 DOM 元素的引用，导致垃圾回收机制无法回收这些元素。
-* **意外行为**: 如果监听器没有被移除，在组件销毁后这些监听器可能会继续响应事件，这可能导致应用程序的意外行为或错误。
-* **性能问题**: 随着时间的推移，未移除的事件监听器会堆积，导致性能下降，尤其是在频繁创建和销毁组件的情况下。
+***内存泄漏**: 如果不手动移除事件监听器，监听器会继续存在于内存中，即使对应的 DOM 元素已经被移除。这会导致内存泄漏，因为监听器持有对 DOM 元素的引用，导致垃圾回收机制无法回收这些元素。
+***意外行为**: 如果监听器没有被移除，在组件销毁后这些监听器可能会继续响应事件，这可能导致应用程序的意外行为或错误。
+***性能问题**: 随着时间的推移，未移除的事件监听器会堆积，导致性能下降，尤其是在频繁创建和销毁组件的情况下。
 
 在 Vue 组件中，可以利用生命周期钩子来添加和移除事件监听器
 
@@ -752,11 +773,12 @@ export defaultf
   }
 }
 </script>
+
 ```
 
-***
+---
 
-**<font style="color:rgb(26, 32, 41);">LEGO 编辑器项目实战讲解</font>**
+**LEGO 编辑器项目实战讲解**
 
 在项目中，我们通过自定义 Hook 完美解决了手动销毁事件的繁琐问题：
 
@@ -775,36 +797,38 @@ export defaultf
       })
     }
     ```
+
 3.  **使用体验**：
     在 `Editor.vue` 中，我们只需关心业务逻辑，完全不用操心内存泄漏问题：
     ```typescript
     // Editor.vue
-    useHotKey('ctrl+c', () => { store.commit('copyComponent') }) 
+    useHotKey('ctrl+c', () => { store.commit('copyComponent') })
     // 组件销毁时，这个 ctrl+c 的监听会自动被清理
     ```
+
     这种**“自动挡”**的开发模式，极大地提升了代码的安全性和可维护性。
 
 #### postMessage和onMessage属于那种设计模式
 
-1. <font style="color:rgb(26, 32, 41);">观察者模式是一种行为型设计模式，它定义了对象之间的一对多依赖关系，当一个对象的状态发生改变时，所有依赖于它的对象都会收到通知并自动更新</font>
-2. <font style="color:rgb(26, 32, 41);">这种模式的核心思想是 解耦，即 发布者（Subject） 和 订阅者（Observer） 之间不需要直接通信，而是通过一个中间媒介（如事件系统）进行通信。</font>
-3. *<u><font style="color:rgb(26, 32, 41);">Web Worker 与主线程的通信中的观察者模式</font></u>*
+1. 观察者模式是一种行为型设计模式，它定义了对象之间的一对多依赖关系，当一个对象的状态发生改变时，所有依赖于它的对象都会收到通知并自动更新
+2. 这种模式的核心思想是 解耦，即 发布者（Subject） 和 订阅者（Observer） 之间不需要直接通信，而是通过一个中间媒介（如事件系统）进行通信。
+3. *Web Worker 与主线程的通信中的观察者模式*
 
-**<font style="color:rgb(26, 32, 41);">主线程作为发布者</font>**<font style="color:rgb(26, 32, 41);">：当主线程向 Worker 发送数据时，使用 </font><code><font style="color:rgb(26, 32, 41);">worker.postMessage(data)</font></code><font style="color:rgb(26, 32, 41);">，相当于发布一个事件。</font>
+**主线程作为发布者**：当主线程向 Worker 发送数据时，使用 `worker.postMessage(data)`，相当于发布一个事件。
 
-**<font style="color:rgb(26, 32, 41);">Worker 作为订阅者</font>**<font style="color:rgb(26, 32, 41);">：Worker 通过 </font><code><font style="color:rgb(26, 32, 41);">self.onmessage = function(event) { ... }</font></code><font style="color:rgb(26, 32, 41);"> 监听主线程发送的消息，这相当于订阅一个事件。</font>
+**Worker 作为订阅者**：Worker 通过 `self.onmessage = function(event) { ... }` 监听主线程发送的消息，这相当于订阅一个事件。
 
-**<font style="color:rgb(26, 32, 41);">Worker 作为发布者</font>**<font style="color:rgb(26, 32, 41);">：Worker 也可以通过 </font><code><font style="color:rgb(26, 32, 41);">self.postMessage(data)</font></code><font style="color:rgb(26, 32, 41);"> 向主线程发送数据。</font>
+**Worker 作为发布者**：Worker 也可以通过 `self.postMessage(data)` 向主线程发送数据。
 
-**<font style="color:rgb(26, 32, 41);">主线程作为订阅者</font>**<font style="color:rgb(26, 32, 41);">：主线程通过 </font><code><font style="color:rgb(26, 32, 41);">worker.onmessage = function(event) { ... }</font></code><font style="color:rgb(26, 32, 41);"> 监听 Worker 发送的消息。</font>
+**主线程作为订阅者**：主线程通过 `worker.onmessage = function(event) { ... }` 监听 Worker 发送的消息。
 
-#### <font style="color:#DF2A3F;">动态组件（了解）</font>
+#### 动态组件（了解）
 
-<font style="color:rgb(0, 0, 0);">Vue 3 的动态组件和异步加载机制是优化项目体积和性能的利器。它们主要通过 </font>**<font style="color:rgb(0, 0, 0);">代码分割（Code Splitting）</font>**<font style="color:rgb(0, 0, 0);"> 和 </font>**<font style="color:rgb(0, 0, 0);">按需加载</font>**<font style="color:rgb(0, 0, 0);"> 来实现减少打包体积的目的。下面我们来看看它的工作原理和具体使用方法。</font>
+Vue 3 的动态组件和异步加载机制是优化项目体积和性能的利器。它们主要通过 **代码分割（Code Splitting）** 和 **按需加载** 来实现减少打包体积的目的。下面我们来看看它的工作原理和具体使用方法。
 
 ##### 动态组件如何减少打包体积
 
-<font style="color:rgb(0, 0, 0);">传统的打包方式会把所有组件代码都合并到一个大文件中。而动态组件借助现代构建工具（如 Webpack 或 Vite），允许你将某些组件分离成独立的代码块（chunk），这些代码块</font>**<font style="color:rgb(0, 0, 0);">只在需要时才被加载</font>**<font style="color:rgb(0, 0, 0);">。</font>
+传统的打包方式会把所有组件代码都合并到一个大文件中。而动态组件借助现代构建工具（如 Webpack 或 Vite），允许你将某些组件分离成独立的代码块（chunk），这些代码块**只在需要时才被加载**。
 
 | **特性**         | **传统静态导入**                                       | **动态导入 (代码分割)**                                    |
 | :--------------- | :----------------------------------------------------- | :--------------------------------------------------------- |
@@ -814,14 +838,14 @@ export defaultf
 | **适用场景**     | 核心组件、小组件                                       | 非核心组件、大组件、路由组件                               |
 | **Tree Shaking** | 生效，但组件本身只要被导入，即使未使用，通常也会被打包 | 生效，且组件未被引用则不会生成任何 chunk，完美实现按需加载 |
 
-**<font style="color:rgb(0, 0, 0);">核心原理：</font>**
+**核心原理：**
 
-* **<font style="color:rgb(0, 0, 0);">编译时分割</font>**<font style="color:rgb(0, 0, 0);">：当你使用 </font><code><font style="color:rgb(0, 0, 0);">import()</font></code><font style="color:rgb(0, 0, 0);">语法（Vue 3 中通常配合 </font><code><font style="color:rgb(0, 0, 0);">defineAsyncComponent</font></code><font style="color:rgb(0, 0, 0);">）时，构建工具（如 Webpack 或 Vite）会识别这是一个代码分割点，并自动将该组件</font>**<font style="color:rgb(0, 0, 0);">单独打包成一个文件</font>**<font style="color:rgb(0, 0, 0);">，而不是合并到主包中</font>
-* **<font style="color:rgb(0, 0, 0);">运行时按需加载</font>**<font style="color:rgb(0, 0, 0);">：当你的应用运行到需要渲染这个动态组件时，Vue 才会发起一个</font>**<font style="color:rgb(0, 0, 0);">网络请求</font>**<font style="color:rgb(0, 0, 0);">（如果你的项目配置了懒加载）去获取这个独立的 JS 文件。这意味着初始加载时，用户不需要下载那些可能根本用不到的组件代码，从而显著减少</font>**<font style="color:rgb(0, 0, 0);">初始加载时间</font>**
+***编译时分割**：当你使用 `import()`语法（Vue 3 中通常配合 `defineAsyncComponent`）时，构建工具（如 Webpack 或 Vite）会识别这是一个代码分割点，并自动将该组件**单独打包成一个文件**，而不是合并到主包中
+***运行时按需加载**：当你的应用运行到需要渲染这个动态组件时，Vue 才会发起一个**网络请求**（如果你的项目配置了懒加载）去获取这个独立的 JS 文件。这意味着初始加载时，用户不需要下载那些可能根本用不到的组件代码，从而显著减少**初始加载时间**
 
 ##### 1. 定义异步组件 (使用 `defineAsyncComponent`)
 
-<font style="color:rgb(0, 0, 0);">使用</font><font style="color:rgb(0, 0, 0);"> </font><code><font style="color:rgb(0, 0, 0);">defineAsyncComponent</font></code><font style="color:rgb(0, 0, 0);">来定义一个异步组件。最常见的做法是传入一个返回</font><font style="color:rgb(0, 0, 0);"> </font><code><font style="color:rgb(0, 0, 0);">import()</font></code><font style="color:rgb(0, 0, 0);">函数的加载器。</font>
+使用 `defineAsyncComponent`来定义一个异步组件。最常见的做法是传入一个返回 `import()`函数的加载器。
 
 ```javascript
 import { defineAsyncComponent } from 'vue';
@@ -839,11 +863,12 @@ const AsyncHeavyComponent = defineAsyncComponent({
   delay: 200,                       // 延迟多少毫秒显示 loadingComponent
   timeout: 3000                     // 加载超时时间
 });
+
 ```
 
 ##### 2. 使用 Suspense 处理异步依赖
 
-<font style="color:rgb(0, 0, 0);">异步组件在加载过程中是“悬停”的，直到组件被加载完成。为了提供更好的用户体验，我们通常需要处理加载中和加载失败的状态。Vue 3 提供了 </font><code>**<font style="color:rgb(0, 0, 0);"><Suspense></font>**</code><font style="color:rgb(0, 0, 0);"> 组件来优雅地处理这个问题。</font>
+异步组件在加载过程中是“悬停”的，直到组件被加载完成。为了提供更好的用户体验，我们通常需要处理加载中和加载失败的状态。Vue 3 提供了 `<Suspense>` 组件来优雅地处理这个问题。
 
 ```vue
 <template>
@@ -867,23 +892,25 @@ const AsyncHeavyComponent = defineAsyncComponent({
 
   const showHeavy = ref(false);
 </script>
+
 ```
 
 ##### 3. 与 KeepAlive 结合使用
 
-<font style="color:rgb(0, 0, 0);">如果你希望动态组件在切换时能</font>**<font style="color:rgb(0, 0, 0);">保持状态</font>**<font style="color:rgb(0, 0, 0);">（例如表单输入内容、滚动位置），可以用</font><font style="color:rgb(0, 0, 0);"> </font><code><font style="color:rgb(0, 0, 0);"><KeepAlive></font></code><font style="color:rgb(0, 0, 0);">组件包裹它，这样可以避免组件被频繁销毁和重新创建。</font>
+如果你希望动态组件在切换时能**保持状态**（例如表单输入内容、滚动位置），可以用 `<KeepAlive>`组件包裹它，这样可以避免组件被频繁销毁和重新创建。
 
 ```javascript
 <KeepAlive>
   <component :is="currentComponent"></component>
   </KeepAlive>
+
 ```
 
 ##### 其他减少打包体积的建议
 
-<font style="color:rgb(0, 0, 0);">除了使用动态组件，还可以结合以下策略进一步优化：</font>
+除了使用动态组件，还可以结合以下策略进一步优化：
 
-* **<font style="color:rgb(0, 0, 0);">路由懒加载</font>**<font style="color:rgb(0, 0, 0);">：这是动态组件最典型的应用场景。使用 Vue Router 时，可以将路由组件定义为异步组件</font>
+***路由懒加载**：这是动态组件最典型的应用场景。使用 Vue Router 时，可以将路由组件定义为异步组件
 
 ```javascript
 const routes = [
@@ -892,14 +919,15 @@ const routes = [
     component: () => import('./views/UserProfile.vue') // 懒加载
   }
 ];
+
 ```
 
-* **<font style="color:rgb(0, 0, 0);">第三方库的按需引入</font>**<font style="color:rgb(0, 0, 0);">：例如，使用 </font><code><font style="color:rgb(0, 0, 0);">lodash-es</font></code><font style="color:rgb(0, 0, 0);">替代 </font><code><font style="color:rgb(0, 0, 0);">lodash</font></code><font style="color:rgb(0, 0, 0);">，或者使用 UI 库（如 Element Plus、Ant Design Vue）提供的按需导入功能，避免引入整个库</font>
-* **<font style="color:rgb(0, 0, 0);">使用构建分析工具</font>**<font style="color:rgb(0, 0, 0);">：利用 </font><code><font style="color:rgb(0, 0, 0);">webpack-bundle-analyzer</font></code><font style="color:rgb(0, 0, 0);">或 Vite 的类似插件分析打包产物，找出体积过大的模块，并针对性地进行优化</font>
+***第三方库的按需引入**：例如，使用 `lodash-es`替代 `lodash`，或者使用 UI 库（如 Element Plus、Ant Design Vue）提供的按需导入功能，避免引入整个库
+***使用构建分析工具**：利用 `webpack-bundle-analyzer`或 Vite 的类似插件分析打包产物，找出体积过大的模块，并针对性地进行优化
 
-***
+---
 
-**<font style="color:rgb(26, 32, 41);">LEGO 编辑器项目实战讲解</font>**
+**LEGO 编辑器项目实战讲解**
 
 在项目中，我们通过精细化的打包策略将首屏体积压缩了 40% 以上：
 
@@ -911,14 +939,15 @@ const routes = [
     ```typescript
     component: () => import(/* webpackChunkName: "editor" */ '../views/Editor.vue')
     ```
+
     这确保了用户在浏览首页模版时，不需要下载编辑器的代码。只有当用户点击“立即使用”时，才会触发 `editor.chunk.js` 的下载。
 
 2.  **依赖库优化**：
     我们全线采用了 `lodash-es` 代替 `lodash`，并配合 Ant Design Vue 的按需加载，确保最终构建产物中不包含任何未使用的工具函数或 UI 组件代码（Tree Shaking 生效）。
 
-### <font style="color:#8CCF17;background-color:rgb(252, 252, 252);">状态管理与路由</font>
+### 状态管理与路由
 
-#### <font style="color:#DF2A3F;">Pinia（重要）</font>
+#### Pinia（重要）
 
 1. Vue.js的状态管理库，提供了更加高效简洁的Composition API,拥抱Vue3,适配TS类型推断
 2. 天然模块化，store间彼此独立，而vuex需要手动分割modules
@@ -927,7 +956,7 @@ const routes = [
 5. getters（计算属性，state的派生值，有缓存，只有依赖项发生变化时才变化）
 6. 无Mutations，actions可以直接修改state，更加轻量级，天然支持模块热更新（HMR）
 
-#### <font style="color:#DF2A3F;">Vuex（重要）</font>
+#### Vuex（重要）
 
 Vuex是专门为Vue设计的状态管理，Vue从store中读取数据后，数据发生改变，组件中的数据也会发生变化。
 
@@ -940,9 +969,9 @@ Vue Components 负责接收用户操作交互行为，执行dispatch触发对应
 
 Vue组件接收交互行为，调用dispatch方法触发action相关处理，若页面状态需要改变，则调用commit方法提交mutation修改state，通过getters获取到state新值，重新渲染Vue Components，界面随之更新。
 
-***
+---
 
-**<font style="color:rgb(26, 32, 41);">LEGO 编辑器项目实战讲解</font>**
+**LEGO 编辑器项目实战讲解**
 
 我们的编辑器模块（`store/editor.ts`）是 Vuex 的教科书式应用：
 
@@ -955,6 +984,7 @@ Vue组件接收交互行为，调用dispatch方法触发action相关处理，若
     // 自动将任何数据修改操作标记为 isDirty = true，提示用户保存
     addComponent: setDirtyWrapper((state, component) => { ... })
     ```
+
 3.  **Getter 的派生能力**：
     利用 Getter 动态计算 `checkUndoDisable`（撤销按钮是否禁用），这比在组件里写 watch 优雅得多。
 4.  **Action 的职责**：
@@ -966,68 +996,69 @@ Vue组件接收交互行为，调用dispatch方法触发action相关处理，若
 
 🔹 **Hash 模式**
 
-<font style="color:rgb(0, 0, 0);">Hash 模式是默认模式，它利用 URL 的 hash（</font><code><font style="color:rgb(0, 0, 0);">#</font></code><font style="color:rgb(0, 0, 0);"> 后面的部分）来实现路由变化</font>
+Hash 模式是默认模式，它利用 URL 的 hash（`#` 后面的部分）来实现路由变化
 
-* **<font style="color:rgb(0, 0, 0);">实现原理</font>**<font style="color:rgb(0, 0, 0);">：通过监听 </font><code><font style="color:rgb(0, 0, 0);">hashchange</font></code><font style="color:rgb(0, 0, 0);"> 事件来响应 URL hash 的变化</font>**<font style="background-color:rgba(0, 0, 0, 0.05);">13</font>**<font style="color:rgb(0, 0, 0);">。当 hash 改变时，Vue Router 会解析出新的路径，匹配对应的组件并渲染</font>
-* **<font style="color:rgb(0, 0, 0);">特点</font>**<font style="color:rgb(0, 0, 0);">：兼容性好（支持到 IE9），不需要服务器额外配置，因为 hash 值不会随 HTTP 请求发送到服务器</font>**<font style="background-color:rgba(0, 0, 0, 0.05);">3</font>**<font style="color:rgb(0, 0, 0);">。但 URL 中会包含 </font><code><font style="color:rgb(0, 0, 0);">#</font></code><font style="color:rgb(0, 0, 0);">，不够美观</font>**<font style="background-color:rgba(0, 0, 0, 0.05);"></font>**<font style="color:rgb(0, 0, 0);">。</font>
+***实现原理**：通过监听 `hashchange` 事件来响应 URL hash 的变化**13**。当 hash 改变时，Vue Router 会解析出新的路径，匹配对应的组件并渲染
+***特点**：兼容性好（支持到 IE9），不需要服务器额外配置，因为 hash 值不会随 HTTP 请求发送到服务器**3**。但 URL 中会包含 `#`，不够美观。
 
-**🔹**\*\* History 模式\*\*
+**🔹 History 模式**
 
-<font style="color:rgb(0, 0, 0);">History 模式利用 HTML5 History API（</font><code><font style="color:rgb(0, 0, 0);">pushState</font></code><font style="color:rgb(0, 0, 0);">、</font><code><font style="color:rgb(0, 0, 0);">replaceState</font></code><font style="color:rgb(0, 0, 0);">）来操作浏览器的会话历史栈</font>
+History 模式利用 HTML5 History API（`pushState`、`replaceState`）来操作浏览器的会话历史栈
 
-* **<font style="color:rgb(0, 0, 0);">实现原理</font>**<font style="color:rgb(0, 0, 0);">：通过 </font><code><font style="color:rgb(0, 0, 0);">history.pushState()</font></code><font style="color:rgb(0, 0, 0);"> 或 </font><code><font style="color:rgb(0, 0, 0);">history.replaceState()</font></code><font style="color:rgb(0, 0, 0);"> 改变 URL 而不刷新页面，并监听 </font><code><font style="color:rgb(0, 0, 0);">popstate</font></code><font style="color:rgb(0, 0, 0);"> 事件来响应浏览器的前进/后退操作。</font>
-* **<font style="color:rgb(0, 0, 0);">特点</font>**<font style="color:rgb(0, 0, 0);">：URL 更美观，没有 </font><code><font style="color:rgb(0, 0, 0);">#</font></code><font style="color:rgb(0, 0, 0);">。但需要服务器支持（配置 Fallback，确保直接访问或刷新子路由时返回 </font><code><font style="color:rgb(0, 0, 0);">index.html</font></code><font style="color:rgb(0, 0, 0);">），否则可能导致 404 错误</font>**<font style="background-color:rgba(0, 0, 0, 0.05);"></font>**<font style="color:rgb(0, 0, 0);">。</font>
+***实现原理**：通过 `history.pushState()` 或 `history.replaceState()` 改变 URL 而不刷新页面，并监听 `popstate` 事件来响应浏览器的前进/后退操作。
+***特点**：URL 更美观，没有 `#`。但需要服务器支持（配置 Fallback，确保直接访问或刷新子路由时返回 `index.html`），否则可能导致 404 错误。
 
-**🔹**\*\* Abstract 模式\*\*
+**🔹 Abstract 模式**
 
-<font style="color:rgb(0, 0, 0);">Abstract 模式用于非浏览器环境（如 Node.js、移动端原生环境）。路由信息保存在内存中，不与浏览器 URL 交互</font>
+Abstract 模式用于非浏览器环境（如 Node.js、移动端原生环境）。路由信息保存在内存中，不与浏览器 URL 交互
 
 ##### 路由匹配机制
 
-<font style="color:rgb(0, 0, 0);">Vue Router 的核心功能之一是将 URL 路径映射到对应的组件。</font>
+Vue Router 的核心功能之一是将 URL 路径映射到对应的组件。
 
-* <font style="color:rgb(0, 0, 0);">路由映射表：初始化时，Vue Router 会根据开发者定义的路由配置（</font><code><font style="color:rgb(0, 0, 0);">routes</font></code><font style="color:rgb(0, 0, 0);"> 数组）创建一个路由映射表。这个表记录了路径（</font><code><font style="color:rgb(0, 0, 0);">path</font></code><font style="color:rgb(0, 0, 0);">）与组件（</font><code><font style="color:rgb(0, 0, 0);">component</font></code><font style="color:rgb(0, 0, 0);">）的对应关系，支持静态路由、动态路由（如 </font><code><font style="color:rgb(0, 0, 0);">/user/:id</font></code><font style="color:rgb(0, 0, 0);">）、嵌套路由和通配符。</font>
+* 路由映射表：初始化时，Vue Router 会根据开发者定义的路由配置（`routes` 数组）创建一个路由映射表。这个表记录了路径（`path`）与组件（`component`）的对应关系，支持静态路由、动态路由（如 `/user/:id`）、嵌套路由和通配符。
 
 ```javascript
 const routes = [
   { path: '/home', component: HomeComponent },
   { path: '/user/:id', component: UserComponent } // 动态路由
 ];
+
 ```
 
-* <font style="color:rgb(0, 0, 0);">匹配算法：当 URL 发生变化时，Vue Router 会按优先级（通常路径越具体优先级越高）遍历路由映射表，使用路径解析和正则表达式来匹配当前路径并提取动态参数（如 </font><code><font style="color:rgb(0, 0, 0);">:id</font></code><font style="color:rgb(0, 0, 0);">）。匹配成功后，会找到对应的组件。</font>
+* 匹配算法：当 URL 发生变化时，Vue Router 会按优先级（通常路径越具体优先级越高）遍历路由映射表，使用路径解析和正则表达式来匹配当前路径并提取动态参数（如 `:id`）。匹配成功后，会找到对应的组件。
 
 ##### 导航守卫系统
 
-<font style="color:rgb(0, 0, 0);">导航守卫是 Vue Router 提供的钩子函数，允许在路由导航不同阶段介入，进行权限控制、数据预取操作</font>
+导航守卫是 Vue Router 提供的钩子函数，允许在路由导航不同阶段介入，进行权限控制、数据预取操作
 
-<font style="color:rgb(0, 0, 0);">导航守卫的执行流程遵循一个完整的解析流程，确保钩子函数按特定顺序执行</font>
+导航守卫的执行流程遵循一个完整的解析流程，确保钩子函数按特定顺序执行
 
-1. **<font style="color:rgb(0, 0, 0);">导航被触发</font>**<font style="color:rgb(0, 0, 0);">（例如用户点击链接或调用 </font><code><font style="color:rgb(0, 0, 0);">router.push</font></code><font style="color:rgb(0, 0, 0);">）</font>
-2. <font style="color:rgb(0, 0, 0);">在失活的组件里调用 </font><code><font style="color:rgb(0, 0, 0);">beforeRouteLeave</font></code><font style="color:rgb(0, 0, 0);"> 守卫</font>
-3. <font style="color:rgb(0, 0, 0);">调用全局的 </font><code><font style="color:rgb(0, 0, 0);">beforeEach</font></code><font style="color:rgb(0, 0, 0);"> 守卫</font>
-4. <font style="color:rgb(0, 0, 0);">在重用的组件里调用 </font><code><font style="color:rgb(0, 0, 0);">beforeRouteUpdate</font></code><font style="color:rgb(0, 0, 0);"> 守卫（如果组件复用）</font>
-5. <font style="color:rgb(0, 0, 0);">在路由配置里调用 </font><code><font style="color:rgb(0, 0, 0);">beforeEnter</font></code><font style="color:rgb(0, 0, 0);"> 守卫（路由独享守卫）</font>
-6. <font style="color:rgb(0, 0, 0);">解析异步路由组件（如果路由组件是懒加载的）</font>**<font style="background-color:rgba(0, 0, 0, 0.05);"></font>**
-7. <font style="color:rgb(0, 0, 0);">在被激活的组件里调用 </font><code><font style="color:rgb(0, 0, 0);">beforeRouteEnter</font></code><font style="color:rgb(0, 0, 0);"> 守卫</font>**<font style="background-color:rgba(0, 0, 0, 0.05);"></font>**
-8. <font style="color:rgb(0, 0, 0);">调用全局的 </font><code><font style="color:rgb(0, 0, 0);">beforeResolve</font></code><font style="color:rgb(0, 0, 0);"> 守卫</font>
-9. \*\*\*\***<font style="color:rgb(0, 0, 0);">导航被确认</font>**<font style="color:rgb(0, 0, 0);">。</font>
-10. <font style="color:rgb(0, 0, 0);">调用全局的 </font><code><font style="color:rgb(0, 0, 0);">afterEach</font></code><font style="color:rgb(0, 0, 0);"> 钩子（注意，这个钩子没有 </font><code><font style="color:rgb(0, 0, 0);">next</font></code><font style="color:rgb(0, 0, 0);"> 参数，也不会改变导航本身）</font>
-11. <font style="color:rgb(0, 0, 0);">触发 DOM 更新，渲染新组件</font>
-12. <font style="color:rgb(0, 0, 0);">在 </font><code><font style="color:rgb(0, 0, 0);">beforeRouteEnter</font></code><font style="color:rgb(0, 0, 0);"> 守卫中传给 </font><code><font style="color:rgb(0, 0, 0);">next</font></code><font style="color:rgb(0, 0, 0);"> 的回调函数被调用，并将组件实例作为参数传入</font>
+1. **导航被触发**（例如用户点击链接或调用 `router.push`）
+2. 在失活的组件里调用 `beforeRouteLeave` 守卫
+3. 调用全局的 `beforeEach` 守卫
+4. 在重用的组件里调用 `beforeRouteUpdate` 守卫（如果组件复用）
+5. 在路由配置里调用 `beforeEnter` 守卫（路由独享守卫）
+6. 解析异步路由组件（如果路由组件是懒加载的）
+7. 在被激活的组件里调用 `beforeRouteEnter` 守卫
+8. 调用全局的 `beforeResolve` 守卫
+9. **导航被确认**。
+10. 调用全局的 `afterEach` 钩子（注意，这个钩子没有 `next` 参数，也不会改变导航本身）
+11. 触发 DOM 更新，渲染新组件
+12. 在 `beforeRouteEnter` 守卫中传给 `next` 的回调函数被调用，并将组件实例作为参数传入
 
 ##### 响应式状态管理与组件渲染
 
-<font style="color:rgb(0, 0, 0);">Vue Router 与 Vue 的响应式系统深度集成，确保视图能随路由变化而更新。</font>
+Vue Router 与 Vue 的响应式系统深度集成，确保视图能随路由变化而更新。
 
-* **<font style="color:rgb(0, 0, 0);">响应式状态</font>**<font style="color:rgb(0, 0, 0);">：Vue Router 内部维护了一个响应式的当前路由对象（例如 </font><code><font style="color:rgb(0, 0, 0);">currentRoute</font></code><font style="color:rgb(0, 0, 0);">，在 Vue 2 中可能是 </font><code><font style="color:rgb(0, 0, 0);">Vue.observable</font></code><font style="color:rgb(0, 0, 0);"> 创建，在 Vue 3 中使用 </font><code><font style="color:rgb(0, 0, 0);">ref</font></code><font style="color:rgb(0, 0, 0);">/</font><code><font style="color:rgb(0, 0, 0);">reactive</font></code><font style="color:rgb(0, 0, 0);">）。这个对象包含了当前路径、参数、查询字符串等信息。当路由变化时，这个对象会被更新</font>**<font style="background-color:rgba(0, 0, 0, 0.05);">25</font>**<font style="color:rgb(0, 0, 0);">。</font>
-* **<font style="color:rgb(0, 0, 0);">组件渲染</font>**<font style="color:rgb(0, 0, 0);">：</font><code><font style="color:rgb(0, 0, 0);"><router-view></font></code><font style="color:rgb(0, 0, 0);"> 组件是渲染的出口。它本质上是一个</font>**<font style="color:rgb(0, 0, 0);">函数式组件</font>**<font style="color:rgb(0, 0, 0);">，会监听上述响应式的当前路由对象。当 </font><code><font style="color:rgb(0, 0, 0);">currentRoute</font></code><font style="color:rgb(0, 0, 0);"> 变化时，</font><code><font style="color:rgb(0, 0, 0);"><router-view></font></code><font style="color:rgb(0, 0, 0);"> 会根据匹配到的组件，使用 Vue 的渲染函数（</font><code><font style="color:rgb(0, 0, 0);">h</font></code><font style="color:rgb(0, 0, 0);"> 函数）动态渲染对应的组件到 DOM 中</font>
+***响应式状态**：Vue Router 内部维护了一个响应式的当前路由对象（例如 `currentRoute`，在 Vue 2 中可能是 `Vue.observable` 创建，在 Vue 3 中使用 `ref`/`reactive`）。这个对象包含了当前路径、参数、查询字符串等信息。当路由变化时，这个对象会被更新**25**。
+***组件渲染**：`<router-view>` 组件是渲染的出口。它本质上是一个**函数式组件**，会监听上述响应式的当前路由对象。当 `currentRoute` 变化时，`<router-view>` 会根据匹配到的组件，使用 Vue 的渲染函数（`h` 函数）动态渲染对应的组件到 DOM 中
 
 ##### 路由懒加载
 
-<font style="color:rgb(0, 0, 0);">为优化应用性能，Vue Router 支持路由懒加载。它结合 Webpack 的代码分割功能，使得路由对应的组件只在被访问时才加载</font>
+为优化应用性能，Vue Router 支持路由懒加载。它结合 Webpack 的代码分割功能，使得路由对应的组件只在被访问时才加载
 
-* **<font style="color:rgb(0, 0, 0);">实现原理</font>**<font style="color:rgb(0, 0, 0);">：使用动态 </font><code><font style="color:rgb(0, 0, 0);">import()</font></code><font style="color:rgb(0, 0, 0);"> 语法定义路由组件，这会返回一个 Promise</font>**<font style="background-color:rgba(0, 0, 0, 0.05);">15</font>**<font style="color:rgb(0, 0, 0);">。</font>
+***实现原理**：使用动态 `import()` 语法定义路由组件，这会返回一个 Promise**15**。
 
 ```javascript
 const routes = [
@@ -1036,23 +1067,24 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ './views/About.vue') // 懒加载
   }
 ];
+
 ```
 
-* **<font style="color:rgb(0, 0, 0);">工作流程</font>**<font style="color:rgb(0, 0, 0);">：当路由被匹配时，Vue Router 会等待该 Promise 解析（即组件加载完成）后再进行渲染</font>
+***工作流程**：当路由被匹配时，Vue Router 会等待该 Promise 解析（即组件加载完成）后再进行渲染
 
 ##### 核心模块协作
 
-<font style="color:rgb(0, 0, 0);">Vue Router 的底层可以看作几个核心模块的协同工作</font>
+Vue Router 的底层可以看作几个核心模块的协同工作
 
-1. \*\*\*\***<font style="color:rgb(0, 0, 0);">路由注册系统 (Matcher)</font>**<font style="color:rgb(0, 0, 0);">：负责根据配置生成路由映射表，并提供路径匹配功能</font>**<font style="background-color:rgba(0, 0, 0, 0.05);">2</font>**<font style="color:rgb(0, 0, 0);">。</font>
-2. **<font style="color:rgb(0, 0, 0);">历史管理器 (History)</font>**<font style="color:rgb(0, 0, 0);">：根据指定模式（hash/history/abstract）管理浏览器地址栏变化，并触发路由更新</font>**<font style="background-color:rgba(0, 0, 0, 0.05);">2</font>**<font style="color:rgb(0, 0, 0);">。</font>
-3. \*\*\*\***<font style="color:rgb(0, 0, 0);">导航守卫系统</font>**<font style="color:rgb(0, 0, 0);">：控制导航流程，执行钩子函数</font>**<font style="background-color:rgba(0, 0, 0, 0.05);">2</font>**<font style="color:rgb(0, 0, 0);">。</font>
-4. \*\*\*\***<font style="color:rgb(0, 0, 0);">响应式状态管理</font>**<font style="color:rgb(0, 0, 0);">：维护当前路由的响应式状态</font>**<font style="background-color:rgba(0, 0, 0, 0.05);">2</font>**<font style="color:rgb(0, 0, 0);">。</font>
-5. **<font style="color:rgb(0, 0, 0);">路由组件渲染系统</font>**<font style="color:rgb(0, 0, 0);">：通过 </font><code><font style="color:rgb(0, 0, 0);"><router-view></font></code><font style="color:rgb(0, 0, 0);"> 和 </font><code><font style="color:rgb(0, 0, 0);"><router-link></font></code><font style="color:rgb(0, 0, 0);"> 实现组件的渲染和导航</font>**<font style="background-color:rgba(0, 0, 0, 0.05);">2</font>**<font style="color:rgb(0, 0, 0);">。</font>
+1. **路由注册系统 (Matcher)**：负责根据配置生成路由映射表，并提供路径匹配功能**2**。
+2. **历史管理器 (History)**：根据指定模式（hash/history/abstract）管理浏览器地址栏变化，并触发路由更新**2**。
+3. **导航守卫系统**：控制导航流程，执行钩子函数**2**。
+4. **响应式状态管理**：维护当前路由的响应式状态**2**。
+5. **路由组件渲染系统**：通过 `<router-view>` 和 `<router-link>` 实现组件的渲染和导航**2**。
 
-***
+---
 
-**<font style="color:rgb(26, 32, 41);">LEGO 编辑器项目实战讲解</font>**
+**LEGO 编辑器项目实战讲解**
 
 我们的路由模块（`src/routes/index.ts`）完美体现了 Vue Router 的底层机制：
 
@@ -1093,10 +1125,11 @@ query传参
 
 参数的生命周期不一样，query参数在URL地址栏中显示不容易丢失，params参数不会在地址栏显示，刷新后会消失
 
-#### <font style="color:#DF2A3F;">HashRouter和HistoryRouter区别（必背）</font>
+#### HashRouter和HistoryRouter区别（必背）
 
 1. 路由的实现形式，区别在于url的表现形式，实现原理和后端要求
 2. HashRouter ：# 监听location.hash/兼容性好 支持所有浏览器 不需要后端额外配置/路由切换，监听变化window.onHahChange 渲染对应组件
+
 3. HistoryRouter：无# 通过H5的history.pushState() 和history.replaceState()/需要HTML5支持 需要后端配置支持 支持seo/window.inpopState
 
 #### 导航守卫
@@ -1105,7 +1138,7 @@ query传参
 * 路由独享守卫：beforeEnter
 * 组件内守卫：beforeRouteEnter(无法访问this),beforeRouteUpdate
 
-|    **守卫类型**     |        **触发时机**        |           **典型场景**           | **访问**\*\* \*\*<code>**this**</code> |
+|    **守卫类型**     |        **触发时机**        |           **典型场景**           | **访问 **`this` |
 | :-----------------: | :------------------------: | :------------------------------: | :------------------------------------: |
 |    `beforeEach`     |         全局跳转前         |      登录验证、全局权限控制      |                   ❌                    |
 |     `afterEach`     |         导航完成后         |        页面统计、滚动复位        |                   ❌                    |
@@ -1116,25 +1149,25 @@ query传参
 
 #### Vue Router 中的路由守卫
 
-**<font style="color:rgb(0, 0, 0);">关键点：</font>**
+**关键点：**
 
-<font style="color:rgb(0, 0, 0);">可以写多次： 你可以在同一个级别（例如全局）注册多个相同类型的守卫（比如多个 </font><code><font style="color:rgb(0, 0, 0);">beforeEach</font></code><font style="color:rgb(0, 0, 0);">）。</font>
+可以写多次： 你可以在同一个级别（例如全局）注册多个相同类型的守卫（比如多个 `beforeEach`）。
 
-**<font style="color:rgb(0, 0, 0);">执行顺序：</font>**
+**执行顺序：**
 
-* <font style="color:rgb(0, 0, 0);">全局守卫 (</font><code><font style="color:rgb(0, 0, 0);">beforeEach</font></code><font style="color:rgb(0, 0, 0);">)： 按照注册的先后顺序依次执行</font>
-* <font style="color:rgb(0, 0, 0);">路由独享守卫 (</font><code><font style="color:rgb(0, 0, 0);">beforeEnter</font></code><font style="color:rgb(0, 0, 0);">)： 在匹配到该路由的全局守卫之后执行</font>
-* <font style="color:rgb(0, 0, 0);">组件内守卫 (</font><code><font style="color:rgb(0, 0, 0);">beforeRouteEnter</font></code><font style="color:rgb(0, 0, 0);">, </font><code><font style="color:rgb(0, 0, 0);">beforeRouteUpdate</font></code><font style="color:rgb(0, 0, 0);">, </font><code><font style="color:rgb(0, 0, 0);">beforeRouteLeave</font></code><font style="color:rgb(0, 0, 0);">)： 路由独享守卫之后执行</font>
+* 全局守卫 (`beforeEach`)： 按照注册的先后顺序依次执行
+* 路由独享守卫 (`beforeEnter`)： 在匹配到该路由的全局守卫之后执行
+* 组件内守卫 (`beforeRouteEnter`, `beforeRouteUpdate`, `beforeRouteLeave`)： 路由独享守卫之后执行
 
-**<font style="color:rgb(0, 0, 0);">守卫链：</font>**
+**守卫链：**
 
-<font style="color:rgb(0, 0, 0);">导航守卫的执行是一个异步解析链。每个守卫接收三个参数：</font>
+导航守卫的执行是一个异步解析链。每个守卫接收三个参数：
 
-* <code><font style="color:rgb(0, 0, 0);">to</font></code><font style="color:rgb(0, 0, 0);">: 即将进入的目标路由对象</font>
-* <code><font style="color:rgb(0, 0, 0);">from</font></code><font style="color:rgb(0, 0, 0);">: 当前导航正要离开的路由对象</font>
-* <code><font style="color:rgb(0, 0, 0);">next</font></code><font style="color:rgb(0, 0, 0);">: 必须调用的函数，决定导航行为 (</font><code><font style="color:rgb(0, 0, 0);">next()</font></code><font style="color:rgb(0, 0, 0);">, </font><code><font style="color:rgb(0, 0, 0);">next(false)</font></code><font style="color:rgb(0, 0, 0);">, </font><code><font style="color:rgb(0, 0, 0);">next('/path')</font></code><font style="color:rgb(0, 0, 0);">, </font><code><font style="color:rgb(0, 0, 0);">next(error)</font></code><font style="color:rgb(0, 0, 0);">)</font>
+* `to`: 即将进入的目标路由对象
+* `from`: 当前导航正要离开的路由对象
+* `next`: 必须调用的函数，决定导航行为 (`next()`, `next(false)`, `next('/path')`, `next(error)`)
 
-**<font style="color:rgb(0, 0, 0);">示例：注册多个全局</font>\*\*\*\*<font style="color:rgb(0, 0, 0);"> </font>**<code>**<font style="color:rgb(0, 0, 0);">beforeEach</font>**</code>**<font style="color:rgb(0, 0, 0);"> </font>\*\*\*\*<font style="color:rgb(0, 0, 0);">守卫</font>**
+**示例：注册多个全局 **`beforeEach`** 守卫**
 
 ```javascript
 // router/index.js (Vue Router)
@@ -1174,26 +1207,52 @@ const routes = [
   },
   // ...其他路由
 ];
+
 ```
 
-**<font style="color:rgb(0, 0, 0);">执行流程示例 (访问 </font>**<code>**<font style="color:rgb(0, 0, 0);">/admin</font>**</code>**<font style="color:rgb(0, 0, 0);">):</font>**
+**执行流程示例 (访问 **`/admin`**):**
 
-1. <code><font style="color:rgb(0, 0, 0);">Global Guard 1</font></code><font style="color:rgb(0, 0, 0);"> 执行：检查是否需要认证 (</font><code><font style="color:rgb(0, 0, 0);">requiresAuth: true</font></code><font style="color:rgb(0, 0, 0);">)，假设用户已登录 (</font><code><font style="color:rgb(0, 0, 0);">isAuthenticated() === true</font></code><font style="color:rgb(0, 0, 0);">)，调用 </font><code><font style="color:rgb(0, 0, 0);">next()</font></code><font style="color:rgb(0, 0, 0);">。</font>
-2. <code><font style="color:rgb(0, 0, 0);">Global Guard 2</font></code><font style="color:rgb(0, 0, 0);"> 执行：记录日志，调用 </font><code><font style="color:rgb(0, 0, 0);">next()</font></code><font style="color:rgb(0, 0, 0);">。</font>
-3. <font style="color:rgb(0, 0, 0);">路由匹配到 </font><code><font style="color:rgb(0, 0, 0);">/admin</font></code><font style="color:rgb(0, 0, 0);">，执行其 </font>**<font style="color:rgb(0, 0, 0);">路由独享守卫</font>**<font style="color:rgb(0, 0, 0);"> </font><code><font style="color:rgb(0, 0, 0);">beforeEnter</font></code><font style="color:rgb(0, 0, 0);">：检查是否是管理员 (</font><code><font style="color:rgb(0, 0, 0);">requiresAdmin: true</font></code><font style="color:rgb(0, 0, 0);">)，假设用户是管理员 (</font><code><font style="color:rgb(0, 0, 0);">isAdmin() === true</font></code><font style="color:rgb(0, 0, 0);">)，调用 </font><code><font style="color:rgb(0, 0, 0);">next()</font></code><font style="color:rgb(0, 0, 0);">。</font>
-4. <font style="color:rgb(0, 0, 0);">导航确认，开始渲染 </font><code><font style="color:rgb(0, 0, 0);">/admin</font></code><font style="color:rgb(0, 0, 0);"> 对应的组件 (</font><code><font style="color:rgb(0, 0, 0);">AdminDashboard</font></code><font style="color:rgb(0, 0, 0);">)。</font>
-5. <font style="color:rgb(0, 0, 0);">如果 </font><code><font style="color:rgb(0, 0, 0);">AdminDashboard</font></code><font style="color:rgb(0, 0, 0);"> 组件定义了 </font><code><font style="color:rgb(0, 0, 0);">beforeRouteEnter</font></code><font style="color:rgb(0, 0, 0);"> 守卫，它会在此时执行（在组件实例创建</font>**<font style="color:rgb(0, 0, 0);">之前</font>**<font style="color:rgb(0, 0, 0);">，所以不能访问 </font><code><font style="color:rgb(0, 0, 0);">this</font></code><font style="color:rgb(0, 0, 0);">）。</font>
-6. <font style="color:rgb(0, 0, 0);">组件渲染完成。</font>
-7. <font style="color:rgb(0, 0, 0);">任何全局 </font><code><font style="color:rgb(0, 0, 0);">afterEach</font></code><font style="color:rgb(0, 0, 0);"> 守卫执行（如果有）。</font>
+1. `Global Guard 1` 执行：检查是否需要认证 (`requiresAuth: true`)，假设用户已登录 (`isAuthenticated() === true`)，调用 `next()`。
+2. `Global Guard 2` 执行：记录日志，调用 `next()`。
+3. 路由匹配到 `/admin`，执行其 **路由独享守卫** `beforeEnter`：检查是否是管理员 (`requiresAdmin: true`)，假设用户是管理员 (`isAdmin() === true`)，调用 `next()`。
+4. 导航确认，开始渲染 `/admin` 对应的组件 (`AdminDashboard`)。
+5. 如果 `AdminDashboard` 组件定义了 `beforeRouteEnter` 守卫，它会在此时执行（在组件实例创建**之前**，所以不能访问 `this`）。
+6. 组件渲染完成。
+7. 任何全局 `afterEach` 守卫执行（如果有）。
 
-**<font style="color:rgb(0, 0, 0);">重要提示：</font>**
+**重要提示：**
 
-* <code>**<font style="color:rgb(0, 0, 0);">next</font>**</code>**<font style="color:rgb(0, 0, 0);"> 函数必须调用：</font>**<font style="color:rgb(0, 0, 0);"> 每个守卫</font>**<font style="color:rgb(0, 0, 0);">必须</font>**<font style="color:rgb(0, 0, 0);">调用 </font><code><font style="color:rgb(0, 0, 0);">next()</font></code><font style="color:rgb(0, 0, 0);"> 一次，否则导航会一直处于</font>**<font style="color:rgb(0, 0, 0);">挂起状态</font>**<font style="color:rgb(0, 0, 0);">，页面不会跳转。</font>
-* **<font style="color:rgb(0, 0, 0);">顺序控制：</font>**<font style="color:rgb(0, 0, 0);"> 全局守卫按注册顺序执行。路由独享守卫和组件内守卫按路由匹配顺序执行。</font>
-* **<font style="color:rgb(0, 0, 0);">短路：</font>**<font style="color:rgb(0, 0, 0);"> 如果某个守卫调用了 </font><code><font style="color:rgb(0, 0, 0);">next(false)</font></code><font style="color:rgb(0, 0, 0);"> 或 </font><code><font style="color:rgb(0, 0, 0);">next('/login')</font></code><font style="color:rgb(0, 0, 0);"> 等，它会</font>**<font style="color:rgb(0, 0, 0);">中断</font>**<font style="color:rgb(0, 0, 0);">当前导航链，后续守卫（包括同级别的其他守卫）</font>**<font style="color:rgb(0, 0, 0);">不会执行</font>**<font style="color:rgb(0, 0, 0);">。例如，如果 </font><code><font style="color:rgb(0, 0, 0);">Global Guard 1</font></code><font style="color:rgb(0, 0, 0);"> 调用了 </font><code><font style="color:rgb(0, 0, 0);">next('/login')</font></code><font style="color:rgb(0, 0, 0);">，那么 </font><code><font style="color:rgb(0, 0, 0);">Global Guard 2</font></code><font style="color:rgb(0, 0, 0);"> 和 </font><code><font style="color:rgb(0, 0, 0);">/admin</font></code><font style="color:rgb(0, 0, 0);"> 的 </font><code><font style="color:rgb(0, 0, 0);">beforeEnter</font></code><font style="color:rgb(0, 0, 0);"> 都不会执行。</font>
-* **<font style="color:rgb(0, 0, 0);">异步守卫：</font>**<font style="color:rgb(0, 0, 0);"> 守卫可以是异步函数（返回 Promise 或使用 </font><code><font style="color:rgb(0, 0, 0);">async/await</font></code><font style="color:rgb(0, 0, 0);">）。导航会等待所有守卫解析（resolve）后才继续。在 </font><code><font style="color:rgb(0, 0, 0);">next</font></code><font style="color:rgb(0, 0, 0);"> 中传递的参数也会被解析</font>
+* `next`** 函数必须调用：** 每个守卫**必须**调用 `next()` 一次，否则导航会一直处于**挂起状态**，页面不会跳转。
+***顺序控制：** 全局守卫按注册顺序执行。路由独享守卫和组件内守卫按路由匹配顺序执行。
+***短路：** 如果某个守卫调用了 `next(false)` 或 `next('/login')` 等，它会**中断**当前导航链，后续守卫（包括同级别的其他守卫）**不会执行**。例如，如果 `Global Guard 1` 调用了 `next('/login')`，那么 `Global Guard 2` 和 `/admin` 的 `beforeEnter` 都不会执行。
+***异步守卫：** 守卫可以是异步函数（返回 Promise 或使用 `async/await`）。导航会等待所有守卫解析（resolve）后才继续。在 `next` 中传递的参数也会被解析
 
-#### <font style="color:#DF2A3F;">从vuex迁移到pinia的挑战（重要）</font>
+---
+
+**LEGO 编辑器项目实战讲解**
+
+我们在项目中主要使用了 **全局前置守卫 (`beforeEach`)** 来构建安全防线，代码位于 `src/routes/index.ts`：
+
+1.  **基于 Meta 的声明式权限控制**：
+    我们不在守卫中写死路径判断（如 `if (path === '/editor')`），而是依赖路由配置中的 `meta` 字段：
+    ```typescript
+    {
+      path: '/editor/:id',
+      meta: { requiredLogin: true } // 声明该路由需要登录
+    }
+    ```
+
+    这使得权限配置与路由定义解耦，维护性极高。
+
+2.  **异步鉴权流**：
+    守卫函数被声明为 `async`，用于处理 Token 验证的异步操作：
+    -   **Token 续期**：如果本地有 Token 但无用户信息（`if (!isLogin && token)`），守卫会挂起导航，先调用 `fetchCurrentUser` 接口。
+    -   **异常熔断**：如果接口报错（说明 Token 过期），直接 catch 住并 `return '/login'`，中断原导航并重定向，同时清理本地状态 (`store.commit('logout')`)。
+
+3.  **体验优化**：
+    在守卫的最开始统一设置 `document.title = to.meta.title`，保证了页面切换时标题的即时更新。
+
+#### 从vuex迁移到pinia的挑战（重要）
 
 **迁移过程**
 
@@ -1213,6 +1272,7 @@ const pinia = createPinia();
 pinia.use(({ store }) => {
   store.$subscribe(() => { /* 持久化逻辑 */ });
 });
+
 ```
 
 问题 2：模块间循环依赖
@@ -1229,6 +1289,7 @@ const useUserStore = defineStore('user', () => {
     // ...
   };
 });
+
 ```
 
 问题 3：TypeScript 类型扩展
@@ -1250,6 +1311,7 @@ declare module 'pinia' {
     persist?: boolean;
 }
 }
+
 ```
 
 问题 4：Devtools 兼容性
@@ -1263,6 +1325,7 @@ declare module 'pinia' {
 ```javascript
 const pinia = createPinia();
 app.use(pinia);
+
 ```
 
 检查 Vue Devtools 是否支持当前 Vue 3 版本。
@@ -1279,7 +1342,7 @@ Composition API 集成更自然
 
 性能优化空间：支持按需加载 Store（如结合 `defineAsyncComponent`）。
 
-### <font style="color:#4861E0;background-color:rgb(252, 252, 252);">指令、模板与编译</font>
+### 指令、模板与编译
 
 #### v-html
 
@@ -1289,28 +1352,28 @@ Composition API 集成更自然
 
 通过addProp添加innerHTML属性，归根结底还是设置innerHTML为v-html的值
 
-**<font style="color:rgb(26, 32, 41);">安全风险：</font>**
+**安全风险：**
 
-<font style="color:rgb(26, 32, 41);">使用v-html需特别注意XSS（跨站脚本攻击）风险。若HTML内容包含恶意脚本（如</font><code><font style="color:rgb(26, 32, 41);"><script></font></code><font style="color:rgb(26, 32, 41);">标签或事件监听器），可能被直接执行，威胁用户安全</font>\*\*\*\*<font style="color:rgb(26, 32, 41);">。因此：</font>
+使用v-html需特别注意XSS（跨站脚本攻击）风险。若HTML内容包含恶意脚本（如`<script>`标签或事件监听器），可能被直接执行，威胁用户安全。因此：
 
-1. **<font style="color:rgb(26, 32, 41);">避免直接渲染用户输入</font>**<font style="color:rgb(26, 32, 41);">：除非经过严格过滤，否则不要将未处理的用户输入绑定到v-html</font>\*\*\*\*
-2. **<font style="color:rgb(26, 32, 41);">内容净化</font>**<font style="color:rgb(26, 32, 41);">：可使用DOMPurify等库对HTML进行过滤，移除危险代码</font>
+1. **避免直接渲染用户输入**：除非经过严格过滤，否则不要将未处理的用户输入绑定到v-html
+2. **内容净化**：可使用DOMPurify等库对HTML进行过滤，移除危险代码
 
-**<font style="color:rgb(26, 32, 41);">其他注意事项：</font>**
+**其他注意事项：**
 
-* **<font style="color:rgb(26, 32, 41);">与普通插值的区别</font>**<font style="color:rgb(26, 32, 41);">：</font><code><font style="color:rgb(26, 32, 41);">{{ }}</font></code><font style="color:rgb(26, 32, 41);">会转义HTML标签，而v-html会直接解析渲染</font>\*\*\*\*
-* **<font style="color:rgb(26, 32, 41);">Vue3中的改进</font>**<font style="color:rgb(26, 32, 41);">：Vue3对v-html的安全性要求更严格，建议结合模板字符串或组件插槽（如</font><code><font style="color:rgb(26, 32, 41);"><slot></font></code><font style="color:rgb(26, 32, 41);">）作为替代方案</font>
+***与普通插值的区别**：`{{ }}`会转义HTML标签，而v-html会直接解析渲染
+***Vue3中的改进**：Vue3对v-html的安全性要求更严格，建议结合模板字符串或组件插槽（如`<slot>`）作为替代方案
 
-#### <font style="color:#DF2A3F;">v-model（必背）</font>
+#### v-model（必背）
 
 Vue 中数据双向绑定是一个指令v-model，可以绑定一个响应式数据到视图，同时视图的变化能改变该值。
 
 * 当作用在表单上：通过v-bind:value绑定数据，v-on:input来监听数据变化并修改value
 * 当作用在组件上：本质上是一个父子通信语法糖，通过props和$emit实现
 
-#### <font style="color:#DF2A3F;">template编译时机、最终产物（重要）</font>
+#### template编译时机、最终产物（重要）
 
-*<u>Vue 的模板编译过程通常发生在以下几个关键时机：</u>*
+* Vue 的模板编译过程通常发生在以下几个关键时机：*
 
 1. 创建 Vue 实例时
 
@@ -1352,9 +1415,9 @@ Vue 中数据双向绑定是一个指令v-model，可以绑定一个响应式数
 
 更新 DOM：新的虚拟 DOM 与旧的虚拟 DOM 进行比较，更新实际 DOM。
 
-***
+---
 
-*<u>模板的编译过程</u>*
+* 模板的编译过程*
 
 Vue 的模板编译过程可以分为以下几个步骤：
 
@@ -1404,9 +1467,9 @@ Diff 算法：比较新旧虚拟 DOM 树，找出差异。
 
 Patch 过程：将差异应用到实际 DOM 中，更新视图。
 
-***
+---
 
-*<u>模板的最终产物</u>*
+* 模板的最终产物*
 
 Vue 模板的最终产物是渲染函数，它是一个可执行的 JavaScript 函数，用于生成虚拟 DOM。渲染函数的结构通常如下：
 
@@ -1424,6 +1487,7 @@ function render() {
     })
   ])
 }
+
 ```
 
 `_c`：用于创建虚拟 DOM 节点。
@@ -1440,7 +1504,7 @@ function render() {
 | :----------- | :----------------------------------- | :--------------------------------- | :--------------------------------------- |
 | **语法形式** | HTML-like 声明式模板                 | JavaScript 函数式编程              | HTML-like 声明式模板（通过 JSX）         |
 | **灵活性**   | 有限（受限于模板语法规则）           | 极高（可使用完整 JavaScript 能力） | 高（通过 JSX 可以使用 HTML-like 语法）   |
-| **动态组件** | 需要 `v-if`<br/>/`v-for`<br/> 等指令 | 直接使用 JavaScript 逻辑控制       | 直接使用 JavaScript 逻辑控制             |
+| **动态组件** | 需要 `v-if` /`v-for`  等指令 | 直接使用 JavaScript 逻辑控制       | 直接使用 JavaScript 逻辑控制             |
 | **JSX 支持** | 不支持                               | 不支持                             | 支持（需配置 Babel 插件）                |
 | **类型支持** | 有限（TypeScript 支持较弱）          | 更好（适合 TypeScript 开发）       | 更好（适合 TypeScript 开发）             |
 | **编译优化** | 自动优化（模板预编译）               | 需要手动优化（更贴近底层）         | 自动优化（通过 JSX 转换为 render 函数）  |
@@ -1501,7 +1565,7 @@ Vue 在编译过程中会解析单文件组件的模板，并对样式进行处�
 
 性
 
-#### <font style="color:#DF2A3F;">vue语法糖（必背）</font>
+#### vue语法糖（必背）
 
 语法糖是一种简化代码的书写方式，其本质是底层功能的一种便捷表达
 
@@ -1511,9 +1575,9 @@ Vue 在编译过程中会解析单文件组件的模板，并对样式进行处�
 4. Vue 3引入：<script setup> 是Vue 3新增的语法糖，用于简化组件逻辑组织
 5. v-model 的升级 Vue 2：主要用于表单输入的双向绑定 Vue 3：支持在自定义组件上使用多个 v-model，并通过参数区分绑定属性。
 
-### <font style="color:#7E45E8;background-color:rgb(252, 252, 252);">高级特性与API</font>
+### 高级特性与API
 
-#### <font style="color:#DF2A3F;">vue3和vue2的区别（重要）</font>
+#### vue3和vue2的区别（重要）
 
 1. 响应式数据系统：vue3使用Proxy，代替了2的Object.defindeProperty,支持深层对象和数据监听
 2. Composition API：提供了更为灵活的代码组织方式，替代Options API的逻辑分散问题
@@ -1521,7 +1585,7 @@ Vue 在编译过程中会解析单文件组件的模板，并对样式进行处�
 4. Vue3引入了Teleprot组件，可以将DOM元素渲染到DOM的其他位置，用于创建模态框、弹出框等
 5. Vue3核心库的依赖更少，减少打包体积
 
-#### <font style="color:#DF2A3F;">compostion 和 options api介绍与区别（重要）</font>
+#### compostion 和 options api介绍与区别（重要）
 
 在Vue.js中，Composition API和Options API是两种不同的组件编写方式。它们都用于定义组件的逻辑，但它们在组织代码的方式上有显著差异
 
@@ -1552,7 +1616,7 @@ Vue 在编译过程中会解析单文件组件的模板，并对样式进行处�
 
 总的来说，Composition API提供了更灵活和模块化的方式来编写组件逻辑，特别是在处理复杂组件时，它可以帮助更好地组织和复用代码。而Options API则更适用于简单组件或对于Vue 2的迁移项目。Vue 3同时支持这两种API，开发者可以根据自己的需求选择使用。
 
-#### <font style="color:#DF2A3F;">computed 和 watch 区别（重要）</font>
+#### computed 和 watch 区别（重要）
 
 computed是基于依赖的缓存属性 当依赖的数据变化时才进行数据更新
 
@@ -1565,9 +1629,9 @@ watch：用于监听数据变化，是无缓存的，同时支持异步逻辑，
 * 在数据变化时执行异步操作 或 复杂逻辑，也可以在监听数据变化时并执行副作用
 * 用于搜索框发生变化时发送请求、表单输入时实时验证
 
-#### <font style="color:#DF2A3F;">watch和watcheffect（重要）</font>
+#### watch和watcheffect（重要）
 
-| **特性**         | \*\*Vue2 的 \*\*<code>**watch**</code>     | \*\*Vue3 的 \*\*<code>**watchEffect**</code>           |
+| **特性**         | **Vue2 的 **`watch`     | **Vue3 的 **`watchEffect`           |
 | :--------------- | :----------------------------------------- | :----------------------------------------------------- |
 | **依赖追踪**     | 需手动指定依赖（如 `watch: { data: {} }`） | 自动追踪所有读取的响应式变量（深度监听）               |
 | **语法结构**     | 选项式 API（位于 `export default` 对象中） | Composition API（函数式，需 `import { watchEffect }`） |
@@ -1599,9 +1663,9 @@ computed 计算属性本质上是具有缓存功能的特殊方法。它们只�
 
 | **场景**                  | **问题**                                                                                         | **解决方案**                                                                                       |
 | :------------------------ | :----------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------- |
-| **基本数据类型**          | 手动赋相同值，`newValue`<br/> 和 `oldValue`<br/> 一样。                                          | 在 `watch`<br/> 回调中增加 `if (newVal !== oldVal)`<br/> 判断。                                    |
-| **对象/数组**             | 修改内部属性，`deep: true`<br/> 会触发，但 `newValue`<br/> 和 `oldValue`<br/> 是**同一个引用**。 | 在 `watch`<br/> 回调中使用 `JSON.stringify(newVal) !== JSON.stringify(oldVal)`<br/> 进行深度比较。 |
-| **Vue 3 Composition API** | 需要自动追踪依赖，但不直接提供新旧值。                                                           | 使用 `watchEffect`<br/> 或 `watch`<br/> 的 `getter`<br/> 函数形式。                                |
+| **基本数据类型**          | 手动赋相同值，`newValue`  和 `oldValue`  一样。                                          | 在 `watch`  回调中增加 `if (newVal !== oldVal)`  判断。                                    |
+| **对象/数组**             | 修改内部属性，`deep: true`  会触发，但 `newValue`  和 `oldValue`  是**同一个引用**。 | 在 `watch`  回调中使用 `JSON.stringify(newVal) !== JSON.stringify(oldVal)`  进行深度比较。 |
+| **Vue 3 Composition API** | 需要自动追踪依赖，但不直接提供新旧值。                                                           | 使用 `watchEffect`  或 `watch`  的 `getter`  函数形式。                                |
 
 #### webSocket如何兼容低浏览器
 
@@ -1612,27 +1676,27 @@ computed 计算属性本质上是具有缓存功能的特殊方法。它们只�
 
 #### 有没有封装过vue的自定义hooks（加分）
 
-<font style="color:rgb(26, 32, 41);">一、</font>**<font style="color:rgb(26, 32, 41);">为什么需要封装自定义 Hooks？</font>**
+一、**为什么需要封装自定义 Hooks？**
 
-*<u><font style="color:rgb(26, 32, 41);">在没有 Hooks 之前，我们可能会遇到以下问题：</font></u>*
+* 在没有 Hooks 之前，我们可能会遇到以下问题：*
 
-<font style="color:rgb(26, 32, 41);">逻辑复用困难</font><font style="color:rgb(26, 32, 41);">：如果多个组件有相似的功能逻辑（如数据获取、表单验证、权限判断等），只能通过</font><font style="color:rgb(26, 32, 41);"> </font><code><font style="color:rgb(26, 32, 41);">mixins</font></code><font style="color:rgb(26, 32, 41);"> </font><font style="color:rgb(26, 32, 41);">或将逻辑复制粘贴到各个组件中。</font><code><font style="color:rgb(26, 32, 41);">mixins</font></code><font style="color:rgb(26, 32, 41);"> </font><font style="color:rgb(26, 32, 41);">存在数据来源不清晰、方法命名冲突等问题。</font>
+逻辑复用困难：如果多个组件有相似的功能逻辑（如数据获取、表单验证、权限判断等），只能通过 `mixins` 或将逻辑复制粘贴到各个组件中。`mixins` 存在数据来源不清晰、方法命名冲突等问题。
 
-<font style="color:rgb(26, 32, 41);">组件臃肿</font><font style="color:rgb(26, 32, 41);">：一个组件文件中可能包含大量不相关的逻辑，比如数据处理、事件监听、API 调用等，导致组件难以理解和维护。</font>
+组件臃肿：一个组件文件中可能包含大量不相关的逻辑，比如数据处理、事件监听、API 调用等，导致组件难以理解和维护。
 
-<font style="color:rgb(26, 32, 41);">逻辑与视图耦合</font><font style="color:rgb(26, 32, 41);">：业务逻辑直接写在组件的生命周期钩子或方法中，难以进行单元测试。</font>
+逻辑与视图耦合：业务逻辑直接写在组件的生命周期钩子或方法中，难以进行单元测试。
 
-*<u><font style="color:rgb(26, 32, 41);">自定义 Hooks 的出现完美解决了这些问题：</font></u>*
+* 自定义 Hooks 的出现完美解决了这些问题：*
 
-<font style="color:rgb(26, 32, 41);">逻辑复用</font><font style="color:rgb(26, 32, 41);">：将可复用的逻辑封装成一个函数（Hook），任何组件都可以按需引入。</font>
+逻辑复用：将可复用的逻辑封装成一个函数（Hook），任何组件都可以按需引入。
 
-<font style="color:rgb(26, 32, 41);">逻辑清晰</font><font style="color:rgb(26, 32, 41);">：将复杂的逻辑从组件中抽离，让组件只负责渲染 UI，代码结构更清晰。</font>
+逻辑清晰：将复杂的逻辑从组件中抽离，让组件只负责渲染 UI，代码结构更清晰。
 
-<font style="color:rgb(26, 32, 41);">依赖注入</font><font style="color:rgb(26, 32, 41);">：像 React Hooks 一样，可以依赖 Vue 的响应式系统 (</font><code><font style="color:rgb(26, 32, 41);">ref</font></code><font style="color:rgb(26, 32, 41);">,</font><font style="color:rgb(26, 32, 41);"> </font><code><font style="color:rgb(26, 32, 41);">reactive</font></code><font style="color:rgb(26, 32, 41);">,</font><font style="color:rgb(26, 32, 41);"> </font><code><font style="color:rgb(26, 32, 41);">computed</font></code><font style="color:rgb(26, 32, 41);"> </font><font style="color:rgb(26, 32, 41);">等)。</font>
+依赖注入：像 React Hooks 一样，可以依赖 Vue 的响应式系统 (`ref`, `reactive`, `computed` 等)。
 
-<font style="color:rgb(26, 32, 41);">易于测试：逻辑是独立的纯函数，可以轻松地进行单元测试。</font>
+易于测试：逻辑是独立的纯函数，可以轻松地进行单元测试。
 
-***
+---
 
 **项目中的具体封装案例**
 
@@ -1671,6 +1735,7 @@ export function useFetch(url) {
 
   return { data, error, isLoading, refetch: fetchData };
 }
+
 ```
 
 使用场景：任何需要从 API 获取数据的列表页、详情页等。
@@ -1698,6 +1763,7 @@ export function useLocalStorage(key, initialValue) {
 
   return [storedValue, setValue];
 }
+
 ```
 
 使用场景：用户的主题偏好、购物车信息、表单草稿等。
@@ -1726,6 +1792,7 @@ export function usePermission(userRoles) {
     canDelete,
   };
 }
+
 ```
 
 使用场景：后台管理系统，根据用户角色动态显示或隐藏按钮、菜单。
@@ -1757,6 +1824,7 @@ export function useWindowSize() {
 
   return { width, height };
 }
+
 ```
 
 使用场景：响应式布局，根据屏幕宽度切换组件样式或布局。
@@ -1789,7 +1857,7 @@ export function useWindowSize() {
 
 这只是一些常见的应用场景，实际上白定义指令的应用范围非常广泛，可以根据具体需求进行灵活的使用。通过自定义指令，你可以扩展 Vue 的能力，实现更复杂和灵活的交互行为。
 
-#### <font style="color:#DF2A3F;">Vue中，created和mounted两个钩子之间调用时间差值受什么影响?（重要）</font>
+#### Vue中，created和mounted两个钩子之间调用时间差值受什么影响?（重要）
 
 created 和 mounted 这两个生命周期钩子，分别在实例创建和挂载的不同阶段被调用。它们之间的时间差值主要受以下几个因素的影响
 
@@ -1817,7 +1885,7 @@ created 和 mounted 这两个生命周期钩子，分别在实例创建和挂载
 
 在编写 Vue 应用时，优化这些方面可以减少 created 和mounted 之间的时间差，提高应用性能。
 
-#### <font style="color:#DF2A3F;">vue中，推荐在哪个生命周期发起请求（重要）</font>
+#### vue中，推荐在哪个生命周期发起请求（重要）
 
 推荐在 mounted 生命周期钩子中发起请求。这样做有几个重要的理由:
 
@@ -1833,7 +1901,7 @@ mounted 钩子在组件的 DOM 已经被插入文档之后调用。这意味着�
 
 在 mounted 钩子中发起请求，能够确保你有机会在请求开始前处理组件的状态(例如设置加载状态)，并。且在请求完成后更新组件的状态(例如显示数据或处理错误)。
 
-*<u>尽管 mounted 是推荐的生命周期钩子，但也有一些特定场景可能需要在 created 钩子中发起请求</u>*
+* 尽管 mounted 是推荐的生命周期钩子，但也有一些特定场景可能需要在 created 钩子中发起请求*
 
 #### $nextTick
 
@@ -1851,7 +1919,7 @@ vue提供的一个方法，用于在dom更新后获取到最新dom，主要作�
 
 vue数据更新是异步的 而是将更新操作推入一个队列中 等待同一事件循环的数据更新完成后 统一操作dom
 
-### <font style="color:#E746A4;background-color:rgb(252, 252, 252);">工程实践与架构</font>
+### 工程实践与架构
 
 #### Vue3.0 性能提升主要是通过哪几方面体现的
 
@@ -1896,15 +1964,15 @@ Vue3 中对不参与更新的元素会做静态提升，只会被创建一次，
 * 公共的文件应该以绝对路径的方式从根目录引用
 * /src外的文件不应该被引入
 
-*<u></u>*
+**
 
-*<u>文件夹和文件夹内部文件的语义一致性</u>*
+* 文件夹和文件夹内部文件的语义一致性*
 
 我们的目录结构都会有一个文件夹是按照路由模块来划分的，如 pages 文件夹，这个文件夹里面应该包含我们项目所有的路由模块，并且仅应该包含路由模块，而不应该有别的其他的非路由模块的文件来
 
 这样做的好处在于一眼就从 pages文件夹看出这个项目的路由有哪些
 
-*<u>单一入口/出口</u>*
+* 单一入口/出口*
 
 举个例子，在 pages 文件夹里面存在一个 seller 文件夹，这时候 seller 文件夹应该作为一个独立的模块由外部引入，并且 seller/index.js 应该作为外部引入 seller 模块的唯一入口
 
@@ -1913,11 +1981,12 @@ Vue3 中对不参与更新的元素会做静态提升，只会被创建一次，
 import sellerReducer from 'src/pages/seller/reducer'
 // 正确用法
 import {reducer as sellerReducer )from 'src/pages/seller'
+
 ```
 
 这样做的好处在于，无论你的模块文件夹内部有多乱，外部引用的时候，都是从一个入口文件引入，这样就很好的实现了隔离，如果后续有重构需求，你就会发现这种方式的优点
 
-*<u>就近原则，紧耦合的文件应该放到一起，且应以相对路径引用</u>*
+* 就近原则，紧耦合的文件应该放到一起，且应以相对路径引用*
 
 使用相对路径可以保证模块内部的独立性
 
@@ -1928,6 +1997,7 @@ import {reducer as sellerReducer )from 'src/pages/seller'
 import styles from./index.module.scss'
 // 错误用法户
 import styles from 'src/pages/seller/index.module.scss4'
+
 ```
 
 举个例子
@@ -1938,7 +2008,7 @@ import styles from 'src/pages/seller/index.module.scss4'
 
 但是如果我们采用第二种绝对路径的方式，移动文件夹的同时，还需要对每个import的路径做修改
 
-*<u>公共的文件应该以绝对路径的方式从根目录引用</u>*
+* 公共的文件应该以绝对路径的方式从根目录引用*
 
 公共指的是多个路由模块共用，如一些公共的组件，我们可以放在src/components下在使用到的页面中，采用绝对路径的形式引用
 
@@ -1947,17 +2017,18 @@ import styles from 'src/pages/seller/index.module.scss4'
 import Input from'../../components/input'
 // 正确用法
 import Input from 'src/components/input'
+
 ```
 
 同样的，如果我们需要对文件夹结构进行调整。将/src/components/input变成/src/components/new/input，如果使用绝对路径，只需要全局搜索替换再加上绝对路径有全局的语义，相对路径有独立模块的语义
 
-*<u></u>*
+**
 
-*<u>/src外的文件不应该被引入</u>*
+* /src外的文件不应该被引入*
 
 vue-cli 脚手架已经帮我们做了相关的约束了，正常我们的前端项目都会有个 src 文件夹，里面放着所有的项目需要的资源，js，css，png，svg 等等。src 外会放一些项目配置，依赖，环境等文件这样的好处是方便划分项目代码文件和配置文件
 
-#### <font style="color:#DF2A3F;">MVVM模式是什么（必背）</font>
+#### MVVM模式是什么（必背）
 
 MVVM，通过双向绑定实现数据和视图的自动同步
 
@@ -1965,7 +2036,7 @@ MVVM，通过双向绑定实现数据和视图的自动同步
 * View：UI层，负责数据展示
 * ViewModel：双向绑定桥梁，实现数据和视图的自动同步
 
-#### <font style="color:#DF2A3F;">SSR是什么?Vue中怎么实现?（重要）</font>
+#### SSR是什么?Vue中怎么实现?（重要）
 
 SSR是一种将应用程序的界面在服务器上进行预先渲染并以 HTML 形式发送到客户端的技术。与传统的客户端渲染(CSR)相比，SSR 在服务器端生成完整HTML页面，然后将其发送到浏览器，提供更好的性能和搜索引擎优化。
 
@@ -2016,7 +2087,7 @@ SSR是一种将应用程序的界面在服务器上进行预先渲染并以 HTML
 
 在服务器端渲染后，需要在客户端激活 Vue 实例，以便能够响应交互事件和更新页面。。可以通过在 HTML 中插入一个 JavaScript 脚本，并在脚本中使用 createApp 方法来创建客户端应用程序0实例。
 
-#### **<font style="color:#DF2A3F;">Vue3 的 v-model 改进</font>**<font style="color:#DF2A3F;">（重要）</font>
+#### **Vue3 的 v-model 改进**（重要）
 
 **1. 新的语法特性**
 
@@ -2036,6 +2107,7 @@ SSR是一种将应用程序的界面在服务器上进行预先渲染并以 HTML
   <!-- 绑定数组 -->
   <MySelect v-model: { value: selectedItems } />
   </template>
+
 ```
 
 • **显式解构**：
@@ -2043,10 +2115,11 @@ SSR是一种将应用程序的界面在服务器上进行预先渲染并以 HTML
 可显式指定 `value` 和 `onChange`：
 
 ```javascript
-<MyInput v-model: { 
-  value: formData.email, 
-    onChange: (e) => formData.email = e.target.value 
+<MyInput v-model: {
+  value: formData.email,
+    onChange: (e) => formData.email = e.target.value
 } />
+
 ```
 
 **2. 组件声明优化**
@@ -2064,11 +2137,12 @@ defineProps({
 </script>
 
   <template>
-  <input 
-:value="modelValue" 
+  <input
+:value="modelValue"
 @input="emit('update:modelValue', $event.target.value)"
   >
   </template>
+
 ```
 
 **3. 类型推断增强**
@@ -2081,9 +2155,10 @@ interface MyInputProps {
 }
 
 const props = defineProps<MyInputProps>();
+
 ```
 
-#### <font style="color:#ED740C;">vue和react的不同点（选背）</font>
+#### vue和react的不同点（选背）
 
 * 模版语法不同，react采用JSX语法，vue使用基于HTML的模版语法
 * 数据绑定不同，vue 使用双向数据绑定，react 则需要手动控制组件的状态和属性。
@@ -2123,7 +2198,7 @@ WebGL:WebGL的编程相对复杂，需要了解着色器编程和3D图形渲染�
 
 选择Canvas还是WebGL取决于具体的需求。如果只需要简单的2D图形和动画，Canvas是一个不错的选择。但如果需要更高级的3D图形渲染和性能，或者开发复杂的游戏或可视化应用程序，那么WebGL可能更适合。
 
-#### <font style="color:#DF2A3F;">讲讲vue的打包过程</font><font style="color:#DF2A3F;">（重要）</font>
+#### 讲讲vue的打包过程（重要）
 
 Vue.js 应用的打包是一个将开发环境的源代码转换为优化后的静态资源文件，以便在生产环境中高效运行的过程。这个过程涉及代码编译、模块打包、资源优化等多个步骤
 
@@ -2131,17 +2206,17 @@ Vue.js 应用的打包是一个将开发环境的源代码转换为优化后的�
 
 打包的目的是为了更好的生产环境性能，以下是一些常见的优化措施：
 
-* **代码分割与懒加载**：将代码分成多个块，按需加载。Vue Router 的路由懒加载是典型应用
-* **Tree Shaking**：移除 JavaScript 上下文中未引用的代码（dead-code）。ES6 模块语法（`import`/`export`）是前提。打包工具（如 Webpack 和 Rollup）在生产模式会自动启用
-* **压缩资源**：使用 Webpack 的 `TerserPlugin` 压缩 JS，`CssMinimizerWebpackPlugin` 压缩 CSS，以及对图片资源进行压缩和优化
-* **利用浏览器缓存**：通过给输出的文件名添加哈希值（例如 `bundle.[hash].js`）实现长期缓存
-* **CDN 加速**：将第三方库（如 Vue、Vue Router、Vuex、Axios）通过 CDN 引入，减小 bundle 体积
+***代码分割与懒加载**：将代码分成多个块，按需加载。Vue Router 的路由懒加载是典型应用
+***Tree Shaking**：移除 JavaScript 上下文中未引用的代码（dead-code）。ES6 模块语法（`import`/`export`）是前提。打包工具（如 Webpack 和 Rollup）在生产模式会自动启用
+***压缩资源**：使用 Webpack 的 `TerserPlugin` 压缩 JS，`CssMinimizerWebpackPlugin` 压缩 CSS，以及对图片资源进行压缩和优化
+***利用浏览器缓存**：通过给输出的文件名添加哈希值（例如 `bundle.[hash].js`）实现长期缓存
+***CDN 加速**：将第三方库（如 Vue、Vue Router、Vuex、Axios）通过 CDN 引入，减小 bundle 体积
 
 通常需在 `index.html` 中引入 CDN 链接，并在 `vue.config.js` 中用 `configureWebpack.externals` 告知构建工具。
 
-* **Bundle 分析**：使用 `webpack-bundle-analyzer` 等工具可视化分析打包后各模块的体积，针对性优化。
+***Bundle 分析**：使用 `webpack-bundle-analyzer` 等工具可视化分析打包后各模块的体积，针对性优化。
 
-***
+---
 
 **部署打包文件**
 
@@ -2152,15 +2227,14 @@ Vue.js 应用的打包是一个将开发环境的源代码转换为优化后的�
 3. **Docker 部署**：对于复杂应用，容器化部署方便且环境一致。
 4. **自动化部署 (CI/CD)**：结合 GitLab CI、Jenkins、GitHub Actions 等工具，可以实现提交代码后自动构建、测试和部署
 
-***
+---
 
 **常见问题与解决**
 
-* **打包后白屏**：检查 `publicPath` 和路由的 `history` 模式是否正确配置。若使用 `history` 模式，服务器需正确配置 fallback
-* **资源路径错误**：确保相对路径和 `publicPath` 配置正确，尤其当应用部署在非根目录时
-* **打包文件过大**：检查并优化，如代码分割、懒加载、CDN、压缩、Tree Shaking、分析 bundle 等。
-* **环境变量问题**：确保生产环境变量已正确设置并在代码中引用（如 `process.env`）
+***打包后白屏**：检查 `publicPath` 和路由的 `history` 模式是否正确配置。若使用 `history` 模式，服务器需正确配置 fallback
+***资源路径错误**：确保相对路径和 `publicPath` 配置正确，尤其当应用部署在非根目录时
+***打包文件过大**：检查并优化，如代码分割、懒加载、CDN、压缩、Tree Shaking、分析 bundle 等。
+***环境变量问题**：确保生产环境变量已正确设置并在代码中引用（如 `process.env`）
 
-
-> 更新: 2025-12-17 14:28:39  
+> 更新: 2025-12-17 14:28:39
 > 原文: <https://www.yuque.com/u56987424/lwyx/pczbkmpcbs386ycf>

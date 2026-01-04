@@ -1,3 +1,12 @@
+---
+tags:
+  - 前端
+  - 八股
+  - JavaScript
+  - ES6
+  - 异步
+---
+
 # JS
 
 > 笔者将从以下方面展开JS八股的学习
@@ -7,18 +16,18 @@
 > 3. 面向对象与原型系统
 > 4. ES6核心特性
 > 5. 浏览器环境与API
-> 6. <font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">DOM/BOM与性能优化</font>
-> 7. <font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">高级主题与安全</font>
+> 6. DOM/BOM与性能优化
+> 7. 高级主题与安全
 
-### <font style="color:#E4495B;">基本概念与数据类型</font>
+### 基本概念与数据类型
 
 #### js底层是什么
 
-* <font style="color:rgb(26, 32, 41);">不同的 JavaScript 引擎可能有不同的底层实现，但大多数主流引擎（如 V8）都使用 C/C++ 编写</font>
-* <font style="color:rgb(26, 32, 41);">V8 引擎负责将 JavaScript 代码编译为机器码并执行</font>\*\*\*\*
-* <font style="color:rgb(26, 32, 41);">JavaScript 的执行机制涉及即时编译（JIT），在运行时生成机器代码，而不是提前编译。这种机制使得 JavaScript 在运行时能够动态优化性能，而这些底层功能也是通过 C/C++ 实现的</font>
+* 不同的 JavaScript 引擎可能有不同的底层实现，但大多数主流引擎（如 V8）都使用 C/C++ 编写
+* V8 引擎负责将 JavaScript 代码编译为机器码并执行
+* JavaScript 的执行机制涉及即时编译（JIT），在运行时生成机器代码，而不是提前编译。这种机制使得 JavaScript 在运行时能够动态优化性能，而这些底层功能也是通过 C/C++ 实现的
 
-#### <font style="color:#DF2A3F;">JS数据类型和区别（必背）</font>
+#### JS数据类型和区别（必背）
 
 1. 分为普通数据类型和引用数据类型
 2. 普通数据类型包括Numer、String、BIgint、Boolean、symbol、undefined、null；
@@ -37,24 +46,24 @@
 
 #### JS最大安全整数
 
-<font style="color:rgb(0, 0, 0);">在JavaScript中，数字类型是基于IEEE 754标准的双精度浮点数，这导致整数表示存在一个安全范围</font>
+在JavaScript中，数字类型是基于IEEE 754标准的双精度浮点数，这导致整数表示存在一个安全范围
 
 1. **什么是最大安全整数？**
 
-<font style="color:rgb(0, 0, 0);">JavaScript中的最大安全整数是</font>**<font style="color:rgb(0, 0, 0);">9007199254740991</font>**<font style="color:rgb(0, 0, 0);">（即2⁵³ - 1），可以通过</font><code><font style="color:rgb(0, 0, 0);">Number.MAX_SAFE_INTEGER</font></code><font style="color:rgb(0, 0, 0);">访问。</font>
+JavaScript中的最大安全整数是**9007199254740991**（即2⁵³ - 1），可以通过`Number.MAX_SAFE_INTEGER`访问。
 
 2. **为什么存在安全整数限制？**
 
-<font style="color:rgb(0, 0, 0);">JavaScript使用64位双精度浮点数表示所有数字：</font>
+JavaScript使用64位双精度浮点数表示所有数字：
 
-* <font style="color:rgb(0, 0, 0);">1位符号位</font>
-* <font style="color:rgb(0, 0, 0);">11位指数位</font>
-* <font style="color:rgb(0, 0, 0);">52位尾数位</font>
+* 1位符号位
+* 11位指数位
+* 52位尾数位
 
-<font style="color:rgb(0, 0, 0);">整数范围受限于尾数位的精度：</font>
+整数范围受限于尾数位的精度：
 
-* <font style="color:rgb(0, 0, 0);">最大安全整数：2⁵³ - 1 = 9007199254740991</font>
-* <font style="color:rgb(0, 0, 0);">最小安全整数：-9007199254740991</font>
+* 最大安全整数：2⁵³ - 1 = 9007199254740991
+* 最小安全整数：-9007199254740991
 
 3. **安全整数范围测试**
 
@@ -66,64 +75,70 @@ console.log(Number.isSafeInteger(9007199254740991)); // true
 // 安全范围外的整数
 console.log(Number.isSafeInteger(9007199254740992)); // false
 console.log(Number.isSafeInteger(-9007199254740992)); // false
+
 ```
 
 4. **超出安全范围的后果**
 
-<font style="color:rgb(0, 0, 0);">当整数超出安全范围时，会出现精度丢失、计算错误、不可预测行为</font>
+当整数超出安全范围时，会出现精度丢失、计算错误、不可预测行为
 
 5. **最佳实践**
 
-* \*\*\*\***<font style="color:rgb(0, 0, 0);">处理ID时</font>**<font style="color:rgb(0, 0, 0);">：优先使用字符串而非数字</font>
-* \*\*\*\***<font style="color:rgb(0, 0, 0);">金融计算时</font>**<font style="color:rgb(0, 0, 0);">：使用专门库如decimal.js</font>
-* **<font style="color:rgb(0, 0, 0);">大整数运算时</font>**<font style="color:rgb(0, 0, 0);">：使用BigInt类型</font>
-* **<font style="color:rgb(0, 0, 0);">时间戳处理时</font>**<font style="color:rgb(0, 0, 0);">：确保在安全范围内</font>
-* **<font style="color:rgb(0, 0, 0);">API设计时</font>**<font style="color:rgb(0, 0, 0);">：避免返回超出安全范围的整数</font>
+***处理ID时**：优先使用字符串而非数字
+***金融计算时**：使用专门库如decimal.js
+***大整数运算时**：使用BigInt类型
+***时间戳处理时**：确保在安全范围内
+***API设计时**：避免返回超出安全范围的整数
 
 #### ==的类型转换
 
-1. \*\*\*\***<font style="color:rgb(0, 0, 0);">字符串与数字</font>**<font style="color:rgb(0, 0, 0);">：字符串会尝试被转换为数字后再进行比较。</font>
+1. **字符串与数字**：字符串会尝试被转换为数字后再进行比较。
 
 ```javascript
 '123' == 123; // true，字符串 '123' 转换为数字 123
 '  123  ' == 123; // true，字符串两端空格会被忽略
 'hello' == 123; // false，'hello' 转换为 NaN，NaN 不等于任何值
+
 ```
 
-2. **<font style="color:rgb(0, 0, 0);">布尔值与非布尔值</font>**<font style="color:rgb(0, 0, 0);">：布尔值先被转换为数字（</font><code><font style="color:rgb(0, 0, 0);">true</font></code><font style="color:rgb(0, 0, 0);">转为 </font><code><font style="color:rgb(0, 0, 0);">1</font></code><font style="color:rgb(0, 0, 0);">，</font><code><font style="color:rgb(0, 0, 0);">false</font></code><font style="color:rgb(0, 0, 0);">转为 </font><code><font style="color:rgb(0, 0, 0);">0</font></code><font style="color:rgb(0, 0, 0);">），然后再进行比较。</font>
+2. **布尔值与非布尔值**：布尔值先被转换为数字（`true`转为 `1`，`false`转为 `0`），然后再进行比较。
 
 ```javascript
 true == 1;  // true，true 转换为 1
 false == 0; // true，false 转换为 0
 true == 2;  // false，1 != 2
+
 ```
 
-3. \*\*\*\***<font style="color:rgb(0, 0, 0);">对象与原始值</font>**<font style="color:rgb(0, 0, 0);">：对象会通过调用自身的 </font><code><font style="color:rgb(0, 0, 0);">valueOf()</font></code><font style="color:rgb(0, 0, 0);">或 </font><code><font style="color:rgb(0, 0, 0);">toString()</font></code><font style="color:rgb(0, 0, 0);">方法尝试转换为原始值，然后再进行比较。</font>
+3. **对象与原始值**：对象会通过调用自身的 `valueOf()`或 `toString()`方法尝试转换为原始值，然后再进行比较。
 
 ```javascript
 [1, 2, 3] == '1,2,3'; // true，数组调用 toString() 转换为字符串
 const obj = { valueOf: () => 42 };
 obj == 42; // true，对象通过 valueOf() 转换为数字 42
+
 ```
 
-4. \*\*\*\*<code>**<font style="color:rgb(0, 0, 0);">null</font>**</code>**<font style="color:rgb(0, 0, 0);">和 </font>**<code>**<font style="color:rgb(0, 0, 0);">undefined</font>**</code><font style="color:rgb(0, 0, 0);">：在 </font><code><font style="color:rgb(0, 0, 0);">==</font></code><font style="color:rgb(0, 0, 0);">比较中，</font><code><font style="color:rgb(0, 0, 0);">null</font></code><font style="color:rgb(0, 0, 0);">和 </font><code><font style="color:rgb(0, 0, 0);">undefined</font></code><font style="color:rgb(0, 0, 0);">相互相等，并且不等于其他任何值（除了彼此）</font>
+4. `null`**和 **`undefined`：在 `==`比较中，`null`和 `undefined`相互相等，并且不等于其他任何值（除了彼此）
 
 ```javascript
 null == undefined; // true
 null == 0;        // false
 undefined == '';  // false
+
 ```
 
-5. \*\*\*\*<code>**<font style="color:rgb(0, 0, 0);">NaN</font>**</code><font style="color:rgb(0, 0, 0);">：</font><code><font style="color:rgb(0, 0, 0);">NaN</font></code><font style="color:rgb(0, 0, 0);">与任何值比较（包括自己）都返回 </font><code><font style="color:rgb(0, 0, 0);">false</font></code>
+5. `NaN`：`NaN`与任何值比较（包括自己）都返回 `false`
 
 ```javascript
 NaN == NaN; // false
 NaN == 42;  // false
+
 ```
 
-<code>**==**</code>**的常见“陷阱”**
+`==`**的常见“陷阱”**
 
-<font style="color:rgb(0, 0, 0);">由于隐式类型转换规则复杂，</font><code><font style="color:rgb(0, 0, 0);">==</font></code><font style="color:rgb(0, 0, 0);">可能导致一些反直觉的结果：</font>
+由于隐式类型转换规则复杂，`==`可能导致一些反直觉的结果：
 
 ```javascript
 '' == '0';          // false，同为字符串，直接比较值，显然不同
@@ -136,9 +151,10 @@ false == '0';       // true，字符串 '0' 转换为数字 0，false 转换为 
 [] == ![];          // true，![] 是 false (对象 true，取反为 false)，然后 false 转换为 0，空数组通过 valueOf/toString 转换为空字符串，空字符串再转换为 0，所以 0 == 0
 [] == 0;            // true，空数组转换为数字 0
 [''] == '';         // true，数组['']通过 toString() 转换为空字符串
+
 ```
 
-#### <font style="color:#DF2A3F;">null和undefined（必背）</font>
+#### null和undefined（必背）
 
 1. undefined：
 
@@ -156,7 +172,7 @@ false == '0';       // true，字符串 '0' 转换为数字 0，false 转换为 
 4. 底层数据类型以二进制形式表示 000 null实际是Null类型的唯一值，而不是object
 5. 使用null使变量变成游离状态，不再引用任何对象，等待垃圾回收器回收
 
-#### <font style="color:#DF2A3F;">weakmap、map、obj 介绍与区别（必背）</font>
+#### weakmap、map、obj 介绍与区别（必背）
 
 1. 在JavaScript中，`WeakMap`、`Map` 和普通对象（`obj`）都是用于存储键值对的数据结构
 2. **Map**
@@ -182,15 +198,15 @@ false == '0';       // true，字符串 '0' 转换为数字 0，false 转换为 
 * 不提供迭代器，不能直接迭代对象的键值对
 * 没有直接的方法来获取对象的大小
 
-#### <font style="color:#DF2A3F;">判断变量类型（必背）</font>
+#### 判断变量类型（必背）
 
-| typeof |  无法判断引用数据类型 |
-| --- | --- |
-| instanceof    | 无法检测基本数据类型、对于夸框架的对象检测不准确 |
-| Obejct.prototype.toString().call()  | 最精准、可以判断任何数据类型 |
-| constructor  | 访问实例的构造函数判断其与某个类是否相同 无法访问null或者undefined/如果原型链被修改，可能导致判断不准确 |
+| typeof                             | 无法判断引用数据类型                                                                                    |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| instanceof                         | 无法检测基本数据类型、对于夸框架的对象检测不准确                                                        |
+| Obejct.prototype.toString().call() | 最精准、可以判断任何数据类型                                                                            |
+| constructor                        | 访问实例的构造函数判断其与某个类是否相同 无法访问null或者undefined/如果原型链被修改，可能导致判断不准确 |
 
-#### <font style="color:#DF2A3F;">数组去重（必背）</font>
+#### 数组去重（必背）
 
 1. 遍历数组，利用对象的唯一性来去重
 2. 利用set去重   代码简洁、效率高、适合现代浏览器环境
@@ -199,7 +215,7 @@ false == '0';       // true，字符串 '0' 转换为数字 0，false 转换为 
 5. 利用reduce+includes
 6. 对象属性、set>filter+indexOf>双指针>reduce+includes
 
-#### <font style="color:#DF2A3F;">数组和伪数组区别（必背）</font>
+#### 数组和伪数组区别（必背）
 
 1. 数组：typeof值为Array，长度可变，可以使用所有数组方法，可以使用for、foreach、map遍历
 2. 伪数组：typeof值为Object，不能改变长度，不能使用数组方法，只能使用for in或者for 循环遍历
@@ -209,17 +225,17 @@ false == '0';       // true，字符串 '0' 转换为数字 0，false 转换为 
 * 使用方法：Array.prototype.slice.call()	/\[].slice.call()	/Array.from()
 * 长度由length决定、如果索引不连续，会立刻补位生成连续数组
 
-#### <font style="color:#DF2A3F;">map和foreach（必背）</font>
+#### map和foreach（必背）
 
-| 特性 | **map** | **forEach** |
-| --- | --- | --- |
-| **返回值** | 返回一个**新数组**，包含处理后的元素  | 返回 <code>**undefined**</code> |
-| **是否修改原数组** | **不修改**原数组  | **不直接修改**。但可通过回调函数内的操作（如通过索引或修改对象属性）改变原数组  |
-| **主要用途** | **数据转换/映射**：基于原数组生成新结构的数据  | **执行操作/副作用**：遍历数组并对每个元素执行操作，如打印、DOM操作、API调用等  |
-| **链式调用** | **支持**。因为它返回数组，可继续调用 `filter`、`reduce`等方法  | **不支持**。因为它返回 `undefined` |
-| **性能特点** | 由于需要创建并返回新数组，在**处理大数据集时相对稍慢** | 不创建新数组，**性能相对较快** |
+| 特性               | **map**                                                       | **forEach**                                                                    |
+| ------------------ | ------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| **返回值**         | 返回一个**新数组**，包含处理后的元素                          | 返回 `undefined`                                                |
+| **是否修改原数组** | **不修改**原数组                                              | **不直接修改**。但可通过回调函数内的操作（如通过索引或修改对象属性）改变原数组 |
+| **主要用途**       | **数据转换/映射**：基于原数组生成新结构的数据                 | **执行操作/副作用**：遍历数组并对每个元素执行操作，如打印、DOM操作、API调用等  |
+| **链式调用**       | **支持**。因为它返回数组，可继续调用 `filter`、`reduce`等方法 | **不支持**。因为它返回 `undefined`                                             |
+| **性能特点**       | 由于需要创建并返回新数组，在**处理大数据集时相对稍慢**        | 不创建新数组，**性能相对较快**                                                 |
 
-#### <font style="color:#DF2A3F;">闭包（必背）</font>
+#### 闭包（必背）
 
 1. 含义：一个函数和其词法环境的引用绑定在一起，使得函数可以访问外部作用域的变量，即使这个函数在其外部作用域之外执行
 2. 形成原因：作用域链
@@ -227,91 +243,91 @@ false == '0';       // true，字符串 '0' 转换为数字 0，false 转换为 
 4. 影响：容易造成 内存泄露、内存溢出
 5. 使用场景：模仿块级作用域（es6之前没有块级作用域）、实现柯里化（将一个多参数函数转换一系列单参数函数）、在构造函数中定义特权方法（访问私有变量）、Vue实现数据响应式监听
 
-#### <font style="color:#DF2A3F;">闭包的缺陷（必背）</font>
+#### 闭包的缺陷（必背）
 
-| **缺陷类型** | **问题描述** | **解决方式** |
-| :--- | :--- | :--- |
-| 内存泄漏 | 保留不必要的引用导致内存不释放 | 及时释放引用、避免大对象保留 |
-| 性能问题 | 频繁创建闭包影响性能 | 减少闭包数量、使用 let 替代 var |
-| 调试困难 | 作用域变量难以追踪 | 使用调试工具、合理结构设计 |
-| 作用域污染 | 全局变量被错误使用 | 使用模块化、IIFE 隔离作用域 |
-| 变量共享问题 | 循环中闭包共享变量导致错误值 | 使用 let、IIFE、立即绑定变量 |
-| 可读性与维护性 | 闭包嵌套复杂，难以理解 | 简化逻辑、合理封装 |
+| **缺陷类型**   | **问题描述**                   | **解决方式**                    |
+| :------------- | :----------------------------- | :------------------------------ |
+| 内存泄漏       | 保留不必要的引用导致内存不释放 | 及时释放引用、避免大对象保留    |
+| 性能问题       | 频繁创建闭包影响性能           | 减少闭包数量、使用 let 替代 var |
+| 调试困难       | 作用域变量难以追踪             | 使用调试工具、合理结构设计      |
+| 作用域污染     | 全局变量被错误使用             | 使用模块化、IIFE 隔离作用域     |
+| 变量共享问题   | 循环中闭包共享变量导致错误值   | 使用 let、IIFE、立即绑定变量    |
+| 可读性与维护性 | 闭包嵌套复杂，难以理解         | 简化逻辑、合理封装              |
 
-#### <font style="color:#DF2A3F;">如何消除闭包（必背）</font>
+#### 如何消除闭包（必背）
 
 1. **使用WeakMap或WeakSet**：这些数据结构允许存储对象引用，但不会阻止垃圾回收。当对象不再被其他地方引用时，可以被回收。不过这种方法需要手动管理，可能比较复杂
 2. **手动销毁闭包**：如果闭包是某个对象的属性或方法，可以通过删除对象属性或替换方法来销毁闭包。例如，将对象上的方法设置为null
 3. **利用函数的作用域**：在闭包内部定义一个清理函数，当需要清除时调用这个函数，手动释放资源
 
-| **方法** | **适用场景** | **优点** | **缺点** |
-| :--- | :--- | :--- | :--- |
-| 解除引用 | 简单闭包，无复杂依赖 | 直接、高效 | 需手动调用 |
-| 显式销毁方法 | 需控制资源释放的时机 | 灵活、可控 | 需在闭包中设计销毁接口 |
-| `Symbol`/`WeakMap` | 私有属性管理 | 非强引用、安全访问 | 需额外维护映射关系 |
+| **方法**           | **适用场景**         | **优点**           | **缺点**               |
+| :----------------- | :------------------- | :----------------- | :--------------------- |
+| 解除引用           | 简单闭包，无复杂依赖 | 直接、高效         | 需手动调用             |
+| 显式销毁方法       | 需控制资源释放的时机 | 灵活、可控         | 需在闭包中设计销毁接口 |
+| `Symbol`/`WeakMap` | 私有属性管理         | 非强引用、安全访问 | 需额外维护映射关系     |
 
 #### 一个页面上怎么检查有没有内存溢出的风险
 
-*<u><font style="color:rgb(26, 32, 41);">使用浏览器的开发者工具</font></u>*
+* 使用浏览器的开发者工具*
 
-<font style="color:rgb(26, 32, 41);">Chrome DevTools</font>
+Chrome DevTools
 
-* **<font style="color:rgb(26, 32, 41);">Memory 面板</font>**<font style="color:rgb(26, 32, 41);">：这是检测内存泄漏的主要工具。你可以通过以下步骤使用它：</font>
-  * <font style="color:rgb(26, 32, 41);">打开 Chrome DevTools（F12 或右键页面选择“检查”）。</font>
-  * <font style="color:rgb(26, 32, 41);">导航到</font><font style="color:rgb(26, 32, 41);"> </font>**<font style="color:rgb(26, 32, 41);">Memory</font>**<font style="color:rgb(26, 32, 41);"> </font><font style="color:rgb(26, 32, 41);">面板。</font>
-  * <font style="color:rgb(26, 32, 41);">点击</font><font style="color:rgb(26, 32, 41);"> </font>**<font style="color:rgb(26, 32, 41);">“Record”</font>**<font style="color:rgb(26, 32, 41);"> </font><font style="color:rgb(26, 32, 41);">按钮开始记录内存使用情况。</font>
-  * <font style="color:rgb(26, 32, 41);">执行可能导致内存泄漏的操作（如打开和关闭弹窗）。</font>
-  * <font style="color:rgb(26, 32, 41);">再次点击</font><font style="color:rgb(26, 32, 41);"> </font>**<font style="color:rgb(26, 32, 41);">“Record”</font>**<font style="color:rgb(26, 32, 41);"> </font><font style="color:rgb(26, 32, 41);">停止记录。</font>
-  * <font style="color:rgb(26, 32, 41);">查看内存图表，观察内存使用情况。如果内存下限（即常驻内存）不断上升，可能表明存在内存泄漏。</font>
+***Memory 面板**：这是检测内存泄漏的主要工具。你可以通过以下步骤使用它：
+  * 打开 Chrome DevTools（F12 或右键页面选择“检查”）。
+  * 导航到 **Memory** 面板。
+  * 点击 **“Record”** 按钮开始记录内存使用情况。
+  * 执行可能导致内存泄漏的操作（如打开和关闭弹窗）。
+  * 再次点击 **“Record”** 停止记录。
+  * 查看内存图表，观察内存使用情况。如果内存下限（即常驻内存）不断上升，可能表明存在内存泄漏。
 
-*<u><font style="color:rgb(26, 32, 41);">使用 JavaScript 内存泄漏检测工具</font></u>*
+* 使用 JavaScript 内存泄漏检测工具*
 
-**<font style="color:rgb(26, 32, 41);">HeapDump</font>**
+**HeapDump**
 
-* **<font style="color:rgb(26, 32, 41);">heapdump</font>**<font style="color:rgb(26, 32, 41);"> </font><font style="color:rgb(26, 32, 41);">是一个 Node.js 模块，可以生成内存快照并保存为文件，供后续分析。</font>
-* **<font style="color:rgb(26, 32, 41);">使用方法</font>**<font style="color:rgb(26, 32, 41);">：</font>
-  * <font style="color:rgb(26, 32, 41);">安装 heapdump：</font><code><font style="color:rgb(26, 32, 41);">npm install heapdump</font></code>
-  * <font style="color:rgb(26, 32, 41);">在代码中引入 heapdump 并生成快照。</font>
-  * <font style="color:rgb(26, 32, 41);">使用 Chrome DevTools 或其他工具分析生成的快照文件。</font>
+***heapdump** 是一个 Node.js 模块，可以生成内存快照并保存为文件，供后续分析。
+***使用方法**：
+  * 安装 heapdump：`npm install heapdump`
+  * 在代码中引入 heapdump 并生成快照。
+  * 使用 Chrome DevTools 或其他工具分析生成的快照文件。
 
-*<u><font style="color:rgb(26, 32, 41);">使用静态代码分析工具</font></u>*
+* 使用静态代码分析工具*
 
-**<font style="color:rgb(26, 32, 41);">ESLint</font>**
+**ESLint**
 
-* **<font style="color:rgb(26, 32, 41);">ESLint</font>**<font style="color:rgb(26, 32, 41);"> </font><font style="color:rgb(26, 32, 41);">是一个 JavaScript 代码静态分析工具，可以检测潜在的内存泄漏问题。</font>
-* **<font style="color:rgb(26, 32, 41);">配置规则</font>**<font style="color:rgb(26, 32, 41);">：</font>
-  * <font style="color:rgb(26, 32, 41);">配置 ESLint 规则，检测未清理的定时器、事件监听器、闭包等。</font>
-  * <font style="color:rgb(26, 32, 41);">例如，配置 </font><code><font style="color:rgb(26, 32, 41);">no-unused-vars</font></code><font style="color:rgb(26, 32, 41);"> 和 </font><code><font style="color:rgb(26, 32, 41);">no-undef</font></code><font style="color:rgb(26, 32, 41);"> 规则，确保代码中没有未使用的变量或未定义的变量。</font>
+***ESLint** 是一个 JavaScript 代码静态分析工具，可以检测潜在的内存泄漏问题。
+***配置规则**：
+  * 配置 ESLint 规则，检测未清理的定时器、事件监听器、闭包等。
+  * 例如，配置 `no-unused-vars` 和 `no-undef` 规则，确保代码中没有未使用的变量或未定义的变量。
 
-*<u><font style="color:rgb(26, 32, 41);">使用性能分析工具</font></u>*
+* 使用性能分析工具*
 
-**<font style="color:rgb(26, 32, 41);">Performance 面板</font>**
+**Performance 面板**
 
-* **<font style="color:rgb(26, 32, 41);">Performance 面板</font>**<font style="color:rgb(26, 32, 41);"> </font><font style="color:rgb(26, 32, 41);">是 Chrome DevTools 中的一个工具，可以记录和分析页面的性能数据。</font>
-* **<font style="color:rgb(26, 32, 41);">使用方法</font>**<font style="color:rgb(26, 32, 41);">：</font>
-  * <font style="color:rgb(26, 32, 41);">打开 Performance 面板。</font>
-  * <font style="color:rgb(26, 32, 41);">点击</font><font style="color:rgb(26, 32, 41);"> </font>**<font style="color:rgb(26, 32, 41);">“Record”</font>**<font style="color:rgb(26, 32, 41);"> </font><font style="color:rgb(26, 32, 41);">按钮开始记录。</font>
-  * <font style="color:rgb(26, 32, 41);">执行操作后，停止记录。</font>
-  * <font style="color:rgb(26, 32, 41);">查看性能数据，分析内存使用情况。</font>
+***Performance 面板** 是 Chrome DevTools 中的一个工具，可以记录和分析页面的性能数据。
+***使用方法**：
+  * 打开 Performance 面板。
+  * 点击 **“Record”** 按钮开始记录。
+  * 执行操作后，停止记录。
+  * 查看性能数据，分析内存使用情况。
 
-<font style="color:rgb(26, 32, 41);">Flame Chart</font>
+Flame Chart
 
-* **<font style="color:rgb(26, 32, 41);">Flame Chart</font>**<font style="color:rgb(26, 32, 41);"> </font><font style="color:rgb(26, 32, 41);">是 Performance 面板中的一个视图，可以显示函数调用的时间线和内存分配情况。</font>
-* **<font style="color:rgb(26, 32, 41);">使用方法</font>**<font style="color:rgb(26, 32, 41);">：</font>
-  * <font style="color:rgb(26, 32, 41);">在 Performance 面板中，选择</font><font style="color:rgb(26, 32, 41);"> </font>**<font style="color:rgb(26, 32, 41);">Flame Chart</font>**<font style="color:rgb(26, 32, 41);"> </font><font style="color:rgb(26, 32, 41);">视图。</font>
-  * <font style="color:rgb(26, 32, 41);">分析函数调用的时间线，识别可能导致内存泄漏的函数。</font>
+***Flame Chart** 是 Performance 面板中的一个视图，可以显示函数调用的时间线和内存分配情况。
+***使用方法**：
+  * 在 Performance 面板中，选择 **Flame Chart** 视图。
+  * 分析函数调用的时间线，识别可能导致内存泄漏的函数。
 
-*<u><font style="color:rgb(26, 32, 41);">使用内存泄漏检测工具</font></u>*
+* 使用内存泄漏检测工具*
 
-<font style="color:rgb(26, 32, 41);">sIEve</font>
+sIEve
 
-* **<font style="color:rgb(26, 32, 41);">sIEve</font>**<font style="color:rgb(26, 32, 41);"> </font><font style="color:rgb(26, 32, 41);">是一个专门用于检测 Internet Explorer 内存泄漏的工具，可以监控 DOM 对象的引用数目。</font>
-* **<font style="color:rgb(26, 32, 41);">使用方法</font>**<font style="color:rgb(26, 32, 41);">：</font>
-  * <font style="color:rgb(26, 32, 41);">下载并运行 sIEve。</font>
-  * <font style="color:rgb(26, 32, 41);">访问需要测试的网页。</font>
-  * <font style="color:rgb(26, 32, 41);">查看 sIEve 的输出，识别泄漏的 DOM 对象。</font>
+***sIEve** 是一个专门用于检测 Internet Explorer 内存泄漏的工具，可以监控 DOM 对象的引用数目。
+***使用方法**：
+  * 下载并运行 sIEve。
+  * 访问需要测试的网页。
+  * 查看 sIEve 的输出，识别泄漏的 DOM 对象。
 
-#### <font style="color:#ED740C;">什么是作用域（选背）</font>
+#### 什么是作用域（选背）
 
 1. 作用域是一个变量或函数的可访问范围，作用域控制着变量或函数的可见性和生命周期
 2. **全局作用域**：可以全局访问
@@ -333,47 +349,47 @@ false == '0';       // true，字符串 '0' 转换为数字 0，false 转换为 
 
 5. 块级作用域主要用来解决由变量提升导致的变量覆盖问题
 
-#### <font style="color:#DF2A3F;">什么是作用域链（必背）</font>
+#### 什么是作用域链（必背）
 
 1. 作用域链是 JavaScript 中用于查找变量和函数的一种机制
 2. 作用域链是由当前执行环境中的变量对象以及其父级执行环境的变量对象组成的。当代码在一个执行环境中执行时，如果需要访问一个变量或者函数，JavaScript 引擎会首先在当前执行环境的变量对象中查找，如果找不到，它会向上一级的执行环境中查找，直到找到对应的变量或者函数，或者达到全局执行环境为止。
 3. 作用域链的形成是由函数定义时的位置来决定的，而不是函数调用时的位置。这意味着函数的作用域链是在函数定义时确定的，而不是在函数调用时确定的。
 4. 作用域链的重要性在于它决定了变量和函数的访问权限。一个变量或者函数能否在当前执行环境中被访问到，取决于它是否在当前执行环境的作用域链上。
 
-#### <font style="color:#DF2A3F;">JS变量提升（必背）</font>
+#### JS变量提升（必背）
 
 1. 使用var声明的变量和函数会在执行前被提升到作用域的顶部  赋值不会提升 函数声明>变量声明
 2. let和const声明的变量也会被提升，但不会初始化  变量初始化之前访问会爆出ReferenceError,形成TDZ暂时性死区
 
 #### 真假值的隐式转换
 
-1. <font style="color:rgb(26, 32, 41);"></font>**<font style="color:rgb(26, 32, 41);">JavaScript 中的假值</font>**
+1. **JavaScript 中的假值**
 
-<font style="color:rgb(26, 32, 41);">这是最需要牢记的部分，因为假值的数量是</font>**<font style="color:rgb(26, 32, 41);">有限的</font>**<font style="color:rgb(26, 32, 41);">。只要记住这几个，剩下的所有值都是真值。</font>
+这是最需要牢记的部分，因为假值的数量是**有限的**。只要记住这几个，剩下的所有值都是真值。
 
-<font style="color:rgb(26, 32, 41);">JavaScript 中只有</font><font style="color:rgb(26, 32, 41);"> </font>**<font style="color:rgb(26, 32, 41);">7 个</font>**<font style="color:rgb(26, 32, 41);">假值：</font>
+JavaScript 中只有 **7 个**假值：
 
-* <code>**<font style="color:rgb(26, 32, 41);">false</font>**</code><font style="color:rgb(26, 32, 41);">: 布尔值 </font><code><font style="color:rgb(26, 32, 41);">false</font></code><font style="color:rgb(26, 32, 41);"> 本身。</font>
-* <code>**<font style="color:rgb(26, 32, 41);">0</font>**</code><font style="color:rgb(26, 32, 41);">: 数字零。包括</font><font style="color:rgb(26, 32, 41);"> </font><code><font style="color:rgb(26, 32, 41);">+0</font></code><font style="color:rgb(26, 32, 41);"> </font><font style="color:rgb(26, 32, 41);">和</font><font style="color:rgb(26, 32, 41);"> </font><code><font style="color:rgb(26, 32, 41);">-0</font></code><font style="color:rgb(26, 32, 41);">。</font>
-* <code>**<font style="color:rgb(26, 32, 41);">-0</font>**</code><font style="color:rgb(26, 32, 41);">: 负零。虽然在数学上</font><font style="color:rgb(26, 32, 41);"> </font><code><font style="color:rgb(26, 32, 41);">0</font></code><font style="color:rgb(26, 32, 41);"> </font><font style="color:rgb(26, 32, 41);">和</font><font style="color:rgb(26, 32, 41);"> </font><code><font style="color:rgb(26, 32, 41);">-0</font></code><font style="color:rgb(26, 32, 41);"> </font><font style="color:rgb(26, 32, 41);">相等，但它们在 JavaScript 内部是不同的值，不过都属于假值。</font>
-* <code>**<font style="color:rgb(26, 32, 41);">0n</font>**</code><font style="color:rgb(26, 32, 41);">: BigInt 零。这是 ES2020 引入的新类型。</font>
-* <code>**<font style="color:rgb(26, 32, 41);">""</font>**</code><font style="color:rgb(26, 32, 41);">,</font><font style="color:rgb(26, 32, 41);"> </font><code>**<font style="color:rgb(26, 32, 41);">''</font>**</code><font style="color:rgb(26, 32, 41);">,</font><font style="color:rgb(26, 32, 41);"> </font><code>**<font style="color:rgb(26, 32, 41);"></code></font>\*\*\`<font style="color:rgb(26, 32, 41);">: 空字符串。长度为 0 的字符串。</font>
-* <code>**<font style="color:rgb(26, 32, 41);">null</font>**</code><font style="color:rgb(26, 32, 41);">: 表示“空”或“无值”的特殊关键字。</font>
-* <code>**<font style="color:rgb(26, 32, 41);">undefined</font>**</code><font style="color:rgb(26, 32, 41);">: 表示变量已声明但未赋值，或对象属性不存在的特殊关键字。</font>
-* <code>**<font style="color:rgb(26, 32, 41);">NaN</font>**</code><font style="color:rgb(26, 32, 41);">: 表示“不是一个数字”（Not-a-Number）的特殊数字值。这是一个非常容易混淆的假值！</font>
+* `false`: 布尔值 `false` 本身。
+* `0`: 数字零。包括 `+0` 和 `-0`。
+* `-0`: 负零。虽然在数学上 `0` 和 `-0` 相等，但它们在 JavaScript 内部是不同的值，不过都属于假值。
+* `0n`: BigInt 零。这是 ES2020 引入的新类型。
+* `""`, `''`, `**`**\`: 空字符串。长度为 0 的字符串。
+* `null`: 表示“空”或“无值”的特殊关键字。
+* `undefined`: 表示变量已声明但未赋值，或对象属性不存在的特殊关键字。
+* `NaN`: 表示“不是一个数字”（Not-a-Number）的特殊数字值。这是一个非常容易混淆的假值！
 
-**<font style="color:rgb(26, 32, 41);">重要提示：</font>**<font style="color:rgb(26, 32, 41);"> </font>**<font style="color:rgb(26, 32, 41);">所有不在这个列表里的值，都是真值。</font>**
+**重要提示：** **所有不在这个列表里的值，都是真值。**
 
-2. **<font style="color:rgb(26, 32, 41);">常见的真值（举几个例子）</font>**
+2. **常见的真值（举几个例子）**
 
-<font style="color:rgb(26, 32, 41);">为了加深理解，我们来看一些典型的真值：</font>
+为了加深理解，我们来看一些典型的真值：
 
-* **<font style="color:rgb(26, 32, 41);">非零数字</font>**<font style="color:rgb(26, 32, 41);">:</font><font style="color:rgb(26, 32, 41);"> </font><code><font style="color:rgb(26, 32, 41);">1</font></code><font style="color:rgb(26, 32, 41);">,</font><font style="color:rgb(26, 32, 41);"> </font><code><font style="color:rgb(26, 32, 41);">-1</font></code><font style="color:rgb(26, 32, 41);">,</font><font style="color:rgb(26, 32, 41);"> </font><code><font style="color:rgb(26, 32, 41);">3.14</font></code><font style="color:rgb(26, 32, 41);">,</font><font style="color:rgb(26, 32, 41);"> </font><code><font style="color:rgb(26, 32, 41);">Infinity</font></code><font style="color:rgb(26, 32, 41);">,</font><font style="color:rgb(26, 32, 41);"> </font><code><font style="color:rgb(26, 32, 41);">-Infinity</font></code>
-* **<font style="color:rgb(26, 32, 41);">非空字符串</font>**<font style="color:rgb(26, 32, 41);">:</font><font style="color:rgb(26, 32, 41);"> </font><code><font style="color:rgb(26, 32, 41);">"0"</font></code><font style="color:rgb(26, 32, 41);">,</font><font style="color:rgb(26, 32, 41);"> </font><code><font style="color:rgb(26, 32, 41);">"false"</font></code><font style="color:rgb(26, 32, 41);">,</font><font style="color:rgb(26, 32, 41);"> </font><code><font style="color:rgb(26, 32, 41);">" "</font></code><font style="color:rgb(26, 32, 41);">,</font><font style="color:rgb(26, 32, 41);"> </font><code><font style="color:rgb(26, 32, 41);">"hello"</font></code><font style="color:rgb(26, 32, 41);"> </font><font style="color:rgb(26, 32, 41);">(注意：</font><code><font style="color:rgb(26, 32, 41);">"0"</font></code><font style="color:rgb(26, 32, 41);"> </font><font style="color:rgb(26, 32, 41);">和</font><font style="color:rgb(26, 32, 41);"> </font><code><font style="color:rgb(26, 32, 41);">"false"</font></code><font style="color:rgb(26, 32, 41);"> </font><font style="color:rgb(26, 32, 41);">作为字符串是真值！)</font>
-* **<font style="color:rgb(26, 32, 41);">所有对象</font>**<font style="color:rgb(26, 32, 41);">:</font><font style="color:rgb(26, 32, 41);"> </font><code><font style="color:rgb(26, 32, 41);">{}</font></code><font style="color:rgb(26, 32, 41);">,</font><font style="color:rgb(26, 32, 41);"> </font><code><font style="color:rgb(26, 32, 41);">[]</font></code><font style="color:rgb(26, 32, 41);">,</font><font style="color:rgb(26, 32, 41);"> </font><code><font style="color:rgb(26, 32, 41);">new Date()</font></code><font style="color:rgb(26, 32, 41);">,</font><font style="color:rgb(26, 32, 41);"> </font><code><font style="color:rgb(26, 32, 41);">/regex/</font></code>
-* **<font style="color:rgb(26, 32, 41);">所有数组</font>**<font style="color:rgb(26, 32, 41);">:</font><font style="color:rgb(26, 32, 41);"> </font><code><font style="color:rgb(26, 32, 41);">[]</font></code><font style="color:rgb(26, 32, 41);"> </font><font style="color:rgb(26, 32, 41);">(空数组是真值！这是最常见的坑之一)</font>
-* **<font style="color:rgb(26, 32, 41);">函数</font>**<font style="color:rgb(26, 32, 41);">:</font><font style="color:rgb(26, 32, 41);"> </font><code><font style="color:rgb(26, 32, 41);">function() {}</font></code>
-* **<font style="color:rgb(26, 32, 41);">Symbol</font>**<font style="color:rgb(26, 32, 41);">: </font><code><font style="color:rgb(26, 32, 41);">Symbol()</font></code>
+***非零数字**: `1`, `-1`, `3.14`, `Infinity`, `-Infinity`
+***非空字符串**: `"0"`, `"false"`, `" "`, `"hello"` (注意：`"0"` 和 `"false"` 作为字符串是真值！)
+***所有对象**: `{}`, `[]`, `new Date()`, `/regex/`
+***所有数组**: `[]` (空数组是真值！这是最常见的坑之一)
+***函数**: `function() {}`
+***Symbol**: `Symbol()`
 
 #### 严格模式是什么?
 
@@ -394,26 +410,28 @@ JavaScript 的严格模式（Strict Mode）是一种在更严格的条件下执�
 
 **启用方式**
 
-* **全局启用**：在脚本文件顶部添加 `"use strict"`，整个脚本将按严格模式执行。
+***全局启用**：在脚本文件顶部添加 `"use strict"`，整个脚本将按严格模式执行。
 
 ```javascript
 "use strict";
 // 此处代码均为严格模式
+
 ```
 
-* **函数级启用**：在函数体内第一行添加 `"use strict"`，仅该函数生效。
+***函数级启用**：在函数体内第一行添加 `"use strict"`，仅该函数生效。
 
 ```javascript
 function strictFunction() {
   "use strict";
   // 仅此函数为严格模式
 }
+
 ```
 
 **严格模式的优势**
 
-* **提升代码健壮性**：通过早期暴露错误，减少运行时隐患。
-* **兼容未来标准**：严格模式的部分规则（如禁止 `arguments.callee`）为后续 ECMAScript 版本铺路。\
+***提升代码健壮性**：通过早期暴露错误，减少运行时隐患。
+***兼容未来标准**：严格模式的部分规则（如禁止 `arguments.callee`）为后续 ECMAScript 版本铺路。\
   严格模式是现代 JavaScript 开发的推荐实践，尤其适用于大型项目或需要高可靠性的场景。
 
 #### js对象中，可枚举性是什么?
@@ -439,46 +457,48 @@ for(var key ino)console.log(o[key]);
 // 3
 Object.keys(o);//["a","b”,"c”]
 JSON.stringify(o); //=>"{a:1,b:2,c:3}
+
 ```
 
 上面代码中，d属性的enumerable为false，所以一般的遍历操作都无法获取该属性，使得它有点像"秘密”属性，但还是可以直接获取它的值。
 
 至于fo..in循环和Object.keys方法的区别，在于前者包括对象继承自原型对象的属性，而后者只包括对象本身的属性。如果需要获取对象自身的所有属性，不管enumerable的值，可以使用Object.getOwnPropertyNames方法可枚举属性是指那些内部“可枚举” 标志设置为 true 的属性。对于通过直接的赋值和属性初始化的属性，该标识值默认为即为 true。但是对于通过 Object.defineProperty 等定义的属性，该标识值默认为 false。
 
-#### <font style="color:#DF2A3F;">判断数组的方式（必背）</font>
+#### 判断数组的方式（必背）
 
 1. 通过Object.prototype.toString.call()做判断 Object.prototype.toString.call(obj).slice(8,-1) === 'Array';
 2. 通过原型链做判断 obj.**proto** === Array.prototype;
 3. 通过ES6的Array.isArray()做判断 Array.isArrray(obj);
 4. 通过instanceof做判断 obj instanceof Array
 
-#### <font style="color:#DF2A3F;">伪数组转化成数组（必背）</font>
+#### 伪数组转化成数组（必背）
 
 1. 通过 call 调用数组的 slice 方法来实现转换 Array.prototype.slice.call(arrayLike)
 2. 通过 call 调用数组的 splice 方法来实现转换 Array.prototype.splice.call(arrayLike, 0)
 3. 通过 apply 调用数组的 concat 方法来实现转换 Array.prototype.concat.apply(\[], arrayLike)
 4. 通过 Array.from 方法来实现转换 Array.from(arrayLike)
 
-#### <font style="color:#DF2A3F;">深拷贝浅拷贝的方法（必背）</font>
+#### 深拷贝浅拷贝的方法（必背）
 
 **一、核心区别**
 
-| **特性** | **浅拷贝** | **深拷贝** |
-| :--- | :--- | :--- |
-| **复制内容** | 复制引用（指向同一内存地址） | 复制实际值（独立内存地址） |
-| **适用场景** | 简单对象/数组，无需修改嵌套数据 | 复杂对象/数组，需完全独立副本 |
-| **性能** | 高效（仅复制引用） | 低效（需递归复制所有嵌套内容） |
+| **特性**     | **浅拷贝**                      | **深拷贝**                         |
+| :----------- | :------------------------------ | :--------------------------------- |
+| **复制内容** | 复制引用（指向同一内存地址）    | 复制实际值（独立内存地址）         |
+| **适用场景** | 简单对象/数组，无需修改嵌套数据 | 复杂对象/数组，需完全独立副本      |
+| **性能**     | 高效（仅复制引用）              | 低效（需递归复制所有嵌套内容）     |
 | **实现方式** | `Object.assign()`、展开运算符等 | 递归拷贝、`JSON.parse()`、第三方库 |
 
-***
+---
 
 **二、浅拷贝方法**
 
-\*\*1. 使用 \*\*<code>**Object.assign()**</code>
+**1. 使用 **`Object.assign()`
 
 ```javascript
 const original = { a: 1, b: { c: 2 } };
 const shallowCopy = Object.assign({}, original);
+
 ```
 
 • **特点**：
@@ -491,6 +511,7 @@ const shallowCopy = Object.assign({}, original);
 
 ```javascript
 const shallowCopy = { ...original };
+
 ```
 
 • **特点**：
@@ -499,14 +520,15 @@ const shallowCopy = { ...original };
 
 • 支持数组浅拷贝：`const shallowArray = [...array];`
 
-**3. **<code>**slice()**</code>** / **<code>**concat()**</code>**（数组专用）**
+**3. **`slice()`** / **`concat()`**（数组专用）**
 
 ```javascript
 const array = [1, 2, 3];
 const shallowArray = array.slice(); // 或 array.concat([]);
+
 ```
 
-***
+---
 
 **三、深拷贝方法**
 
@@ -528,6 +550,7 @@ function deepCopy(obj) {
 
 const original = { a: 1, b: { c: 2 } };
 const deepCopy = deepCopy(original);
+
 ```
 
 • **特点**：
@@ -536,11 +559,12 @@ const deepCopy = deepCopy(original);
 
 • 需手动处理所有嵌套层级，复杂对象可能遗漏某些属性（如 `Symbol`）。
 
-**2. **<code>**JSON.parse()**</code>**（简单场景）**
+**2. **`JSON.parse()`**（简单场景）**
 
 ```javascript
 const original = { a: 1, b: { c: 2 } };
 const deepCopy = JSON.parse(JSON.stringify(original));
+
 ```
 
 • **特点**：
@@ -560,6 +584,7 @@ const deepCopy = JSON.parse(JSON.stringify(original));
 ```javascript
 import _ from 'lodash';
 const deepCopy = _.cloneDeep(original);
+
 ```
 
 • **优势**：
@@ -568,16 +593,16 @@ const deepCopy = _.cloneDeep(original);
 
 • 性能优化（缓存机制）。
 
-***
+---
 
 **四、总结**
 
-| **方法** | **代码示例** | **适用场景** |
-| :--- | :--- | :--- |
-| 浅拷贝 | `{ ...original }` 或 `Object.assign()` | 快速复制，无需修改嵌套数据 |
-| 深拷贝（手动） | 递归函数 `deepCopy()` | 完全独立副本，复杂对象 |
-| 深拷贝（JSON） | `JSON.parse(JSON.stringify(obj))` | 纯 JSON 数据，简单嵌套 |
-| 深拷贝（第三方） | Lodash `cloneDeep()` | 大型项目，复杂数据类型 |
+| **方法**         | **代码示例**                           | **适用场景**               |
+| :--------------- | :------------------------------------- | :------------------------- |
+| 浅拷贝           | `{ ...original }` 或 `Object.assign()` | 快速复制，无需修改嵌套数据 |
+| 深拷贝（手动）   | 递归函数 `deepCopy()`                  | 完全独立副本，复杂对象     |
+| 深拷贝（JSON）   | `JSON.parse(JSON.stringify(obj))`      | 纯 JSON 数据，简单嵌套     |
+| 深拷贝（第三方） | Lodash `cloneDeep()`                   | 大型项目，复杂数据类型     |
 
 #### object.assign和扩展运算法是深拷贝还是浅拷贝，两者区别
 
@@ -616,9 +641,10 @@ const emptyArray = [];
 // 没有提供初始值
 const result = emptyArray.reduce((accumulator, currentValue) => accumulator + currentValue);
 // 抛出: TypeError: Reduce of empty array with no initial value
+
 ```
 
-为了解决这个问题，\*\*必须为 \*\*<code>**reduce()**</code>**方法提供初始值**，作为其第二个参数。这样，即使数组为空，`reduce()`也会使用这个初始值作为结果返回。
+为了解决这个问题，**必须为 **`reduce()`**方法提供初始值**，作为其第二个参数。这样，即使数组为空，`reduce()`也会使用这个初始值作为结果返回。
 
 以下是修复后的安全写法：
 
@@ -627,6 +653,7 @@ const emptyArray = [];
 const initialValue = 0; // 提供初始值
 const result = emptyArray.reduce((accumulator, currentValue) => accumulator + currentValue, initialValue);
 console.log(result); // 输出: 0
+
 ```
 
 #### 数组的reduce方法
@@ -650,6 +677,7 @@ reduce()方法的执行过程如下:
 const numbers=[1,2,3,4,5];
 const sum = numbers.reduce((accumulator, currentValue)=> accumulator + currentValue);
 console.log(sum); //输出:154
+
 ```
 
 在上述代码中，使用 reduce()方法对 numbers 数组中的每个元素进行累加操作，并将结果存储在 sum 变量中。
@@ -666,6 +694,7 @@ reduce()方法非常强大，可以用于解决各种累积计算问题，如求
 var s=new Object('1');
   s.tostring();
   s = null;
+
 ```
 
 * 第一步: 创建Object类实例。注意为什么不是String? 由于Symbol和BigInt的出现，对它们调用new都会报错目前ES6规范也不建议用new来创建基本类型的包装类，
@@ -674,7 +703,7 @@ var s=new Object('1');
 
 整个过程体现了 基本包装类型 的性质，而基本包装类型恰恰属于基本数据类型，包括Boolean，Number和String。
 
-#### <font style="color:#DF2A3F;">Math.ceil()、Math.round()、Math.floor()三者的区别是什么?（必背）</font>
+#### Math.ceil()、Math.round()、Math.floor()三者的区别是什么?（必背）
 
 * Math.ceil()上取整
 * Math.round()四舍五入
@@ -703,7 +732,7 @@ Number.isNaN()方法确定传递的值是否为NaN，并且检查其类型是否
 * 使用三等号(===)进行相等判断时，如果两边的类型不一致时，不会做强制类型准换，直接返回 false
 * 使用 Object.is 来进行相等判断时，一般情况下和三等号的判断相同，它处理了一些特殊的情况，比如-0和-+0 不再相等，两个 NaN 是相等的。
 
-#### <font style="color:#DF2A3F;">for...in和for...of的区别（必背）</font>
+#### for...in和for...of的区别（必背）
 
 1. for...in和for...of都是JavaScript中的循环语句，而for…of 是ES6新增的遍历方式，允许遍历一个含有iterator接口的数据结构并且返回各项的值，和ES3中的for…in的区别如下
 2. for…of 遍历获取的是对象的键值，for…in 获取的是对象的键名；
@@ -718,6 +747,7 @@ NaN 指“不是一个数字”(notanumber)，NaN 是一个"警戒值”(sentine
 
 ```javascript
 typeof NaN; //"number"
+
 ```
 
 NaN 是一个特殊值，它和自身不相等，是唯一一个非自反(自反，reflexive，即x===x不成立)的值。而 NaN!== NaN 为true。
@@ -748,12 +778,13 @@ function mySetInterval(fn,timeout){
   // 返回控制器20
   return timer;
 }
+
 ```
 
-#### <font style="color:#ED740C;">匿名函数（选背）</font>
+#### 匿名函数（选背）
 
 * 匿名函数在声明时不用带上函数名 没有函数提升
-* <font style="color:rgb(51, 51, 51);">匿名函数可以有效的保证在页面上写入Javascript，而不会造成全局变量的污染。</font>
+* 匿名函数可以有效的保证在页面上写入Javascript，而不会造成全局变量的污染。
 
 #### new fn与new fn()有什么区别吗?
 
@@ -765,6 +796,7 @@ function Parent(){
 }
 console.log(new Parent());//输出Parent对象{num:1}
 console.log(new Parent);//输出Parent对象:{num:1}
+
 ```
 
 但有些情况下new的构造函数后带括号和不带括号的情况并不一致，譬如:
@@ -775,6 +807,7 @@ function Parent(){
 }
 console.log(new Parent().num);//1
 console.log(new Parent.num);//报错
+
 ```
 
 结果分析:
@@ -806,6 +839,7 @@ function test(){
   console.log("测试");
 }
 test();// 测试
+
 ```
 
 函数的表达式写法为: var test = function(){}，这种写法不会导致函数提升，必须先声明后调用，不然就会报错。
@@ -815,6 +849,7 @@ test();// 报错:TypeError:test is not a function1
 var test =function(){
   console.log(“测试");
 };
+
 ```
 
 二者的区别
@@ -828,6 +863,7 @@ function greeting(){
 var greeting = function(){
   console.log("hello world");
 }
+
 ```
 
 * 函数声明式变量会声明提前 函数表达式变量不会声明提前
@@ -835,7 +871,7 @@ var greeting = function(){
 * 函数表达式可以在定义的时候直接在表达式后面加()执行，而函数声明则不可以
 * 自执行函数即使带有函数名，它里面的函数还是属于函数表达式
 
-#### <font style="color:#ED740C;">forEach中return有效果吗?如何中断forEach循环?（选背）</font>
+#### forEach中return有效果吗?如何中断forEach循环?（选背）
 
 在forEach中用return不会返回，函数会继续执行。
 
@@ -847,12 +883,12 @@ var greeting = function(){
 * every在碰到return false的时候，中止循环。
 * some在碰到return true的时候，中止循环。
 
-### <font style="color:#ED740C;">异步编程与事件循环</font>
+### 异步编程与事件循环
 
-#### <font style="color:#DF2A3F;">Promise（必背）</font>
+#### Promise（必背）
 
 1. Promise 对象是异步编程的一种解决方案。Promise 是一个构造函数，接收一个函数作为参数，返回一个 Promise 实例。
-2. 一个 Promise 实例有三种状态，分别是\_pending、**<font style="color:rgb(27, 27, 27);">fulfilled </font>** *和* rejected\_。实例的状态只能由 pending 转变 *<font style="color:rgb(27, 27, 27);">fulfilled </font>* 或者 rejected 状态，并且状态一经改变，无法再被改变了。
+2. 一个 Promise 实例有三种状态，分别是\_pending、**fulfilled ** *和* rejected\_。实例的状态只能由 pending 转变 *fulfilled * 或者 rejected 状态，并且状态一经改变，无法再被改变了。
 3. 状态的改变是通过传入的 resolve() 和 reject() 函数来实现的，当我们调用resolve回调函数时，会执行Promise对象的then方法传入的第一个回调函数，当我们调用reject回调函数时，会执行Promise对象的then方法传入的第二个回调函数，或者catch方法传入的回调函数。
 4. Promise的实例有**两个过程**：
 
@@ -860,7 +896,7 @@ var greeting = function(){
 * pending -> rejected：Rejected（已拒绝）
 * 一旦从进行状态变成为其他状态就永远不能更改状态了。
 
-\*\*在通过new创建Promise对象时，我们需要传入一个回调函数，我们称之为executor \*\*
+**在通过new创建Promise对象时，我们需要传入一个回调函数，我们称之为executor **
 
 ✓ 这个回调函数会被立即执行，并且给传入另外两个回调函数resolve、reject；
 
@@ -894,7 +930,7 @@ reject的回调函数：当状态变成reject时会回调的函数；
 
 当then方法抛出一个异常时，那么它处于reject状态
 
-#### <font style="color:#DF2A3F;">Promise方法（必背）</font>
+#### Promise方法（必背）
 
 1. promise.then()  对应resolve成功的处理
 2. promise.catch()对应reject失败的处理
@@ -904,19 +940,19 @@ reject的回调函数：当状态变成reject时会回调的函数；
 
 #### promise.then的第二个参数
 
-| **特性** | <code>**then**</code>**的第二个参数** | <code>**.catch()**</code>**方法** |
-| :--- | :--- | :--- |
-| **捕获范围** | 仅捕获**当前** Promise 或其**之前**未处理的拒绝 | 捕获**整个链**中**之前**所有未处理的拒绝 |
-| **链式调用** | 需要每次调用 `then`时都传递 | 可以链式调用，通常放在链的末尾 |
-| **代码简洁性** | 相对繁琐 | 更简洁，易于阅读和维护 |
+| **特性**       | `then`**的第二个参数**           | `.catch()`**方法**        |
+| :------------- | :---------------------------------------------- | :--------------------------------------- |
+| **捕获范围**   | 仅捕获**当前** Promise 或其**之前**未处理的拒绝 | 捕获**整个链**中**之前**所有未处理的拒绝 |
+| **链式调用**   | 需要每次调用 `then`时都传递                     | 可以链式调用，通常放在链的末尾           |
+| **代码简洁性** | 相对繁琐                                        | 更简洁，易于阅读和维护                   |
 
-#### <font style="color:#DF2A3F;">Promise.all() 和 Promise.allSelected() （必背）</font>
+#### Promise.all() 和 Promise.allSelected() （必背）
 
 1. Promise.all() 和 Promise.allSettled() 都是用来处理多个 Promise 实例的方法
 2. all: 只有当所有Promise实例都resolve后，才会resolve返回一个由所有Promise返回值组成的数组。如果有一个Promise实例reject，就会立即被拒绝，并返回拒绝原因
 3. allSettled： 等所有Promise执行完毕后，不管成功或失败，把每个Promise状态信息放到一个数组里面返回。
 
-#### <font style="color:#ED740C;">JavaScript 中如何取消请求（选背）</font>
+#### JavaScript 中如何取消请求（选背）
 
 JavaScript 实现异步请求就靠浏览器提供的两个 API -- XMLHttpRequest 和 Fetch。我们平常用的较多的是Promise 请求库 axios，它基于 XMLHttpRequest.
 
@@ -933,6 +969,7 @@ xhr.send();
 setTimeout(()=>{
   xhr.abort();
 }，1000);
+
 ```
 
 取消请求，readyState 会变成 XLHttpRequest.UNSENT(0);请求的 xhrstatus 会被设为0;
@@ -952,6 +989,7 @@ void(async function(){
 setTimeout(()=>{
   controller.abort();
 }，1000);
+
 ```
 
 #### Promise 的 finally 怎么实现的?
@@ -966,6 +1004,7 @@ Promise.prototype.finally=function(callback){
     reason =>P.resolve(callback()).then(()=>{ throw reason })
   )
 }
+
 ```
 
 我们定义了一个名为 finally 的函数，它使用了 Promise 原型链的方式实现了 finally 方法。该函数接收一个回调函数作为参数，并返回一个新的 Promise 对象。如果原始 Promise 成功，则会先调用 callback 函数，然后将结果传递给下一个 Promise;如果失败，则会先调用 callback 函数，然后将错误信息抛出
@@ -974,7 +1013,7 @@ Promise.prototype.finally=function(callback){
 
 这样，我们就完成了 Promise.prototype.finally 方法的实现。
 
-#### <font style="color:#DF2A3F;">promise.catch后面的.then还会执行吗?（必背）</font>
+#### promise.catch后面的.then还会执行吗?（必背）
 
 会继续执行。
 
@@ -982,6 +1021,7 @@ Promise.prototype.finally=function(callback){
 
 ```javascript
 Ap.catch(onRejected);
+
 ```
 
 * .catch 只会处理 rejected 的情况，并且也会返回一个新的 Promise 实例
@@ -993,7 +1033,7 @@ Ap.catch(onRejected);
 * 如果 .catch(onRejected)的 onRejected 回调中抛出了异常，那么 .catch 返回的 Promise 实例的状态也将变成 rejected。
 * 其他情况下，.catch 返回的 Promise实例的状态将是 fulfilled
 
-#### <font style="color:#DF2A3F;">Promise中的值穿透是什么?（必背）</font>
+#### Promise中的值穿透是什么?（必背）
 
 解释:.then 或者 .catch 的参数期望是函数，传入非函数则会发生值穿透。当then中传入的不是函数，则这个then返回的promise的data，将会保存上一个的promise.data,这就是发生值穿透的原因。而且每一个无效的then所返回的promise的状态都为resolved.
 
@@ -1002,11 +1042,12 @@ Promise.resolve(1)
   .then(2)// 注意这里
   .then(Promise.resolve(3))
   .then(console.log)
+
 ```
 
 上面代码的输出是 1
 
-#### <font style="color:#DF2A3F;">对async/await的理解（必背）</font>
+#### 对async/await的理解（必背）
 
 1. async/await其实是Generator 语法糖，效果都能用then链来实现，是为优化then链而开发的。通过async关键字声明一个异步函数， await 用于等待一个异步方法执行完成，并会阻塞执行
 
@@ -1043,27 +1084,28 @@ const gen =myGenerator();
 gen.next();//输出 Step 1
 gen.next();//输出Step 2
 gen.next();//输出 Step 3
+
 ```
 
 在这个示例中，myGenerator()函数包含三个yield 表达式，每次调用迭代器对象的 next()方法都会从上一次执行的位置继续执行，直到遇到下一个 yield 表达式或函数结束,
 
 当执行第一个 gen.next()方法时，输出 Step 1，并暂停执行，将控制权交回给调用者。当再次调用 gen.next()方法时，继续执行后面的代码，输出 Step 2，并再次暂停执行。最后，再次调用 gen.next()方法时，完成函数的执行，输出 Step 3，并返回一个包含 value 和 done 属性的对象。通过使用 yield 表达式和迭代器对象，Generator 函数可以实现中断和恢复执行的功能，从而提供更灵活、更高效的 JavaScript 编程方式。
 
-#### <font style="color:#DF2A3F;">async/await对比Promise的优势（必背）</font>
+#### async/await对比Promise的优势（必背）
 
 1. 代码可读性高，Promise虽然摆脱了回掉地狱，但自身的链式调用会影响可读性。
 2. 相对Promise更优雅，传值更方便。
 3. 对错误处理友好，可以通过try/catch捕获，Promise的错误捕获非常冗余
-4. <font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">async/await</font><font style="color:rgb(51, 51, 51);">基于</font><font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Promise</font><font style="color:rgb(51, 51, 51);">。async把promise包装了一下，async函数更简洁，不需要像promise一样需要写then，不需要写匿名函数处理promise的resolve值。</font>
+4. async/await基于Promise。async把promise包装了一下，async函数更简洁，不需要像promise一样需要写then，不需要写匿名函数处理promise的resolve值。
 
 #### async/await对Generator的改进（必背）
 
 1. 内置执行器：async内置了执行器，无需手动调用next方法
 2. 更广的适用性：await后面可以跟Promise对象和原始类型的值
 3. 更好的语义：async表示函数里有异步操作 await表示需要等待结果
-4. <font style="color:rgb(51, 51, 51);">async是Generator函数的语法糖，</font>**<font style="color:rgb(51, 51, 51);">async函数返回值是promise对象</font>**<font style="color:rgb(51, 51, 51);">，比</font><font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">generator</font><font style="color:rgb(51, 51, 51);">函数返回值 iterator对象更方便，</font>*<u><font style="color:rgb(51, 51, 51);">可使用 await 代替then 指定下一步操作(await==promise.then)</font></u>*
+4. async是Generator函数的语法糖，**async函数返回值是promise对象**，比generator函数返回值 iterator对象更方便，*可使用 await 代替then 指定下一步操作(await==promise.then)*
 
-#### <font style="color:#DF2A3F;">事件循环（必背）</font>
+#### 事件循环（必背）
 
 1. 概念：
 
@@ -1084,10 +1126,10 @@ gen.next();//输出 Step 3
 
 4. 常见执行顺序：调用栈中的同步任务、所有微任务、渲染页面、取出任务队列中的下一个宏任务、重复
 
-#### <font style="color:#DF2A3F;">如果最后一个微任务又产生了新的微任务（必背）</font>
+#### 如果最后一个微任务又产生了新的微任务（必背）
 
-* <font style="color:rgb(0, 0, 0);">JavaScript 事件循环中，微任务队列的处理规则是：必须在本轮一次性清空。因此，如果最后一个微任务又产生了新的微任务，事件循环会继续执行这个新产生的微任务，直到微任务队列再次被清空，然后才会继续执行后续的宏任务或进行渲染</font>
-* <font style="color:rgb(0, 0, 0);">简单来说，微任务队列的清空过程是一个“</font>**<font style="color:rgb(0, 0, 0);">持续执行直到为空</font>**<font style="color:rgb(0, 0, 0);">”的过程。事件循环会不断地从微任务队列中取出任务执行，如果在此期间执行某个微任务时又产生了新的微任务（例如在一个 </font><code><font style="color:rgb(0, 0, 0);">Promise.then</font></code><font style="color:rgb(0, 0, 0);">回调中又返回了新的 Promise），那么这个新微任务会被立刻加入到当前微任务队列的末尾</font>
+* JavaScript 事件循环中，微任务队列的处理规则是：必须在本轮一次性清空。因此，如果最后一个微任务又产生了新的微任务，事件循环会继续执行这个新产生的微任务，直到微任务队列再次被清空，然后才会继续执行后续的宏任务或进行渲染
+* 简单来说，微任务队列的清空过程是一个“**持续执行直到为空**”的过程。事件循环会不断地从微任务队列中取出任务执行，如果在此期间执行某个微任务时又产生了新的微任务（例如在一个 `Promise.then`回调中又返回了新的 Promise），那么这个新微任务会被立刻加入到当前微任务队列的末尾
 * 事件循环不会离开微任务队列去执行其他操作，而是会继续检查并执行这个新加入的微任务，直到微任务队列被彻底清空。
 
 #### try/catch能捕获异步代码的错误吗
@@ -1102,24 +1144,25 @@ try {
 } catch (err) {
   console.log(err)
 }
+
 ```
 
 `setTimeout`是一个异步函数，它的回调函数会在指定的延时后被放入事件队列，等待当前执行栈清空后才执行。因此，当 `setTimeout`的回调函数执行并抛出错误时，外层的 `try...catch`代码块已经执行完毕，无法捕获异步回调中抛出的错误
 
 对于异步代码的错误，需要结合 `Promise.catch`、`async/await`或事件监听等机制来处理
 
-#### <font style="color:#DF2A3F;">Js实现异步的方式（必背）</font>
+#### Js实现异步的方式（必背）
 
-| 方式 | 描述 | 优点 | 缺点/注意事项 |
-| --- | --- | --- | --- |
-| **1. 回调函数** | 将函数作为参数传递给另一个函数，在异步操作完成后调用该函数 | 实现简单，广泛兼容 | 1. 回调地狱，代码难以维护   2. 无法直接用try/catch捕获错误   3. 每个任务只能指定一个回调函数 |
-| **2. 事件监听** | 通过事件监听器处理异步操作结果 | 适用于事件驱动的场景，松耦合 | 代码结构松散，难以追踪流程 |
-| **3. setTimeout/setInterval** | 通过定时器延迟执行代码 | 简单易用，适合简单延迟任务 | 不适合复杂的异步逻辑，难以管理多个定时器 |
-| **4. Promise** | 使用Promise对象处理异步操作 | 1. 解决了回调地狱问题   2. 支持链式调用   3. 错误处理更清晰 | 1. 无法取消Promise   2. 错误需要通过回调函数捕获（.catch） |
-| **5. 生成器 (yield)** | 使用function\*和yield关键字实现异步操作 | 1. 异步语义清晰   2. 可以暂停和恢复函数执行 | 1. 手动迭代函数复杂   2. 实现逻辑相对复杂 |
-| **6. async/await** | 基于Promise，使用async/await关键字实现异步操作 | 1. 代码看起来像同步代码，易于理解   2. 支持try-catch捕获错误 | 如果多个异步操作没有依赖性，使用async/await可能导致性能降低 |
+| 方式                          | 描述                                                       | 优点                                                         | 缺点/注意事项                                                                                |
+| ----------------------------- | ---------------------------------------------------------- | ------------------------------------------------------------ | -------------------------------------------------------------------------------------------- |
+| **1. 回调函数**               | 将函数作为参数传递给另一个函数，在异步操作完成后调用该函数 | 实现简单，广泛兼容                                           | 1. 回调地狱，代码难以维护   2. 无法直接用try/catch捕获错误   3. 每个任务只能指定一个回调函数 |
+| **2. 事件监听**               | 通过事件监听器处理异步操作结果                             | 适用于事件驱动的场景，松耦合                                 | 代码结构松散，难以追踪流程                                                                   |
+| **3. setTimeout/setInterval** | 通过定时器延迟执行代码                                     | 简单易用，适合简单延迟任务                                   | 不适合复杂的异步逻辑，难以管理多个定时器                                                     |
+| **4. Promise**                | 使用Promise对象处理异步操作                                | 1. 解决了回调地狱问题   2. 支持链式调用   3. 错误处理更清晰  | 1. 无法取消Promise   2. 错误需要通过回调函数捕获（.catch）                                   |
+| **5. 生成器 (yield)**         | 使用function*和yield关键字实现异步操作                    | 1. 异步语义清晰   2. 可以暂停和恢复函数执行                  | 1. 手动迭代函数复杂   2. 实现逻辑相对复杂                                                    |
+| **6. async/await**            | 基于Promise，使用async/await关键字实现异步操作             | 1. 代码看起来像同步代码，易于理解   2. 支持try-catch捕获错误 | 如果多个异步操作没有依赖性，使用async/await可能导致性能降低                                  |
 
-#### <font style="color:#DF2A3F;">JavaScript脚本延迟加载的方式有哪些?（必背）</font>
+#### JavaScript脚本延迟加载的方式有哪些?（必背）
 
 延迟加载是等页面加载完成后再加载 JavaScript 文件。js 延迟加载有助于提高页面加载速度，一般有以下几种方式:
 
@@ -1133,7 +1176,7 @@ try {
 
 在JavaScript中，判断一个函数是否是异步函数（async function）可以通过几种不同的方式来实现。以下是一些常用的方法：
 
-**1. 使用 **<code>**instanceof**</code>** 操作符**
+**1. 使用 **`instanceof`** 操作符**
 
 异步函数是 `AsyncFunction` 构造函数的实例，因此可以使用 `instanceof` 来判断：
 
@@ -1145,9 +1188,10 @@ function isAsyncFunction(func) {
 async function asyncFunc() {}
 console.log(isAsyncFunction(asyncFunc)); // true
 console.log(isAsyncFunction(function() {})); // false
+
 ```
 
-**2. 检查函数的 **<code>**constructor**</code>** 属性**
+**2. 检查函数的 **`constructor`** 属性**
 
 异步函数的 `constructor` 属性指向 `AsyncFunction`：
 
@@ -1159,9 +1203,10 @@ function isAsyncFunction(func) {
 async function asyncFunc() {}
 console.log(isAsyncFunction(asyncFunc)); // true
 console.log(isAsyncFunction(function() {})); // false
+
 ```
 
-**3. 使用 **<code>**Object.prototype.toString**</code>** 方法**
+**3. 使用 **`Object.prototype.toString`** 方法**
 
 `Object.prototype.toString` 方法可以用来获取对象的类型字符串，对于异步函数，它将返回 `[object AsyncFunction]`：
 
@@ -1173,9 +1218,10 @@ function isAsyncFunction(func) {
 async function asyncFunc() {}
 console.log(isAsyncFunction(asyncFunc)); // true
 console.log(isAsyncFunction(function() {})); // false
+
 ```
 
-#### <font style="color:#ED740C;">js 中的倒计时，怎么实现纠正偏差（选背）</font>
+#### js 中的倒计时，怎么实现纠正偏差（选背）
 
 在前端实现中我们一般通过 setTimeout 和 setInterval 方法来实现一个倒计时效果。但是使用这些方法会存在时间偏差的问题，这是由于js的程序执行机制造成的，setTimeout 和 setInterval的作用是隔一段时间将回调事件加入到事件队列中，因此事件并不是立即执行的，它会等到当前执行栈为空的时候再取出事件执行，因此事件等待执行的时间就是造成误差的原因。
 
@@ -1195,28 +1241,30 @@ requestIdleCallback 可以帮助我们优化 Web 应用程序的性能和响应�
 **使用方法：**
 
 ```
+
 1. 使用 requestIdlecallback 需要传入一个回调函数，该函数会在浏览器空闲时被调用。
 2. 回调函数的参数是一个IdleDeadline 对象，它包含有关浏览器还剩余多少时间可供执行任务的信息。
 3. 根据该对象的时间戳信息，开发人员可以自行决定是否继续执行任务或推迟执行。
+
 ```
 
-### <font style="color:#8CCF17;">面向对象与原型系统</font>
+### 面向对象与原型系统
 
-#### <font style="color:#DF2A3F;">this指向（必背）</font>
+#### this指向（必背）
 
 1. 在对象内部的方法中指向对象
 2. 全局执行上下文指向对象（浏览器指向window，nodejs指向global）
 3. 构造函数指向新创建的对象
 4. 嵌套函数的this不会继承外部函数的this
 
-#### <font style="color:#DF2A3F;">如何判断是否为空对象（必背）</font>
+#### 如何判断是否为空对象（必背）
 
-| Object.keys() | 直观、性能较好 | 不继承原型链属性<br/> | `Object.keys(obj).length === 0` |
-| :--- | :--- | :--- | :--- |
-| JSON.stringify() | 简单易懂<br/> | 性能较低、有局限性 | `JSON.stringify(obj) === '{}'` |
-| for...in 循环 | 兼容性好 | 性能较差 | `for (let key in obj)``{ `<br/>`if (obj.hasOwnProperty(key)) { `<br/>`return false; } } `<br/>`return true;` |
+| Object.keys()    | 直观、性能较好 | 不继承原型链属性  | `Object.keys(obj).length === 0`                                                                              |
+| :--------------- | :------------- | :-------------------- | :----------------------------------------------------------------------------------------------------------- |
+| JSON.stringify() | 简单易懂   | 性能较低、有局限性    | `JSON.stringify(obj) === '{}'`                                                                               |
+| for...in 循环    | 兼容性好       | 性能较差              | `for (let key in obj)``{ ` `if (obj.hasOwnProperty(key)) { ` `return false; } } ` `return true;` |
 
-#### <font style="color:#DF2A3F;">call、apply、bind的作用及区别（必背）</font>
+#### call、apply、bind的作用及区别（必背）
 
 1. 都可以改变函数执行时的this指向 call、apply在改变this指向时 立刻执行函数 / 返回一个改变了this指向的新函数 不会立刻执行
 2. func.call(thisArg,arg1,arg2.....)   对象继承、伪数组转换为真数组
@@ -1241,29 +1289,31 @@ function myNew(fn, ...args) {
   // 如果构造函数返回⼀个对象，则返回该对象；否则返回新对象
   return ret instanceof Object ? ret : obj;
 }
+
 ```
 
 #### 对象方法解构的this绑定丢失
 
-<font style="color:rgb(0, 0, 0);">对象方法中的 </font><code><font style="color:rgb(0, 0, 0);">this</font></code><font style="color:rgb(0, 0, 0);">指向取决于</font>**<font style="color:rgb(0, 0, 0);">调用方式</font>**<font style="color:rgb(0, 0, 0);">。当你通过 </font><code><font style="color:rgb(0, 0, 0);">obj.method()</font></code><font style="color:rgb(0, 0, 0);">形式调用时，</font><code><font style="color:rgb(0, 0, 0);">this</font></code><font style="color:rgb(0, 0, 0);">指向 </font><code><font style="color:rgb(0, 0, 0);">obj</font></code><font style="color:rgb(0, 0, 0);">。但若将方法赋值给一个新变量再调用，就相当于</font>**<font style="color:rgb(0, 0, 0);">直接调用函数</font>**<font style="color:rgb(0, 0, 0);">，而非通过对象属性调用。此时：</font>
+对象方法中的 `this`指向取决于**调用方式**。当你通过 `obj.method()`形式调用时，`this`指向 `obj`。但若将方法赋值给一个新变量再调用，就相当于**直接调用函数**，而非通过对象属性调用。此时：
 
-* <font style="color:rgb(0, 0, 0);">在</font>**<font style="color:rgb(0, 0, 0);">非严格模式</font>**<font style="color:rgb(0, 0, 0);">下，</font><code><font style="color:rgb(0, 0, 0);">this</font></code><font style="color:rgb(0, 0, 0);">会指向全局对象（浏览器中为 </font><code><font style="color:rgb(0, 0, 0);">window</font></code><font style="color:rgb(0, 0, 0);">，Node.js 中为 </font><code><font style="color:rgb(0, 0, 0);">global</font></code><font style="color:rgb(0, 0, 0);">）</font>
-* <font style="color:rgb(0, 0, 0);">在</font>**<font style="color:rgb(0, 0, 0);">严格模式</font>**<font style="color:rgb(0, 0, 0);">（</font><code><font style="color:rgb(0, 0, 0);">'use strict'</font></code><font style="color:rgb(0, 0, 0);">）下，</font><code><font style="color:rgb(0, 0, 0);">this</font></code><font style="color:rgb(0, 0, 0);">为 </font><code><font style="color:rgb(0, 0, 0);">undefined</font></code>
+* 在**非严格模式**下，`this`会指向全局对象（浏览器中为 `window`，Node.js 中为 `global`）
+* 在**严格模式**（`'use strict'`）下，`this`为 `undefined`
 
 ##### 如何保持原 `this`指向
 
-<font style="color:rgb(0, 0, 0);">若需在解构后维持原</font><font style="color:rgb(0, 0, 0);"> </font><code><font style="color:rgb(0, 0, 0);">this</font></code><font style="color:rgb(0, 0, 0);">指向，可参考以下方法：</font>
+若需在解构后维持原 `this`指向，可参考以下方法：
 
-1. **<font style="color:rgb(0, 0, 0);">调用时使用 </font>**<code>**<font style="color:rgb(0, 0, 0);">.bind()</font>**</code>**<font style="color:rgb(0, 0, 0);">方法</font>**<font style="color:rgb(0, 0, 0);">：</font><code><font style="color:rgb(0, 0, 0);">bind()</font></code><font style="color:rgb(0, 0, 0);">会创建一个新函数，其 </font><code><font style="color:rgb(0, 0, 0);">this</font></code><font style="color:rgb(0, 0, 0);">值永久绑定到指定对象</font>
+1. **调用时使用 **`.bind()`**方法**：`bind()`会创建一个新函数，其 `this`值永久绑定到指定对象
 
 ```javascript
 const extractedFunc = obj.sayHi.bind(obj); // 使用 bind 绑定 this
 extractedFunc(); // 输出："Frontend Expert"
+
 ```
 
-2. **<font style="color:rgb(0, 0, 0);">使用箭头函数定义方法</font>**<font style="color:rgb(0, 0, 0);">：箭头函数</font>**<font style="color:rgb(0, 0, 0);">不绑定自己的 </font>**<code>**<font style="color:rgb(0, 0, 0);">this</font>**</code><font style="color:rgb(0, 0, 0);">，其 </font><code><font style="color:rgb(0, 0, 0);">this</font></code><font style="color:rgb(0, 0, 0);">值</font>**<font style="color:rgb(0, 0, 0);">继承自定义时的外层作用域</font>**
+2. **使用箭头函数定义方法**：箭头函数**不绑定自己的 **`this`，其 `this`值**继承自定义时的外层作用域**
 
-<font style="color:rgb(0, 0, 0);">因此若 </font><code><font style="color:rgb(0, 0, 0);">obj.sayHi</font></code><font style="color:rgb(0, 0, 0);">是箭头函数，解构后 </font><code><font style="color:rgb(0, 0, 0);">this</font></code><font style="color:rgb(0, 0, 0);">通常指向定义 </font><code><font style="color:rgb(0, 0, 0);">obj</font></code><font style="color:rgb(0, 0, 0);">时的外层 </font><code><font style="color:rgb(0, 0, 0);">this</font></code><font style="color:rgb(0, 0, 0);">（常是 </font><code><font style="color:rgb(0, 0, 0);">window</font></code><font style="color:rgb(0, 0, 0);">或 </font><code><font style="color:rgb(0, 0, 0);">undefined</font></code><font style="color:rgb(0, 0, 0);">），而非 </font><code><font style="color:rgb(0, 0, 0);">obj</font></code><font style="color:rgb(0, 0, 0);">本身。</font>
+因此若 `obj.sayHi`是箭头函数，解构后 `this`通常指向定义 `obj`时的外层 `this`（常是 `window`或 `undefined`），而非 `obj`本身。
 
 ```javascript
 const obj2 = {
@@ -1274,47 +1324,52 @@ const obj2 = {
 };
 const extractedFunc2 = obj2.sayHi;
 extractedFunc2(); // 输出：undefined（因为外层 this 可能没有 name 属性）
+
 ```
 
 #### 解构赋值遇到不存在的属性怎么做
 
-**<font style="color:rgb(0, 0, 0);">默认值详解与注意事项</font>**
+**默认值详解与注意事项**
 
-**<font style="color:rgb(0, 0, 0);">基本用法</font>**<font style="color:rgb(0, 0, 0);">：在解构模式中，使用 </font><code><font style="color:rgb(0, 0, 0);">=</font></code><font style="color:rgb(0, 0, 0);">操作符直接为变量指定默认值。</font>**<font style="color:rgb(0, 0, 0);">默认值仅在解构目标的属性值为严格等于 </font>**<code>**<font style="color:rgb(0, 0, 0);">undefined</font>**</code>**<font style="color:rgb(0, 0, 0);">时才会生效</font>**<font style="color:rgb(0, 0, 0);">。如果属性值为 </font><code><font style="color:rgb(0, 0, 0);">null</font></code><font style="color:rgb(0, 0, 0);">，则不会使用默认值</font>
+**基本用法**：在解构模式中，使用 `=`操作符直接为变量指定默认值。**默认值仅在解构目标的属性值为严格等于 **`undefined`**时才会生效**。如果属性值为 `null`，则不会使用默认值
 
 ```javascript
 const { nonExistentProp = 'default', nullProp = 'default' } = { nullProp: null };
 console.log(nonExistentProp); // 'default'
 console.log(nullProp); // null (因为 null !== undefined)
+
 ```
 
-**<font style="color:rgb(0, 0, 0);">嵌套解构与默认值结合</font>**<font style="color:rgb(0, 0, 0);">：对于嵌套较深的对象，可以</font>**<font style="color:rgb(0, 0, 0);">为每一层的解构都设置默认值</font>**<font style="color:rgb(0, 0, 0);">，通常是一个空对象</font><font style="color:rgb(0, 0, 0);"> </font><code><font style="color:rgb(0, 0, 0);">{}</font></code><font style="color:rgb(0, 0, 0);">，这样可以避免在尝试解构</font><font style="color:rgb(0, 0, 0);"> </font><code><font style="color:rgb(0, 0, 0);">undefined</font></code><font style="color:rgb(0, 0, 0);">或</font><font style="color:rgb(0, 0, 0);"> </font><code><font style="color:rgb(0, 0, 0);">null</font></code><font style="color:rgb(0, 0, 0);">时抛出错误。</font>
+**嵌套解构与默认值结合**：对于嵌套较深的对象，可以**为每一层的解构都设置默认值**，通常是一个空对象 `{}`，这样可以避免在尝试解构 `undefined`或 `null`时抛出错误。
 
 ```javascript
 // 假设 response 数据中，user 或 user.profile 可能不存在
 const { user: { profile: { name = 'Anonymous' } = {} } = {} } = apiResponse || {};
 console.log(name); // 即使 apiResponse、user 或 profile 缺失，name 也会有默认值 'Anonymous'
+
 ```
 
-**<font style="color:rgb(0, 0, 0);">函数参数中的解构默认值</font>**<font style="color:rgb(0, 0, 0);">：在函数参数中使用解构赋值时，</font>**<font style="color:rgb(0, 0, 0);">建议同时为参数本身设置一个默认的空对象</font>**<font style="color:rgb(0, 0, 0);">（如</font><font style="color:rgb(0, 0, 0);"> </font><code><font style="color:rgb(0, 0, 0);">= {}</font></code><font style="color:rgb(0, 0, 0);">），以防止调用函数时未传递参数导致的错误。</font>
+**函数参数中的解构默认值**：在函数参数中使用解构赋值时，**建议同时为参数本身设置一个默认的空对象**（如 `= {}`），以防止调用函数时未传递参数导致的错误。
 
 ```javascript
 function createUser({ name = 'Anonymous', age = 18, email = 'none@provided.com' } = {}) {
   // 函数体
 }
 createUser(); // 安全调用，所有参数使用默认值
+
 ```
 
-<font style="color:rgb(0, 0, 0);"></font>**<font style="color:rgb(0, 0, 0);">可选链操作符 (?.) 的配合使用</font>**
+**可选链操作符 (?.) 的配合使用**
 
-<font style="color:rgb(0, 0, 0);">在处理可能不存在的深层嵌套属性时，解构赋值配合 ES2020 引入的</font>**<font style="color:rgb(0, 0, 0);">可选链操作符（Optional Chaining Operator）</font>**<code>**<font style="color:rgb(0, 0, 0);">?.</font>**</code><font style="color:rgb(0, 0, 0);"> 可以写出更简洁安全的代码</font>
+在处理可能不存在的深层嵌套属性时，解构赋值配合 ES2020 引入的**可选链操作符（Optional Chaining Operator）**`?.` 可以写出更简洁安全的代码
 
 ```javascript
 // 假设我们有一个对象，但不确定 someObj 或 someObj.deeply 是否存在
 const deeplyNestedValue = someObj?.deeply?.nested?.property ?? 'defaultValue';
+
 ```
 
-#### <font style="color:#DF2A3F;">如果new一个箭头函数会怎么样?（必背）</font>
+#### 如果new一个箭头函数会怎么样?（必背）
 
 箭头函数是ES6中的提出来的，它没有prototype，也没有自己的this指向，更不可以使用arguments参数，所以不能New一个箭头函数。
 
@@ -1327,27 +1382,27 @@ new操作符的实现步骤如下:
 
 所以，上面的第二、三步，箭头函数都是没有办法执行的。
 
-#### <font style="color:#DF2A3F;">原型和原型链（必背）</font>
+#### 原型和原型链（必背）
 
 1. js通过构造函数来创建对象，每个构造函数内部都会一个原型prototype属性，它指向另外一个对象，这个对象包含了可以由该构造函数的所有实例共享的属性和方法
 2. 当访问对象的一个属性或方法时，当对象身上不存在该属性方法时，就会沿着原型链向上查找，直到查找到该属性方法位置。
 3. 原型链的顶层原型是Object.prototype，如果这里没有就只指向null
 
-#### <font style="color:#DF2A3F;">继承的方式（必背）</font>
+#### 继承的方式（必背）
 
-| 继承方法 | 优点 | 缺点 |
-| --- | --- | --- |
-| 原型链继承  | 写法简单  | 共享引用类型属性，无法传参 |
-| 借用构造方法继承  | 解决了引用类型属性共享问题  | 无法复用父类原型方法 |
-| 组合式继承  | 结合了原型链继承和借用构造方法继承  | 父类构造函数会被调用两次 |
-| 原型式继承   | 无需单独创建构造函数  | 引用类型属性共享 |
-| 寄生式继承  | 写法简单  | 父类方法无法复用 |
-| 寄生组合式继承  | 高效，避免重复属性，保持原型链    | / |
-| es6 class  | 语法简洁支持super | 部分浏览器不支持 |
+| 继承方法         | 优点                               | 缺点                       |
+| ---------------- | ---------------------------------- | -------------------------- |
+| 原型链继承       | 写法简单                           | 共享引用类型属性，无法传参 |
+| 借用构造方法继承 | 解决了引用类型属性共享问题         | 无法复用父类原型方法       |
+| 组合式继承       | 结合了原型链继承和借用构造方法继承 | 父类构造函数会被调用两次   |
+| 原型式继承       | 无需单独创建构造函数               | 引用类型属性共享           |
+| 寄生式继承       | 写法简单                           | 父类方法无法复用           |
+| 寄生组合式继承   | 高效，避免重复属性，保持原型链     | /                          |
+| es6 class        | 语法简洁支持super                  | 部分浏览器不支持           |
 
-#### <font style="color:#ED740C;">js的原型链，日常的使用场景（选背）</font>
+#### js的原型链，日常的使用场景（选背）
 
-* **实现对象继承**：通过原型链，子对象可以继承父对象的属性和方法，避免重复代码。例如：
+***实现对象继承**：通过原型链，子对象可以继承父对象的属性和方法，避免重复代码。例如：
 
 ```javascript
 function Parent() {
@@ -1363,9 +1418,10 @@ Child.prototype = new Parent();
 const child = new Child();
 console.log(child.name); // 输出: Parent
 child.sayHello(); // 输出: Hello
+
 ```
 
-* **共享方法或属性**：在多个实例中共享相同的方法或属性，减少内存占用。例如，通过构造函数的 `prototype` 属性为所有实例添加公共方法：
+***共享方法或属性**：在多个实例中共享相同的方法或属性，减少内存占用。例如，通过构造函数的 `prototype` 属性为所有实例添加公共方法：
 
 ```javascript
 function Animal() {}
@@ -1376,9 +1432,10 @@ const dog = new Animal();
 const cat = new Animal();
 dog.eat(); // 输出: Eating...
 cat.eat(); // 输出: Eating...
+
 ```
 
-* **动态扩展对象功能**：通过修改原型对象，动态为现有对象或其构造函数添加新功能。例如：
+***动态扩展对象功能**：通过修改原型对象，动态为现有对象或其构造函数添加新功能。例如：
 
 ```javascript
 Array.prototype.customPush = function(item) {
@@ -1388,6 +1445,7 @@ Array.prototype.customPush = function(item) {
 const arr = [1, 2, 3];
 arr.customPush(4); // 输出: 4
 console.log(arr); // 输出: [1, 2, 3, 4]
+
 ```
 
 #### 说说你对 new.target 的理解
@@ -1403,6 +1461,7 @@ function Foo(){
 }
 Foo();//throws "Foo()must be called with new"
 new Foo(); //logs "Foo instantiated with new"
+
 ```
 
 #### 说说你对 ToPrimitive 的理解
@@ -1416,9 +1475,9 @@ ToPrimitive 是一个抽象操作，用于将一个值转换为原始值(primiti
 * 调用 valueOf()方法并返回结果，如果结果是原始类型则直接返回该结果
 * 调用 toString()方法并返回结果，如果结果是原始类型则直接返回该结果如果都不是原始类型，则抛出 TypeError 异常
 
-### <font style="color:#01B2BC;">ES6核心特性</font>
+### ES6核心特性
 
-#### <font style="color:#DF2A3F;">ES6箭头函数（必背）</font>
+#### ES6箭头函数（必背）
 
 1. 特点：
 
@@ -1434,19 +1493,19 @@ ToPrimitive 是一个抽象操作，用于将一个值转换为原始值(primiti
 * 简单的函数表达式、内层函数表达式
 * 定义对象上的方法、事件处理程序
 
-#### <font style="color:#DF2A3F;">箭头函数和普通函数（必背）</font>
+#### 箭头函数和普通函数（必背）
 
-| **特性** | **普通函数** | **箭头函数** |
-| :--- | :--- | :--- |
-| **语法** | 使用 `function`<br/> 关键字声明 | 使用箭头 `=>`<br/> 定义，通常更简洁 |
-| **this 绑定** | 动态绑定，取决于调用方式 | 静态绑定，继承自定义时的父级词法作用域 |
-| **构造函数** | 可用作构造函数，支持 `new`<br/> 调用 | 不能用作构造函数，不支持 `new`<br/> 调用 |
-| **arguments 对象** | 有自己的 `arguments`<br/> 对象 | 没有自己的 `arguments`<br/> 对象，需用 rest 参数替代 |
-| **prototype 属性** | 有 `prototype`<br/> 属性 | 没有 `prototype`<br/> 属性 |
-| **call/apply/bind 重定向** | 可使用这些方法改变 `this`<br/> 指向 | 无法通过这些方法改变 `this`<br/> 指向 |
-| **适用场景** | 方法、构造函数、需要动态上下文或 arguments 的场景 | 回调函数、需要继承外部 this 的场景、简短函数表达式 |
+| **特性**                   | **普通函数**                                      | **箭头函数**                                         |
+| :------------------------- | :------------------------------------------------ | :--------------------------------------------------- |
+| **语法**                   | 使用 `function`  关键字声明                   | 使用箭头 `=>`  定义，通常更简洁                  |
+| **this 绑定**              | 动态绑定，取决于调用方式                          | 静态绑定，继承自定义时的父级词法作用域               |
+| **构造函数**               | 可用作构造函数，支持 `new`  调用              | 不能用作构造函数，不支持 `new`  调用             |
+| **arguments 对象**         | 有自己的 `arguments`  对象                    | 没有自己的 `arguments`  对象，需用 rest 参数替代 |
+| **prototype 属性**         | 有 `prototype`  属性                          | 没有 `prototype`  属性                           |
+| **call/apply/bind 重定向** | 可使用这些方法改变 `this`  指向               | 无法通过这些方法改变 `this`  指向                |
+| **适用场景**               | 方法、构造函数、需要动态上下文或 arguments 的场景 | 回调函数、需要继承外部 this 的场景、简短函数表达式   |
 
-#### <font style="color:#DF2A3F;">拓展符的使用场景（必背）</font>
+#### 拓展符的使用场景（必背）
 
 * 函数调用时展开数组，等价于apply
 * 数组构造时展开数组，多个数组合并为一个数组
@@ -1454,16 +1513,16 @@ ToPrimitive 是一个抽象操作，用于将一个值转换为原始值(primiti
 * 对象构造时展开对象，只适用于可迭代对象
 * 剩余参数
 
-#### <font style="color:#DF2A3F;">let const var 相关（必背）</font>
+#### let const var 相关（必背）
 
-<font style="color:rgb(51, 51, 51);">var没有块级作用域，只有函数作用域。var只有在function{ }内部才有作用域的概念，其他地方没有。意味着函数以外用var定义的变量是同一个，我们所有的修改都是针对他的</font>
+var没有块级作用域，只有函数作用域。var只有在function{ }内部才有作用域的概念，其他地方没有。意味着函数以外用var定义的变量是同一个，我们所有的修改都是针对他的
 
-1. <font style="color:rgb(51, 51, 51);">let和const增加</font>**<font style="color:rgb(51, 51, 51);">块级作用域</font>**<font style="color:rgb(51, 51, 51);">（JS没有块级作用域）</font>
-2. <font style="color:rgb(51, 51, 51);">let和const存在</font>**<font style="color:rgb(51, 51, 51);">暂时性死区</font>**<font style="color:rgb(51, 51, 51);">，不存在</font>**<font style="color:rgb(51, 51, 51);">变量提升</font>**<font style="color:rgb(51, 51, 51);">，不能在初始化前引用，调用 返回 </font><font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">uninitialized</font>
-3. <font style="color:rgb(51, 51, 51);">let和const禁止</font>**<font style="color:rgb(51, 51, 51);">重复声明</font>**<font style="color:rgb(51, 51, 51);">，不能重新声明</font>
-4. <font style="color:rgb(51, 51, 51);">let和</font><font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">const</font><font style="color:rgb(51, 51, 51);">不会成为全局对象属性，var声明的变量自动成为全局对象属性</font>
-5. <font style="color:rgb(51, 51, 51);">var 存在变量提升（执行前，编译器对代码预编译，当前作用域的变量/函数提升到作用域顶部），</font><font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">let</font><font style="color:rgb(51, 51, 51);">约束变量提升。let和var都发生了变量提升，只是</font><font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">es6</font><font style="color:rgb(51, 51, 51);">进行了约束，在我们看来，就像</font><font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">let</font><font style="color:rgb(51, 51, 51);">禁止了变量提升</font>
-6. <font style="color:rgb(51, 51, 51);">使用</font><font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">var</font><font style="color:rgb(51, 51, 51);">，我们能对变量多次声明，后面声明的变量会覆盖前面的声明 </font>
+1. let和const增加**块级作用域**（JS没有块级作用域）
+2. let和const存在**暂时性死区**，不存在**变量提升**，不能在初始化前引用，调用 返回 uninitialized
+3. let和const禁止**重复声明**，不能重新声明
+4. let和const不会成为全局对象属性，var声明的变量自动成为全局对象属性
+5. var 存在变量提升（执行前，编译器对代码预编译，当前作用域的变量/函数提升到作用域顶部），let约束变量提升。let和var都发生了变量提升，只是es6进行了约束，在我们看来，就像let禁止了变量提升
+6. 使用var，我们能对变量多次声明，后面声明的变量会覆盖前面的声明
 
 ```javascript
 var a = 123
@@ -1471,11 +1530,12 @@ if (true) {
   a = 'abc' // ReferenceError 因为下面的 let
   let a;
 }
+
 ```
 
-<font style="color:rgb(119, 119, 119);background-color:rgb(243, 244, 244);">const</font><font style="color:rgb(119, 119, 119);">实际保证的并不是变量的值，而是变量指向的内存地址</font>
+const实际保证的并不是变量的值，而是变量指向的内存地址
 
-#### <font style="color:#DF2A3F;">ES6新特性（必背）</font>
+#### ES6新特性（必背）
 
 1. **变量声明**：
 
@@ -1484,7 +1544,7 @@ if (true) {
 
 2. **箭头函数**：箭头函数简化了函数表达式的语法，并且自动绑定外层函数的this值，避免了传统函数中this指向不明确的问题
 3. **模板字符串** 特点： 使用反引号（\`）包裹字符串，可以直接嵌入变量或表达式，支持多行字符串。
-4. \*\*解构赋值 \*\*特点：可以从数组或对象中提取值，并赋给多个变量
+4. **解构赋值 **特点：可以从数组或对象中提取值，并赋给多个变量
 5. **类与模块化** 特点
 
 * 类：提供了一种更直观的面向对象编程方式，是ES5构造函数的语法糖
@@ -1494,7 +1554,7 @@ if (true) {
 
 * Promise：用于处理异步操作，避免回调地狱。
 
-7. \*\*扩展运算符与剩余参数 \*\*
+7. **扩展运算符与剩余参数 **
 
 * 扩展运算符（…）：用于展开数组或对象
 * 剩余参数（…）：用于收集函数的剩余参数。
@@ -1503,39 +1563,39 @@ if (true) {
 
 **ES7 (2016)**
 
-* **数组 includes 方法**：解决 `indexOf`无法检测 `NaN`以及语义不直观的问题。
-* \*\*指数运算符 \*\*<code>******</code>：解决幂运算依赖 `Math.pow`函数，使代码更简洁。
+***数组 includes 方法**：解决 `indexOf`无法检测 `NaN`以及语义不直观的问题。
+***指数运算符 **``：解决幂运算依赖 `Math.pow`函数，使代码更简洁。
 
 **ES8 (2017)**
 
-* **async/await**：解决异步编程中“回调地狱”和 Promise 链式调用不够直观的问题，让异步代码看起来像同步代码。
-* **Object.values 和 Object.entries**：解决对象遍历时只能获取键(`Object.keys`)的问题，方便地获取值或键值对。
-* **字符串填充 padStart/padEnd**：解决字符串格式化（如日期、金额前导补零）需要手动拼接的问题。
+***async/await**：解决异步编程中“回调地狱”和 Promise 链式调用不够直观的问题，让异步代码看起来像同步代码。
+***Object.values 和 Object.entries**：解决对象遍历时只能获取键(`Object.keys`)的问题，方便地获取值或键值对。
+***字符串填充 padStart/padEnd**：解决字符串格式化（如日期、金额前导补零）需要手动拼接的问题。
 
 **ES9 (2018)**
 
-* **异步迭代 for-await-of**：解决遍历一系列异步操作（如数据流）时，无法直接使用循环语法的问题。
-* **对象 Rest/Spread 操作符**：解决对象的浅拷贝、合并和提取部分属性时操作繁琐的问题。
+***异步迭代 for-await-of**：解决遍历一系列异步操作（如数据流）时，无法直接使用循环语法的问题。
+***对象 Rest/Spread 操作符**：解决对象的浅拷贝、合并和提取部分属性时操作繁琐的问题。
 
 **ES10 (2019)**
 
-* **数组 flat 和 flatMap**：解决多维数组降维（扁平化）操作需要递归或循环的问题。
-* **Object.fromEntries**：解决将键值对列表（如 Map、二维数组）反向转换为对象不够方便的问题，与 `Object.entries`功能相反。
-* **字符串 trimStart 和 trimEnd**：更明确地解决只去除字符串开头或末尾空白符的需求，替代模糊的 `trimLeft`和 `trimRight`。
+***数组 flat 和 flatMap**：解决多维数组降维（扁平化）操作需要递归或循环的问题。
+***Object.fromEntries**：解决将键值对列表（如 Map、二维数组）反向转换为对象不够方便的问题，与 `Object.entries`功能相反。
+***字符串 trimStart 和 trimEnd**：更明确地解决只去除字符串开头或末尾空白符的需求，替代模糊的 `trimLeft`和 `trimRight`。
 
 **ES11 (2020)**
 
-* \*\*可选链操作符 \*\*<code>**?.**</code>：解决深层访问对象属性时，需要逐层判断中间层级是否存在（防止 `Cannot read property of undefined`错误）的冗余代码问题。
-* \*\*空值合并操作符 \*\*<code>**??**</code>：解决使用逻辑或 `||`设置默认值时，会意外排除假值（如 `0`, `''`）的问题，确保只在值为 `null`或 `undefined`时才使用默认值。
-* **Promise.allSettled**：解决需要等待一组异步操作全部完成（无论成功或失败）后再执行后续逻辑的场景，而 `Promise.all`会在一个失败后立即中断。
-* **动态导入 import()**：解决按需加载模块（懒加载）以提高初始加载性能的问题，实现代码分割。
+***可选链操作符 **`?.`：解决深层访问对象属性时，需要逐层判断中间层级是否存在（防止 `Cannot read property of undefined`错误）的冗余代码问题。
+***空值合并操作符 **`??`：解决使用逻辑或 `||`设置默认值时，会意外排除假值（如 `0`, `''`）的问题，确保只在值为 `null`或 `undefined`时才使用默认值。
+***Promise.allSettled**：解决需要等待一组异步操作全部完成（无论成功或失败）后再执行后续逻辑的场景，而 `Promise.all`会在一个失败后立即中断。
+***动态导入 import()**：解决按需加载模块（懒加载）以提高初始加载性能的问题，实现代码分割。
 
 **ES12 (2021)**
 
-* **String.prototype.replaceAll**：解决替换字符串中所有匹配子串时需要全局正则表达式的问题，使全局替换更简单直观。
-* **逻辑赋值操作符 (&&=, ||=, ??=)**：解决将逻辑判断与赋值操作结合时代码冗余的问题，实现简写。
-* **Promise.any**：解决等待一组异步操作中第一个成功的需求，与 `Promise.race`（关注第一个完成的）不同，它忽略失败，直到有一个成功。
-* **WeakRef**：解决直接创建对对象的“弱引用”，允许其被垃圾回收，主要用于实现大型对象的缓存或映射，而不会导致内存泄漏。
+***String.prototype.replaceAll**：解决替换字符串中所有匹配子串时需要全局正则表达式的问题，使全局替换更简单直观。
+***逻辑赋值操作符 (&&=, ||=, ??=)**：解决将逻辑判断与赋值操作结合时代码冗余的问题，实现简写。
+***Promise.any**：解决等待一组异步操作中第一个成功的需求，与 `Promise.race`（关注第一个完成的）不同，它忽略失败，直到有一个成功。
+***WeakRef**：解决直接创建对对象的“弱引用”，允许其被垃圾回收，主要用于实现大型对象的缓存或映射，而不会导致内存泄漏。
 
 #### ES6中的 Reflect 对象有什么用?
 
@@ -1563,20 +1623,21 @@ var loggedobj= new Proxy(obj,{
     return Reflect.has(target,name);
   },
 );
+
 ```
 
 上面代码中，每一个 Proxy 对象的拦截操作(get、delete、has)，内部都调用对应的 Reflect 方法，保证原生行为能够正常执行。添加的工作，就是将每一个操作输出一行日志。
 
 #### 什么是尾调用优化和尾递归
 
-| 特性 | 尾调用 (Tail Call) | 尾递归 (Tail Recursion) |
-| --- | --- | --- |
-| **定义** | 一个函数的**最后一步操作**是调用另一个函数。 | 一个函数在**最后一步调用自身**（是尾调用的特殊形式）。 |
-| **核心目的** | 优化函数调用机制，减少栈帧开销。 | 优化递归算法，避免深层递归时的栈溢出。 |
-| **优化关键** | 调用后无需保留当前函数的任何上下文。 | 递归调用后没有其他操作，结果直接返回。 |
-| **优化效果** | 可复用当前栈帧，使调用栈深度与循环类似，维持在常数级 O(1)。 | 将递归的空间复杂度从 O(n) 降为 O(1)。 |
+| 特性         | 尾调用 (Tail Call)                                          | 尾递归 (Tail Recursion)                                |
+| ------------ | ----------------------------------------------------------- | ------------------------------------------------------ |
+| **定义**     | 一个函数的**最后一步操作**是调用另一个函数。                | 一个函数在**最后一步调用自身**（是尾调用的特殊形式）。 |
+| **核心目的** | 优化函数调用机制，减少栈帧开销。                            | 优化递归算法，避免深层递归时的栈溢出。                 |
+| **优化关键** | 调用后无需保留当前函数的任何上下文。                        | 递归调用后没有其他操作，结果直接返回。                 |
+| **优化效果** | 可复用当前栈帧，使调用栈深度与循环类似，维持在常数级 O(1)。 | 将递归的空间复杂度从 O(n) 降为 O(1)。                  |
 
-#### <font style="color:#ED740C;">const修饰常量怎么让它可变（选背）</font>
+#### const修饰常量怎么让它可变（选背）
 
 一、方法 1：使用对象/数组包裹
 
@@ -1587,11 +1648,12 @@ var loggedobj= new Proxy(obj,{
 const constant = { value: 10 };
 
 // 修改属性（合法）
-constant.value = 20; 
+constant.value = 20;
 console.log(constant.value); // 20
 
 // 尝试重新赋值（非法，仍报错）
 constant = { value: 30 }; // TypeError: Assignment to constant variable.
+
 ```
 
 **特点**：
@@ -1602,7 +1664,7 @@ constant = { value: 30 }; // TypeError: Assignment to constant variable.
 
 • 适用于需要「部分可变」的场景（如配置参数）。
 
-***
+---
 
 **二、方法 2：使用闭包封装可变状态**
 
@@ -1626,6 +1688,7 @@ const mutableConst = createMutableConstant(10);
 console.log(mutableConst.get()); // 10
 mutableConst.set(20);
 console.log(mutableConst.get()); // 20
+
 ```
 
 **特点**：
@@ -1638,13 +1701,13 @@ console.log(mutableConst.get()); // 20
 
 ***
 
-\*\*三、方法 3：利用 **<code>**Proxy**</code>** 或 \*\*<code>**Reflect**</code>
+**三、方法 3：利用 **`Proxy`** 或 **`Reflect`
 
 通过代理（`Proxy`）拦截属性访问，动态修改值：
 
 ```javascript
 const mutableConst = new Proxy(
-  {}, 
+  {},
   {
     set(target, prop, value) {
       target[prop] = value;
@@ -1655,6 +1718,7 @@ const mutableConst = new Proxy(
 
 mutableConst.value = 10; // 正常修改
 console.log(mutableConst.value); // 10
+
 ```
 
 **特点**：
@@ -1672,9 +1736,9 @@ console.log(mutableConst.value); // 10
 
 由于 arquments不是真正的数组，所以没有slice方法，通过apply可以调用数组对象的slice方法，从而将arquments 类数组转换为数组
 
-### <font style="color:#2F8EF4;">浏览器环境与API</font>
+### 浏览器环境与API
 
-#### <font style="color:#DF2A3F;">Axios（必背）</font>
+#### Axios（必背）
 
 1. 基于Promise的Http库，支持在浏览器和node中发送请求，拦截器是axios的一个功能，允许开发者在请求发送前和响应返回后对请求和响应做处理
 2. 请求拦截器：
@@ -1695,7 +1759,7 @@ console.log(mutableConst.value); // 10
 * 可拦截请求和响应，方便统一处理
 * 自动转换JSON ，自动将请求数据和响应数据转换为json
 
-#### <font style="color:#DF2A3F;">ajax、axios、fetch有什么区别?（必背）</font>
+#### ajax、axios、fetch有什么区别?（必背）
 
 **AJAX**
 
@@ -1706,7 +1770,7 @@ Aiax 即"AsynchronousJavascriptAndXML”(异步 JavaScript 和 XML)，是指一�
 * 不符合关注分离(Separation of Concerns)的原则
 * 配置和调用方式非常混乱，而且基于事件的异步模型不友好。.
 
-***
+---
 
 **Fetch**
 
@@ -1739,20 +1803,20 @@ Axios 是一种基于Promise封装的HTTP客户端，其特点如下:
 
 #### Axios和Fecth的区别
 
-| 特性 | **Axios** | **Fetch** |
-| --- | --- | --- |
-| **默认行为** | 返回的 Promise 直接处理响应数据（包括错误） | 返回的 Promise 仅返回网络请求的状态（即使响应码是 4xx 或 5xx 也不算失败） |
-| **请求/响应拦截器** | 支持请求和响应拦截器，方便统一处理请求和响应 | 不支持，需要手动封装 |
-| **错误处理** | 对 HTTP 状态码 4xx 和 5xx 会自动抛出错误 | 只会在网络错误或无法解析响应时抛出错误，不会自动抛出 4xx 或 5xx 错误 |
-| **JSON 解析** | 自动解析 JSON 数据，无需手动调用 | 需要手动调用 `.json()`来解析响应数据 |
-| **浏览器兼容性** | 在 IE 浏览器中不支持，需要 polyfill | 原生支持现代浏览器，IE11 及以下需要 polyfill |
-| **请求取消** | 支持设置请求超时，提供较好的超时管理 | 通过 AbortController 也可以实现取消请求功能 |
-| **上传/下载进度** | 支持上传和下载的进度监控 | 不直接支持进度监控，需额外手动实现 |
-| **请求数据格式** | 支持 JSON、FormData、Blob 等多种格式，支持自定义 Content-Type | 需要手动设置 Content-Type 和请求体格式 |
-| **浏览器支持** | 支持现代浏览器，IE11 及以下需要 polyfill | 原生支持现代浏览器，IE11 及以下需要 polyfill |
-| **体积** | 较大，需要额外引入库 | 较小，原生 fetch 不需要外部依赖 |
+| 特性                | **Axios**                                                     | **Fetch**                                                                 |
+| ------------------- | ------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| **默认行为**        | 返回的 Promise 直接处理响应数据（包括错误）                   | 返回的 Promise 仅返回网络请求的状态（即使响应码是 4xx 或 5xx 也不算失败） |
+| **请求/响应拦截器** | 支持请求和响应拦截器，方便统一处理请求和响应                  | 不支持，需要手动封装                                                      |
+| **错误处理**        | 对 HTTP 状态码 4xx 和 5xx 会自动抛出错误                      | 只会在网络错误或无法解析响应时抛出错误，不会自动抛出 4xx 或 5xx 错误      |
+| **JSON 解析**       | 自动解析 JSON 数据，无需手动调用                              | 需要手动调用 `.json()`来解析响应数据                                      |
+| **浏览器兼容性**    | 在 IE 浏览器中不支持，需要 polyfill                           | 原生支持现代浏览器，IE11 及以下需要 polyfill                              |
+| **请求取消**        | 支持设置请求超时，提供较好的超时管理                          | 通过 AbortController 也可以实现取消请求功能                               |
+| **上传/下载进度**   | 支持上传和下载的进度监控                                      | 不直接支持进度监控，需额外手动实现                                        |
+| **请求数据格式**    | 支持 JSON、FormData、Blob 等多种格式，支持自定义 Content-Type | 需要手动设置 Content-Type 和请求体格式                                    |
+| **浏览器支持**      | 支持现代浏览器，IE11 及以下需要 polyfill                      | 原生支持现代浏览器，IE11 及以下需要 polyfill                              |
+| **体积**            | 较大，需要额外引入库                                          | 较小，原生 fetch 不需要外部依赖                                           |
 
-#### <font style="color:#DF2A3F;">跨域资源（必背）</font>
+#### 跨域资源（必背）
 
 并非所有Web资源都不受跨域限制。事实上，许多资源的加载都受到跨域限制:
 
@@ -1779,7 +1843,7 @@ Axios 是一种基于Promise封装的HTTP客户端，其特点如下:
 * SharedWorker 通信: Messagechanne1 可以用于在主线程和 Shared Worker 之间建立通信通道4.服务端和客户端之间的通信: Messagechanne1 可以用于客户端(如浏览器)与服务端(如 WebSocket 服务器)之间的通信，特别是在与 WebSocket 或其他类似技术结合使用时。
 * 异步任务处理:在某些场景中，使用 essagechanne1可以更方便地处理异步任务，因为它提供了独立于主线程的通信通道。
 
-#### <font style="color:#DF2A3F;">前后端通信方式（必背）</font>
+#### 前后端通信方式（必背）
 
 1. 轮询-客户端定时向服务端发送请求，检查有无数据更新/实现简单,无需过多修改/频繁请求增加服务器负担 请求时间过长数据更新不及时 过短浪费网络带宽和CPU资源 适用于小型应用 事实性不高的场景
 2. 长轮询-客户端发送请求，服务端保持连接，有数据更新时返回/减少不必要请求，时效性较好/保持连接消耗资源，长时间无数据更新客户端超时
@@ -1795,6 +1859,7 @@ Axios 是一种基于Promise封装的HTTP客户端，其特点如下:
 
 ```javascript
 const socket = new WebSocket("ws://example.com/socket");
+
 ```
 
 参数说明：
@@ -1811,6 +1876,7 @@ const socket = new WebSocket("ws://example.com/socket");
 socket.onopen = function(event) {
   console.log("WebSocket 连接已建立");
 };
+
 ```
 
 接收到消息时触发：
@@ -1819,6 +1885,7 @@ socket.onopen = function(event) {
 socket.onmessage = function(event) {
   console.log("收到消息：" + event.data);
 };
+
 ```
 
 连接关闭时触发：
@@ -1827,6 +1894,7 @@ socket.onmessage = function(event) {
 socket.onclose = function(event) {
   console.log("WebSocket 连接已关闭");
 };
+
 ```
 
 发生错误时触发：
@@ -1835,6 +1903,7 @@ socket.onclose = function(event) {
 socket.onerror = function(event) {
   console.error("WebSocket 错误：" + event);
 };
+
 ```
 
 3. 发送和关闭连接
@@ -1843,42 +1912,47 @@ socket.onerror = function(event) {
 
 ```javascript
 socket.send("Hello, WebSocket!");
+
 ```
 
 关闭连接：
 
 ```javascript
 socket.close();
+
 ```
 
-#### <font style="color:#ED740C;">SSE和websocket传送的数据格式是否有区别（选背）</font>
+#### SSE和websocket传送的数据格式是否有区别（选背）
 
-*<u>SSE：</u>*
+* SSE：*
 
-* **纯文本格式**：SSE 使用纯文本格式传输数据，每条消息以 `data:` 开头，以两个换行符 `\n\n` 结尾。例如：
+***纯文本格式**：SSE 使用纯文本格式传输数据，每条消息以 `data:` 开头，以两个换行符 `\n\n` 结尾。例如：
 
 ```plain
 data: {"name": "John", "message": "Hello"}
+
 ```
 
-* **支持事件类型**：可以通过 `event:` 字段指定事件类型，客户端可以监听特定事件
+***支持事件类型**：可以通过 `event:` 字段指定事件类型，客户端可以监听特定事件
 
 ```plain
 event: update
     data: {"status": "success"}
+
 ```
 
-* **<font style="color:rgb(26, 32, 41);">支持自定义字段</font>**<font style="color:rgb(26, 32, 41);">：如 </font><code><font style="color:rgb(26, 32, 41);">id</font></code><font style="color:rgb(26, 32, 41);">（用于断点恢复）、</font><code><font style="color:rgb(26, 32, 41);">retry</font></code><font style="color:rgb(26, 32, 41);">（重连间隔）等。</font>
+***支持自定义字段**：如 `id`（用于断点恢复）、`retry`（重连间隔）等。
 
-*<u><font style="color:rgb(26, 32, 41);">WebSocket：</font></u>*
+* WebSocket：*
 
-* **<font style="color:rgb(26, 32, 41);">二进制或文本格式</font>**<font style="color:rgb(26, 32, 41);">：WebSocket 支持发送文本（如 JSON）或二进制数据（如图像、音频、视频等）。数据以帧（Frame）的形式传输，每帧包含控制信息和应用数据。</font>
-* **<font style="color:rgb(26, 32, 41);">灵活的数据结构</font>**<font style="color:rgb(26, 32, 41);">：数据可以是任意格式，无需特定的解析规则，但需要客户端和服务器共同定义数据结构。</font>
+***二进制或文本格式**：WebSocket 支持发送文本（如 JSON）或二进制数据（如图像、音频、视频等）。数据以帧（Frame）的形式传输，每帧包含控制信息和应用数据。
+***灵活的数据结构**：数据可以是任意格式，无需特定的解析规则，但需要客户端和服务器共同定义数据结构。
 
 #### 如何判断当前脚本运行在浏览器还是 node 环境中?
 
 ```javascript
 this === window ?'browser':'node';
+
 ```
 
 通过判断 Global 对象是否为 window，如果不为 window，当前脚本没有运行在浏览器中
@@ -1924,7 +1998,7 @@ JSON和XML之间的区别
 * 使用第三方插件或工具需要安装额外的软件，而且可能存在安全风险
 * 使用 Canvas 绘制需要掌握一定的 Canvas 编程知识，而且可能会影响性能使用服务器端渲染则需要对服务器编程有一定的了解。
 
-#### <font style="color:#DF2A3F;">defer和async加载脚本的区别（必背）</font>
+#### defer和async加载脚本的区别（必背）
 
 1. 默认 无两者 浏览器会立刻加载并执行脚本 阻塞HTML的解析和渲染
 2. async 脚本的加载与HTML文档的解析和渲染并行执行（异步加载）加载完成后立刻执行 适用于与不依赖DOM和其他脚本的独立脚本
@@ -1991,6 +2065,7 @@ window.postMessage()方法可以安全地实现跨源通信。window.postMessage
 
 ```javascript
 otherWindow.postMessage(message,targetOrigin,[transfer]);
+
 ```
 
 参数说明
@@ -2013,7 +2088,7 @@ otherWindow.postMessage(message,targetOrigin,[transfer]);
 
 一般来说，URL只能使用英文字母、阿拉伯数字和某些标点符号，不能使用其他文字和符号。这是因为网络标准RFC 1738做了硬性规定:
 
-> "..only alphanumerics \[0-9a-zA-Z], the special characters "$-\_.+!\*'()," \[not including the quotes - ed], andreserved characters used for their reserved purposes may be used unencoded within a URL.
+> "..only alphanumerics \[0-9a-zA-Z], the special characters "$-\_.+!*'()," \[not including the quotes - ed], andreserved characters used for their reserved purposes may be used unencoded within a URL.
 
 这意味着，如果URL中有汉字，就必须编码后使用。但是麻烦的是，RFC1738没有规定具体的编码方法，而是交给应用程序(浏览器)自己决定。这导致"URL编码"成为了一个混乱的领域。
 
@@ -2021,7 +2096,7 @@ otherWindow.postMessage(message,targetOrigin,[transfer]);
 
 Javascript语言用于编码的函数，一共有三个
 
-1. 最古老的一个就是escape()。虽然这个函数现在已经不提倡使用了但是由于历史原因，很多地方还在使用它，所以有必要先从它讲起。具体规则是，除了ASCII字母、数字、标点符号"@\* +-.""以外，对其他所有字符进行编码,
+1. 最古老的一个就是escape()。虽然这个函数现在已经不提倡使用了但是由于历史原因，很多地方还在使用它，所以有必要先从它讲起。具体规则是，除了ASCII字母、数字、标点符号"@* +-.""以外，对其他所有字符进行编码,
 2. encodeURI()是Javascript中真正用来对URL编码的函数。它着眼于对整个URL进行编码，因此除了常见的符号以外，对其他一些在网址中有特殊含义的符号";/?:@ &=+$，#"，也不进行编码。编码后，它输出符号的utf-8形式，并且在每个字节前加上%。
 3. 最后一个Javascript编码函数是encodeURIComponent()，与encodeURI()的区别是，它用于对URL的组成部分进行个别编码，而不用于对整个URL进行编码。
 
@@ -2070,9 +2145,9 @@ Polyfil 指的是用于实现浏览器并不支持的原生 API 的代码。比�
 * 这时候PC端的轮询接口，它就可以得知二维码的状态已经变成了"已确认"。并且从服务端可以获取到用户登录的token
 * 到这里，登录就成功了，后端PC端就可以用token去访问服务端的资源了
 
-### <font style="color:#4861E0;background-color:rgb(252, 252, 252);">DOM/BOM与性能优化</font>
+### DOM/BOM与性能优化
 
-#### <font style="color:#DF2A3F;">事件流（必背）</font>
+#### 事件流（必背）
 
 1. 事件流分为三个阶段：捕获阶段、目标阶段、冒泡阶段。
 2. 过程如下：
@@ -2097,24 +2172,24 @@ Polyfil 指的是用于实现浏览器并不支持的原生 API 的代码。比�
 
 IE浏览器：event.cancelBubble = true;
 
-#### <font style="color:#DF2A3F;">事件代理/事件委托（必背）</font>
+#### 事件代理/事件委托（必背）
 
-**<font style="color:rgb(51, 51, 51);">原理</font>**
+**原理**
 
-<font style="color:rgb(51, 51, 51);">事件委托，把一个或者一组元素的事件委托到它的父层或者更外层元素上，真正绑定事件的是外层元素，不是目标元素</font>
+事件委托，把一个或者一组元素的事件委托到它的父层或者更外层元素上，真正绑定事件的是外层元素，不是目标元素
 
-* <font style="color:rgb(51, 51, 51);">只指定一个事件处理程序，管理某一类型 所有事件</font>
-* <font style="color:rgb(51, 51, 51);">把一个元素响应事件（</font><font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">click</font><font style="color:rgb(51, 51, 51);">、</font><font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">keydown</font><font style="color:rgb(51, 51, 51);">......）的函数委托到另一个元素，冒泡阶段完成</font>
+* 只指定一个事件处理程序，管理某一类型 所有事件
+* 把一个元素响应事件（click、keydown......）的函数委托到另一个元素，冒泡阶段完成
 
-<font style="color:rgb(51, 51, 51);">使用事件委托，只需在DOM树中尽量高的一层添加一个事件处理程序</font>
+使用事件委托，只需在DOM树中尽量高的一层添加一个事件处理程序
 
-<font style="color:rgb(51, 51, 51);">优点</font>
+优点
 
-* <font style="color:rgb(51, 51, 51);">节省内存，减少dom操作</font>
-* <font style="color:rgb(51, 51, 51);">不需要给子节点注销事件</font>
-* <font style="color:rgb(51, 51, 51);">动态绑定事件</font>
-* <font style="color:rgb(51, 51, 51);">提高性能</font>
-* <font style="color:rgb(51, 51, 51);">新添加的元素还会有之前的事件</font>
+* 节省内存，减少dom操作
+* 不需要给子节点注销事件
+* 动态绑定事件
+* 提高性能
+* 新添加的元素还会有之前的事件
 
 #### 不会冒泡的事件有哪些?
 
@@ -2160,7 +2235,7 @@ mouseenter 和 mouseover是两个用于处理鼠标进入元素时的事件，�
 
 如果你希望在鼠标移动到某个元素或其子元素上时都触发某些行为(比如动态改变样式)，可以用mouseover
 
-#### <font style="color:#DF2A3F;">script标签放在header里和放在body底部里有什么区别?（必背）</font>
+#### script标签放在header里和放在body底部里有什么区别?（必背）
 
 将<script> 标签放在<head>和<body> 底部，会对页面的加载和性能产生不同的影响:
 
@@ -2196,12 +2271,14 @@ defer 属性:在<head>部分使用<script>标签时，可以添加 defer 属性�
 
 ```javascript
 <script src="script.js" defer></script>
+
 ```
 
 async 属性:async 属性也用于异步加载脚本，但它会在脚本下载完成后立即执行，不考虑页面的解析进度。这对某些独立的、不会依赖于其他脚本或 DOM 结构的脚本很有用。
 
 ```javascript
 <script src="script.js" async></script>
+
 ```
 
 **总结**
@@ -2230,7 +2307,7 @@ scrolTop 属性返回的是一个元素的内容垂直滚动的像素数。
 
 scrollLeft 属性返回的是元素滚动条到元素左边的距离,
 
-#### <font style="color:#DF2A3F;">获取 DOM 元素（必背）</font>
+#### 获取 DOM 元素（必背）
 
 * querySelector('CSS选择器')：
 * querySelectorAll('CSS选择器')：
@@ -2240,22 +2317,22 @@ scrollLeft 属性返回的是元素滚动条到元素左边的距离,
 
 #### 监听鼠标事件
 
-**<font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">1. 基础事件监听</font>**
+**1. 基础事件监听**
 
-* **<font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">方法</font>**<font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">：使用</font><code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">addEventListener</font></code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">绑定事件到DOM元素。</font>
-* **<font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">常用事件类型</font>**<font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">：</font>
-  * <code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">click</font></code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">：单击（左键按下并释放）</font>
-  * <code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">dblclick</font></code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">：双击</font>
-  * <code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">mousedown</font></code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">/</font><code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">mouseup</font></code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">：按下/释放鼠标按键（可区分左、中、右键）</font>
-  * **<font style="background-color:rgb(252, 252, 252);"></font>**<code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">mousemove</font></code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">：实时追踪鼠标移动</font>
-  * **<font style="background-color:rgb(252, 252, 252);"></font>**<code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">mouseenter</font></code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">/</font><code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">mouseleave</font></code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">：进入/离开元素（不冒泡）</font>
-  * <code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">mouseover</font></code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">/</font><code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">mouseout</font></code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">：进入/离开元素（冒泡，子元素触发）</font>
+***方法**：使用`addEventListener`绑定事件到DOM元素。
+***常用事件类型**：
+  * `click`：单击（左键按下并释放）
+  * `dblclick`：双击
+  * `mousedown`/`mouseup`：按下/释放鼠标按键（可区分左、中、右键）
+  * `mousemove`：实时追踪鼠标移动
+  * `mouseenter`/`mouseleave`：进入/离开元素（不冒泡）
+  * `mouseover`/`mouseout`：进入/离开元素（冒泡，子元素触发）
 
-**<font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">2. 高级技巧</font>**
+**2. 高级技巧**
 
-**<font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">事件委托</font>**<font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">：</font>
+**事件委托**：
 
-<font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">将事件绑定到父元素，通过</font><code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">event.target</font></code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">判断子元素，减少监听器数量</font>
+将事件绑定到父元素，通过`event.target`判断子元素，减少监听器数量
 
 ```javascript
 document.getElementById('parent').addEventListener('click', (event) => {
@@ -2263,11 +2340,12 @@ document.getElementById('parent').addEventListener('click', (event) => {
     console.log('Child element clicked');
   }
 });
+
 ```
 
-**<font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">组合键判断</font>**<font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">：</font>
+**组合键判断**：
 
-<font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">通过</font><code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">event.ctrlKey</font></code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">、</font><code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">event.shiftKey</font></code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">等实现快捷键功能</font>
+通过`event.ctrlKey`、`event.shiftKey`等实现快捷键功能
 
 ```javascript
 document.addEventListener('keydown', (event) => {
@@ -2276,32 +2354,32 @@ document.addEventListener('keydown', (event) => {
     saveContent();
   }
 });
+
 ```
 
 #### 鼠标双击事件优化
 
-<font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">原生事件支持</font>
+原生事件支持
 
-<font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">Web端通过</font><code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">dblclick</font></code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">事件直接监听双击行为，无需手动实现时间间隔检测：</font>
+Web端通过`dblclick`事件直接监听双击行为，无需手动实现时间间隔检测：
 
 ```javascript
 const element = document.getElementById('myElement');
 element.addEventListener('dblclick', (event) => {
   console.log('双击触发', event.clientX, event.clientY);
 });
+
 ```
 
-**<font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">优势</font>**<font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">：浏览器原生支持，无额外延迟，性能高效</font>
+**优势**：浏览器原生支持，无额外延迟，性能高效
 
-* **<font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">事件对象属性</font>**<font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">：</font>
-  * <code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">event.clientX/Y</font></code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">：鼠标相对于视口的坐标。</font>
-  * <code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">event.target</font></code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">：触发事件的元素</font>
+***事件对象属性**：
+  * `event.clientX/Y`：鼠标相对于视口的坐标。
+  * `event.target`：触发事件的元素
 
-**<font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);"></font>**
+**与单击事件的冲突解决**
 
-**<font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">与单击事件的冲突解决</font>**
-
-<font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">双击事件会默认触发两次</font><code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">click</font></code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">事件，需通过定时器管理状态：</font>
+双击事件会默认触发两次`click`事件，需通过定时器管理状态：
 
 ```javascript
 let clickCount = 0;
@@ -2320,13 +2398,14 @@ element.addEventListener('click', (event) => {
     clickCount = 0;
   }
 });
+
 ```
 
-* **<font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">关键点</font>**<font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">：</font>
-  * <font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">设定时间阈值（通常为300ms），超时则判定为单击</font>
-  * <font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">双击时清除单击定时器，避免冲突</font>
+***关键点**：
+  * 设定时间阈值（通常为300ms），超时则判定为单击
+  * 双击时清除单击定时器，避免冲突
 
-#### <font style="color:#DF2A3F;">addEventListener()和attachEvent()的区别（必背）</font>
+#### addEventListener()和attachEvent()的区别（必背）
 
 * addEventListener()是符合W3C规范的标准方法;attachEvent()是IE低版本的非标准方法
 * addEventListener()支持事件冒泡和事件捕获;而 attachEvent()只支持事件冒泡
@@ -2339,6 +2418,7 @@ element.addEventListener('click', (event) => {
 addEventListener(type,listener);
 addEventListener(type,listener,options);
 addEventListener(type,listener,useCapture);
+
 ```
 
 type 表示监听事件类型的大小写敏感的字符串,listener 当所监听的事件类型触发时，会接收到一个事件通知(实现了 Event 接口的对象)对象。listener 必须是一个实现了 EventListener 接口的对象，或者是一个函数。有关回调本身的详细信息，请参阅事件监听回调
@@ -2386,6 +2466,7 @@ function step(timestamp){
   }
 }
 window.requestAnimationFrame(step);
+
 ```
 
 除此之外，requestAnimationFrame还有以下两个优势:
@@ -2397,30 +2478,26 @@ window.requestAnimationFrame(step);
 
 1. **阻塞渲染与界面冻结**
 
-<font style="color:rgb(0, 0, 0);">浏览器渲染页面的过程是逐帧进行的，通常每秒60帧（约16.7毫秒/帧）。在这个过程中，JavaScript执行、样式计算、布局（重排）、绘制（重绘）等任务都需要在这一帧的时间内完成。</font>
+浏览器渲染页面的过程是逐帧进行的，通常每秒60帧（约16.7毫秒/帧）。在这个过程中，JavaScript执行、样式计算、布局（重排）、绘制（重绘）等任务都需要在这一帧的时间内完成。
 
-<font style="color:rgb(0, 0, 0);">当你将一个耗时很长的同步任务（例如一个复杂的数学计算、大规模循环、同步的DOM操作等）放入 rAF 回调中时，它会</font><font style="color:rgb(0, 0, 0);">独占浏览器的主线程</font><font style="color:rgb(0, 0, 0);">。由于JavaScript是单线程的，这意味着在它执行完毕之前，后续的</font><font style="color:rgb(0, 0, 0);">样式计算、布局、绘制、甚至其他JavaScript任务都会被阻塞</font><font style="color:rgb(0, 0, 0);">。</font>
+当你将一个耗时很长的同步任务（例如一个复杂的数学计算、大规模循环、同步的DOM操作等）放入 rAF 回调中时，它会独占浏览器的主线程。由于JavaScript是单线程的，这意味着在它执行完毕之前，后续的样式计算、布局、绘制、甚至其他JavaScript任务都会被阻塞。
 
-* <font style="color:rgb(0, 0, 0);">直观表现</font><font style="color:rgb(0, 0, 0);">：页面会出现</font><font style="color:rgb(0, 0, 0);">卡顿、无响应</font><font style="color:rgb(0, 0, 0);">的状态，动画和交互都会完全停止，直到该任务执行完毕。</font>
-* <font style="color:rgb(0, 0, 0);">监控指标</font><font style="color:rgb(0, 0, 0);">：浏览器的FPS（每秒帧数）会</font><font style="color:rgb(0, 0, 0);">急剧下降甚至降为0</font><font style="color:rgb(0, 0, 0);">。</font>
+* 直观表现：页面会出现卡顿、无响应的状态，动画和交互都会完全停止，直到该任务执行完毕。
+* 监控指标：浏览器的FPS（每秒帧数）会急剧下降甚至降为0。
 
-<font style="color:rgb(0, 0, 0);">这直接违背了使用 rAF 来创建流畅动画的初衷</font>
-
-<font style="color:rgb(0, 0, 0);"></font>
+这直接违背了使用 rAF 来创建流畅动画的初衷
 
 2. **延迟后续帧的回调**
 
-<font style="color:rgb(0, 0, 0);">rAF 的设计是每次重绘前调用一次。但如果当前帧的回调函数执行时间远远超过了一帧的预算时间（如16.7ms），那么浏览器无法按时开始下一帧的渲染工作。</font>
+rAF 的设计是每次重绘前调用一次。但如果当前帧的回调函数执行时间远远超过了一帧的预算时间（如16.7ms），那么浏览器无法按时开始下一帧的渲染工作。
 
-<font style="color:rgb(0, 0, 0);">这会导致后续的 rAF 回调被严重延迟。即使你的耗时任务最终执行完了，下一个 rAF 回调也不会立刻被触发，它必须等待下一次VSync信号（垂直同步）后的重绘时机。这就造成了动画的不连贯和跳帧现象。</font>
-
-<font style="color:rgb(0, 0, 0);"></font>
+这会导致后续的 rAF 回调被严重延迟。即使你的耗时任务最终执行完了，下一个 rAF 回调也不会立刻被触发，它必须等待下一次VSync信号（垂直同步）后的重绘时机。这就造成了动画的不连贯和跳帧现象。
 
 3. **任务被中断或合并**
 
-<font style="color:rgb(0, 0, 0);">虽然 rAF 回调会集中DOM操作以减少重排重绘，但超长的执行时间可能会让浏览器无法优化。有时，为了性能，浏览器可能会合并多次本应分别执行的渲染更新，用户看到的是跳跃式的变化，不是平滑过渡。</font>
+虽然 rAF 回调会集中DOM操作以减少重排重绘，但超长的执行时间可能会让浏览器无法优化。有时，为了性能，浏览器可能会合并多次本应分别执行的渲染更新，用户看到的是跳跃式的变化，不是平滑过渡。
 
-#### <font style="color:#ED740C;">如何获取页面滚动值（选背）</font>
+#### 如何获取页面滚动值（选背）
 
 为确保在所有浏览器和文档模式下都能正确获取滚动距离，建议采用以下优先级顺序：
 
@@ -2431,32 +2508,42 @@ window.requestAnimationFrame(step);
 ##### 获取垂直滚动距离的兼容性写法
 
 ```javascript
-var scrollTop = window.pageYOffset || 
-  window.scrollY || 
-  document.documentElement.scrollTop || 
-  document.body.scrollTop || 
+var scrollTop = window.pageYOffset ||
+
+  window.scrollY ||
+
+  document.documentElement.scrollTop ||
+
+  document.body.scrollTop ||
+
   0;
+
 ```
 
 ##### 获取水平滚动距离的兼容性写法
 
 ```javascript
-var scrollLeft = window.pageXOffset || 
-  window.scrollX || 
-  document.documentElement.scrollLeft || 
-  document.body.scrollLeft || 
+var scrollLeft = window.pageXOffset ||
+
+  window.scrollX ||
+
+  document.documentElement.scrollLeft ||
+
+  document.body.scrollLeft ||
+
   0;
+
 ```
 
 #### 判断元素是否在视口内
 
-| **特性** | <code>**getBoundingClientRect()**</code> | <code>**Intersection Observer API**</code> |
-| :--- | :--- | :--- |
-| **原理** | 同步计算元素位置 | 异步观察交叉状态 |
-| **性能** | 频繁调用可能导致性能问题（强制重排） | **高性能**，由浏览器优化，避免布局抖动 |
-| **使用便利性** | 需手动监听 `scroll`, `resize`事件 | **自动监听**，无需手动处理事件 |
-| **功能** | 相对基础 | **功能强大**，支持阈值、根元素、边距等配置 |
-| **兼容性** | **兼容性极好**（包括 IE） | 现代浏览器支持良好，**IE 11 及以下不支持** |
+| **特性**       | `getBoundingClientRect()` | `Intersection Observer API` |
+| :------------- | :--------------------------------------- | :----------------------------------------- |
+| **原理**       | 同步计算元素位置                         | 异步观察交叉状态                           |
+| **性能**       | 频繁调用可能导致性能问题（强制重排）     | **高性能**，由浏览器优化，避免布局抖动     |
+| **使用便利性** | 需手动监听 `scroll`, `resize`事件        | **自动监听**，无需手动处理事件             |
+| **功能**       | 相对基础                                 | **功能强大**，支持阈值、根元素、边距等配置 |
+| **兼容性**     | **兼容性极好**（包括 IE）                | 现代浏览器支持良好，**IE 11 及以下不支持** |
 
 #### document.write和innerHTML有什么区别
 
@@ -2466,7 +2553,7 @@ var scrollLeft = window.pageXOffset ||
 * innerHTML将内容写入某个DOM节点，不会导致页面全部重绘
 * innerHTML很多情况下都优于document.write，其原因在于其允许更精确的控制要刷新页面的那一个部分。
 
-#### <font style="color:#DF2A3F;">怎么预防用户快速连续点击，造成数据多次提交?（必背）</font>
+#### 怎么预防用户快速连续点击，造成数据多次提交?（必背）
 
 * 为了防止重复提交，前端一般会在第一次提交的结果返回前，将提交按钮禁用。实现的方法有很多种:
 * css设置 pointer-events为none
@@ -2501,15 +2588,15 @@ var scrollLeft = window.pageXOffset ||
 
 记录上传进度和状态，以便在网络中断或上传失败后能够从上次中断的位置继续上传。可以使用客户端或服务器端的断点续传机制来实现。
 
-***<u>问题 1:谁负责资源分块?谁负责资源整合?</u>***
+***问题 1:谁负责资源分块?谁负责资源整合?***
 
 当然这个问题也很简单，肯定是前端负责分块，服务端负责整合:
 
-***<u>问题 2:前端怎么对资源进行分块?</u>***
+***问题 2:前端怎么对资源进行分块?***
 
 首先是选择上传的文件资源，接着就可以得到对应的文件对象 File，而 File.prototype.slice 方法可以实现资源的分块，当然也有人说是 Blob.prototype.slice方法，因为Blob.prototype.slice ===File.prototype.slice
 
-***<u>问题 3:服务端怎么知道什么时候要整合资源?如何保证资源整合的有序性?</u>***
+***问题 3:服务端怎么知道什么时候要整合资源?如何保证资源整合的有序性?***
 
 由于前端会将资源分块，然后单独发送请求，也就是说，原来1个文件对应1个上传请求，现在可能会变成1个文件对应n个上传请求，所以前端可以基于 Promise.a 将这多个接口整合，上传完成在发送一个合并的请求，通知服务端进行合并。
 
@@ -2517,7 +2604,7 @@ var scrollLeft = window.pageXOffset ||
 
 在发送请求资源时，前端会定好每个文件对应的序号，并将当前分块、序号以及文件 hash 等信息一起发送给服务端，服务端在进行合并时，通过序号进行依次合并即可。
 
-***<u>问题 4:如果某个分块的上传请求失败了，怎么办?</u>***
+***问题 4:如果某个分块的上传请求失败了，怎么办?***
 
 一旦服务端某个上传请求失败，会返回当前分块失败的信息，其中会包含文件名称、文件 hash、分块大小以及分块序号等，前端拿到这些信息后可以进行重传，同时考虑此时是否需要将Promise.all替换为 Promise.alSettled 更方便。
 
@@ -2527,21 +2614,21 @@ var scrollLeft = window.pageXOffset ||
 
 具体而言，实现虚拟列表需要以下步骤:
 
-* **计算可见区域**:首先需要计算出当前可见区域内的列表项数量和位置
-* **渲染可见区域**:只渲染当前可见区域内的列表项，而不是整个列表。
-* **动态调整列表高度**:由于只渲染了部分列表项，因此需要动态调整列表容器的高度，以确保滚动条可以正确地显示并且用户可以滚动整个列表。
-* **延迟加载非可见区域**:当用户滚动列表时，需要根据当前滚动位置动态加载非可见区域的列表项，以便在用户滚动到该区域时能够及时显示。
+***计算可见区域**:首先需要计算出当前可见区域内的列表项数量和位置
+***渲染可见区域**:只渲染当前可见区域内的列表项，而不是整个列表。
+***动态调整列表高度**:由于只渲染了部分列表项，因此需要动态调整列表容器的高度，以确保滚动条可以正确地显示并且用户可以滚动整个列表。
+***延迟加载非可见区域**:当用户滚动列表时，需要根据当前滚动位置动态加载非可见区域的列表项，以便在用户滚动到该区域时能够及时显示。
 
 在实现虚拟列表的过程中，还可以使用一些技术来优化渲染性能，包括:
 
-* **虚拟 DOM**:使用虚拟 DOM 技术可以减少每次重新渲染时需要操作真实 DOM 的次数，从而提高渲染性能。
-* **懒加载**:懒加载可以延迟加载非可见区域的列表项，从而减少不必要的网络请求和资源占用。
-* **缓存**:缓存可以在滚动时快速复用已经渲染的列表项，从而减少重新染的次数。
-* **预测算法**:使用预测算法可以根据当前滚动位置和滚动速度来预测用户可能查看的区域，并提前加载该区域的列表项，以提高用户体验。
+***虚拟 DOM**:使用虚拟 DOM 技术可以减少每次重新渲染时需要操作真实 DOM 的次数，从而提高渲染性能。
+***懒加载**:懒加载可以延迟加载非可见区域的列表项，从而减少不必要的网络请求和资源占用。
+***缓存**:缓存可以在滚动时快速复用已经渲染的列表项，从而减少重新染的次数。
+***预测算法**:使用预测算法可以根据当前滚动位置和滚动速度来预测用户可能查看的区域，并提前加载该区域的列表项，以提高用户体验。
 
 总之，实现虚拟列表需要计算可见区域、渲染可见区域、动态调整列表高度和延迟加载非可见区域等步骤，并且需要使用一些技术来优化渲染性能。虚拟列表可以大幅提高长列表的渲染性能，并提高用户体验。
 
-#### <font style="color:#ED740C;">为什么推荐将静态资源放到cdn上?（选背）</font>
+#### 为什么推荐将静态资源放到cdn上?（选背）
 
 **静态资源是什么**
 
@@ -2639,7 +2726,7 @@ JavaScript 会阻塞 DOM 生成，而样式文件又会阻塞 JavaScript 的执�
 
 **四、白屏-性能优化**
 
-1.DNS解析优化
+1. DNS解析优化
 
 针对DNS Lookup环节，我们可以针对性的进行DNS解析优化:
 
@@ -2647,15 +2734,15 @@ JavaScript 会阻塞 DOM 生成，而样式文件又会阻塞 JavaScript 的执�
 * DNS预加载策略
 * 稳定可靠的DNS服务器
 
-2.TCP网络链路优化
+2. TCP网络链路优化
 
 * 多花点钱吧
 
-3.服务端处理优化
+3. 服务端处理优化
 
 * 服务端的处理优化，是一个非常庞大的话题，会涉及到如Redis缓存、数据库存储优化或是系统内的各种中间件以及Gzip压缩等..
 
-4.浏览器下载、解析、渲染页面优化
+4. 浏览器下载、解析、渲染页面优化
 
 * 根据浏览器对页面的下载、解析、渲染过程，可以考虑一下的优化处理
 * 尽可能的精简HTML的代码和结构
@@ -2667,6 +2754,7 @@ JavaScript 会阻塞 DOM 生成，而样式文件又会阻塞 JavaScript 的执�
 ```javascript
 document.documentElement.clientHeight//获取屏幕可视区域的高度1
 element.offsetTop//获取元素相对于文档顶部的高度2
+
 ```
 
 因为JavaScript 会阻塞 DOM 生成，而样式文件又会阻塞 JavaScript 的执行，所以在实际的工程中需要重点关注JavaScript 文件和样式表文件，使用不当会影响到页面性能的。
@@ -2711,7 +2799,7 @@ flexible.js存在的目的，是为了让网页在各终端上的展示效果就
 
 那么:
 
-* P=100F\*A
+* P=100F*A
 * A = P/100F
 
 当P为750时，A=7.5px/F，即一份为7.5px
@@ -2728,41 +2816,41 @@ window.onresize =function(){html.size = P/100 + 'px'}
 
 需要注意的是，基准值其实是个动态值，只是在写代码时，我们是按照设计稿宽度计算的基准值写的rem，即以设计稿为标准进行屏幕适配的(将设计稿用代码还原成UI界面)，但在实际运行时，页面宽度是动态的，所以基准值也是动态的哦。
 
-### <font style="color:#7E45E8;background-color:rgb(252, 252, 252);">高级主题与安全</font>
+### 高级主题与安全
 
-#### <font style="color:#DF2A3F;">什么行为会引发内存泄漏（必背）</font>
+#### 什么行为会引发内存泄漏（必背）
 
 1. 意外的全局变量：由于使用未声明的变量，而意外创建一个全局变量，而使这个变量一直留在内存中无法回收。
 2. 被遗忘的计时器或回调函数：设置了 setInterval 定时器，而忘记取消它，如果循环函数有对外部变量的引用的话，那么这个变量会被一直留在内存中，而无法被回收。
 3. 脱离 DOM 的引用：获取一个 DOM 元素的引用，而后面这个元素被删除，由于一直保留了对这个元素的引用，所以它也无法被回收。
 4. 闭包：不合理的使用闭包，从而导致某些变量一直被留在内存当中
 
-#### <font style="color:#DF2A3F;">内存泄漏解决方法（必背）</font>
+#### 内存泄漏解决方法（必背）
 
-1. **<font style="color:rgb(26, 32, 41);">合理管理对象引用</font>**
+1. **合理管理对象引用**
 
-* <font style="color:rgb(26, 32, 41);">避免使用不必要的全局变量，及时将不再使用的对象引用置为</font><code><font style="color:rgb(26, 32, 41);">null</font></code><font style="color:rgb(26, 32, 41);">或</font><code><font style="color:rgb(26, 32, 41);">undefined</font></code><font style="color:rgb(26, 32, 41);">。</font>
-* <font style="color:rgb(26, 32, 41);">在PyTorch等深度学习框架中，正确管理Tensor的引用计数，避免Tensor占用过多显存。</font>
+* 避免使用不必要的全局变量，及时将不再使用的对象引用置为`null`或`undefined`。
+* 在PyTorch等深度学习框架中，正确管理Tensor的引用计数，避免Tensor占用过多显存。
 
-2. **<font style="color:rgb(26, 32, 41);">移除无用的事件监听器</font>**
+2. **移除无用的事件监听器**
 
-* <font style="color:rgb(26, 32, 41);">在组件卸载或页面关闭时，手动移除事件监听器，避免内存泄漏。</font>
+* 在组件卸载或页面关闭时，手动移除事件监听器，避免内存泄漏。
 
-3. **<font style="color:rgb(26, 32, 41);">清理异步操作</font>**
+3. **清理异步操作**
 
-* <font style="color:rgb(26, 32, 41);">在组件销毁时，取消未完成的异步请求、定时器或Promise，确保资源释放。</font>
+* 在组件销毁时，取消未完成的异步请求、定时器或Promise，确保资源释放。
 
-4. **<font style="color:rgb(26, 32, 41);">使用内存泄漏检测工具</font>**
+4. **使用内存泄漏检测工具**
 
-* <font style="color:rgb(26, 32, 41);">在C#或嵌入式开发中，使用工具如MemFault检测和分析内存泄漏。</font>
-* <font style="color:rgb(26, 32, 41);">在前端开发中，利用浏览器的开发者工具（如Performance面板）定位内存泄漏问题。</font>
+* 在C#或嵌入式开发中，使用工具如MemFault检测和分析内存泄漏。
+* 在前端开发中，利用浏览器的开发者工具（如Performance面板）定位内存泄漏问题。
 
-5. **<font style="color:rgb(26, 32, 41);">优化垃圾回收机制</font>**
+5. **优化垃圾回收机制**
 
-* <font style="color:rgb(26, 32, 41);">在支持自动GC的语言（如JavaScript、Python）中，尽量避免手动操作内存，依赖GC机制自动回收。</font>
-* <font style="color:rgb(26, 32, 41);">在C/C++等无自动GC的语言中，确保动态分配的内存被及时释放。</font>
+* 在支持自动GC的语言（如JavaScript、Python）中，尽量避免手动操作内存，依赖GC机制自动回收。
+* 在C/C++等无自动GC的语言中，确保动态分配的内存被及时释放。
 
-#### <font style="color:#DF2A3F;">在项目中是如何捕获 JavaScript 错误的?有哪些方式?（必背）</font>
+#### 在项目中是如何捕获 JavaScript 错误的?有哪些方式?（必背）
 
 * 使用 try...catch 捕获同步代码错误
 * 利用 window.onerror 捕获运行时错误
@@ -2790,7 +2878,7 @@ AST通常是由多个节点组成的树状结构，每个节点代表一个语�
 
 通过使用AST，开发人员可以更好地理解和分析代码的结构，从而进行静态分析、优化和转换等操作。它也为很多编程工具提供了基础，如编译器、静态代码分析工具和IDE等。
 
-#### <font style="color:#DF2A3F;">项目上线出现白屏问题，你是如何排查的?（必背）</font>
+#### 项目上线出现白屏问题，你是如何排查的?（必背）
 
 * 检查是否有主 JS 加载失败(查看 Chrome DevTools Network)
 * 查看是否有资源跨域、CDN 缓存、source等问题
@@ -2835,65 +2923,66 @@ JSBridge是给 JavaScript 提供调用 Native 功能的接口，让混合开发�
 双向通信的通道:
 JS 向 Native 发送消息:调用相关功能、通知 Native 当前 S 的相关状态等。
 Native 向 JS 发送消息:回溯调用结果、消息推送、通知 S 当前 Native 的状态等
+
 ```
 
 #### 微前端
 
-1. *<u><font style="color:rgb(26, 32, 41);">微前端定义</font></u>*
+1. *微前端定义*
 
-<font style="color:rgb(26, 32, 41);">微前端是一种前端架构模式，它借鉴了微服务的理念，将一个大型的前端应用拆分成多个小型、独立的前端应用。这些小型应用可以独立开发、测试、部署和维护，从而提高开发效率和系统的可维护性。微前端的核心思想包括独立部署、松耦合集成、共享资源和独立生命周期。</font>
+微前端是一种前端架构模式，它借鉴了微服务的理念，将一个大型的前端应用拆分成多个小型、独立的前端应用。这些小型应用可以独立开发、测试、部署和维护，从而提高开发效率和系统的可维护性。微前端的核心思想包括独立部署、松耦合集成、共享资源和独立生命周期。
 
-2. *<u><font style="color:rgb(26, 32, 41);">微前端解决了哪些问题？</font></u>*
+2. *微前端解决了哪些问题？*
 
-**<font style="color:rgb(26, 32, 41);">技术栈多样化</font>**<font style="color:rgb(26, 32, 41);">：不同团队可以使用各自擅长的技术栈进行开发，然后将这些应用集成到一个统一的界面中。</font>
+**技术栈多样化**：不同团队可以使用各自擅长的技术栈进行开发，然后将这些应用集成到一个统一的界面中。
 
-**<font style="color:rgb(26, 32, 41);">团队协作与并行开发</font>**<font style="color:rgb(26, 32, 41);">：每个团队可以独立地开发、测试、部署自己的应用，无需等待其他团队完成。</font>
+**团队协作与并行开发**：每个团队可以独立地开发、测试、部署自己的应用，无需等待其他团队完成。
 
-**<font style="color:rgb(26, 32, 41);">应用的可维护性和可扩展性</font>**<font style="color:rgb(26, 32, 41);">：通过将应用拆分成多个小型的、可独立部署的微应用，使得每个微应用都可以独立地进行升级和扩展。</font>
+**应用的可维护性和可扩展性**：通过将应用拆分成多个小型的、可独立部署的微应用，使得每个微应用都可以独立地进行升级和扩展。
 
-**<font style="color:rgb(26, 32, 41);">遗留系统的集成与兼容</font>**<font style="color:rgb(26, 32, 41);">：可以将遗留系统封装为微应用，与新开发的应用一起集成到统一的界面中。</font>
+**遗留系统的集成与兼容**：可以将遗留系统封装为微应用，与新开发的应用一起集成到统一的界面中。
 
-3. *<u><font style="color:rgb(26, 32, 41);">微前端的特点</font></u>*
+3. *微前端的特点*
 
-**<font style="color:rgb(26, 32, 41);">简单、松耦合的代码库</font>**<font style="color:rgb(26, 32, 41);">：将庞大的整体拆分成可控的小块，并明确他们之间的依赖关系，使得代码库更小、更内聚、可维护性更高。</font>
+**简单、松耦合的代码库**：将庞大的整体拆分成可控的小块，并明确他们之间的依赖关系，使得代码库更小、更内聚、可维护性更高。
 
-**<font style="color:rgb(26, 32, 41);">增量升级</font>**<font style="color:rgb(26, 32, 41);">：由于每个应用都是独立的，因此可以独立地进行升级、更新甚至重写部分前端功能，而无需影响整个应用。</font>
+**增量升级**：由于每个应用都是独立的，因此可以独立地进行升级、更新甚至重写部分前端功能，而无需影响整个应用。
 
-**<font style="color:rgb(26, 32, 41);">独立部署</font>**<font style="color:rgb(26, 32, 41);">：每个微前端都可以独立地进行部署，这大大提高了团队的自治性和可扩展性。</font>
+**独立部署**：每个微前端都可以独立地进行部署，这大大提高了团队的自治性和可扩展性。
 
-**<font style="color:rgb(26, 32, 41);">团队自治</font>**<font style="color:rgb(26, 32, 41);">：每个团队可以独立地开发、测试、部署自己的应用，无需等待其他团队，从而提高了开发效率。</font>
+**团队自治**：每个团队可以独立地开发、测试、部署自己的应用，无需等待其他团队，从而提高了开发效率。
 
-4. *<u><font style="color:rgb(26, 32, 41);">微前端的应用场景</font></u>*
+4. *微前端的应用场景*
 
-**<font style="color:rgb(26, 32, 41);">大型Web应用</font>**<font style="color:rgb(26, 32, 41);">：对于体量庞大的Web应用，微前端架构能够将其拆解成多个可以独立开发、部署和运行的微型应用。</font>
+**大型Web应用**：对于体量庞大的Web应用，微前端架构能够将其拆解成多个可以独立开发、部署和运行的微型应用。
 
-**<font style="color:rgb(26, 32, 41);">兼容历史应用与增量开发</font>**<font style="color:rgb(26, 32, 41);">：在需要兼容遗留系统的同时，使用新框架或技术去开发新功能时，微前端架构是一个理想的选择。</font>
+**兼容历史应用与增量开发**：在需要兼容遗留系统的同时，使用新框架或技术去开发新功能时，微前端架构是一个理想的选择。
 
-**<font style="color:rgb(26, 32, 41);">应用聚合</font>**<font style="color:rgb(26, 32, 41);">：大型互联网公司或企业内部通常会部署大量的应用和服务。为了向用户或员工提供统一、高效的体验，可以使用微前端技术将这些应用和服务聚合在一起。</font>
+**应用聚合**：大型互联网公司或企业内部通常会部署大量的应用和服务。为了向用户或员工提供统一、高效的体验，可以使用微前端技术将这些应用和服务聚合在一起。
 
-**<font style="color:rgb(26, 32, 41);">团队间共享</font>**<font style="color:rgb(26, 32, 41);">：不同的应用之间可能存在可以共享的功能和服务。通过微前端架构，这些共享的功能和服务可以被封装成独立的模块，并在不同的团队之间进行高质量的共享，从而提高研发效率。</font>
+**团队间共享**：不同的应用之间可能存在可以共享的功能和服务。通过微前端架构，这些共享的功能和服务可以被封装成独立的模块，并在不同的团队之间进行高质量的共享，从而提高研发效率。
 
-5. *<u><font style="color:rgb(26, 32, 41);">微前端的实现方式</font></u>*
+5. *微前端的实现方式*
 
-**<font style="color:rgb(26, 32, 41);">Iframe方式</font>**<font style="color:rgb(26, 32, 41);">：每个子应用通过独立的 Iframe 嵌入到主应用中，子应用拥有自己的全局上下文，避免了相互影响。</font>
+**Iframe方式**：每个子应用通过独立的 Iframe 嵌入到主应用中，子应用拥有自己的全局上下文，避免了相互影响。
 
-**<font style="color:rgb(26, 32, 41);">Web Components方式</font>**<font style="color:rgb(26, 32, 41);">：Web Components 提供了一个原生的封装机制，可以将子应用作为组件嵌入主应用中，不同技术栈的子应用通过 Web Components 进行集成。</font>
+**Web Components方式**：Web Components 提供了一个原生的封装机制，可以将子应用作为组件嵌入主应用中，不同技术栈的子应用通过 Web Components 进行集成。
 
-**<font style="color:rgb(26, 32, 41);">JavaScript脚本加载方式</font>**<font style="color:rgb(26, 32, 41);">：通过动态加载 JavaScript 文件，将每个子应用的脚本通过 URL 引入到主应用中，主应用根据需要渲染和销毁子应用。</font>
+**JavaScript脚本加载方式**：通过动态加载 JavaScript 文件，将每个子应用的脚本通过 URL 引入到主应用中，主应用根据需要渲染和销毁子应用。
 
-**<font style="color:rgb(26, 32, 41);">模块化加载工具</font>**<font style="color:rgb(26, 32, 41);">：使用框架来实现微前端的加载和管理，支持子应用的独立生命周期管理，并提供了子应用之间的通信机制。</font>
+**模块化加载工具**：使用框架来实现微前端的加载和管理，支持子应用的独立生命周期管理，并提供了子应用之间的通信机制。
 
-6. *<u><font style="color:rgb(26, 32, 41);">微前端的实施步骤</font></u>*
+6. *微前端的实施步骤*
 
-**<font style="color:rgb(26, 32, 41);">需求分析</font>**<font style="color:rgb(26, 32, 41);">：确定应用的需求和微前端的适用性。</font>
+**需求分析**：确定应用的需求和微前端的适用性。
 
-**<font style="color:rgb(26, 32, 41);">架构设计</font>**<font style="color:rgb(26, 32, 41);">：选择合适的微前端架构模式和技术栈。</font>
+**架构设计**：选择合适的微前端架构模式和技术栈。
 
-**<font style="color:rgb(26, 32, 41);">模块划分</font>**<font style="color:rgb(26, 32, 41);">：将应用划分为若干独立的模块，每个模块有明确的功能边界。</font>
+**模块划分**：将应用划分为若干独立的模块，每个模块有明确的功能边界。
 
-**<font style="color:rgb(26, 32, 41);">开发和测试</font>**<font style="color:rgb(26, 32, 41);">：独立开发和测试每个模块，确保模块的独立性和稳定性。</font>
+**开发和测试**：独立开发和测试每个模块，确保模块的独立性和稳定性。
 
-**<font style="color:rgb(26, 32, 41);">集成和部署</font>**<font style="color:rgb(26, 32, 41);">：通过主应用集成各个模块，并进行统一的部署和运维。</font>
+**集成和部署**：通过主应用集成各个模块，并进行统一的部署和运维。
 
 #### 实现微前端有哪些技术方案?
 
@@ -2919,11 +3008,11 @@ Native 向 JS 发送消息:回溯调用结果、消息推送、通知 S 当前 N
 
 任何新技术的产生都是为了解决现有场景和需求下的技术痛点，微前端也不例外:
 
-*<u>拆分和细化</u>*
+* 拆分和细化*
 
 当下前端领域，单页面应用(SPA)是非常流行的项目形态之一，而随着时间的推移以及应用功能的丰富，单页应用变得不再单一而是越来越庞大也越来越难以维护，往往是改一处而动全身，由此带来的发版成本也越来越高。微前端的意义就是将这些庞大应用进行拆分，并随之解耦，每个部分可以单独进行维护和部署，提升效率。
 
-*<u>整合历史系统</u>*
+* 整合历史系统*
 
 在不少的业务中，或多或少会存在一些历史项目，这些项目大多以采用老框架类似(Backbone.js，Angularjs 1)的B端管理系统为主，介于日常运营，这些系统需要结合到新框架中来使用还不能抛弃，对此我们也没有理由浪费时间和精力重写旧的逻辑。而微前端可以将这些系统进行整合，在基本不修改来逻辑的同时来同时兼容新老两套系统并行运行。
 
@@ -2938,70 +3027,69 @@ Native 向 JS 发送消息:回溯调用结果、消息推送、通知 S 当前 N
 
 Base64编码的思想是是采用64个基本的ASCII码字符对数据进行重新编码。它将需要编码的数据拆分成字节数组。以3个字节为一组。按顺序排列24位数据，再把这24位数据分成4组，即每组6位。再在每组的的最高位前补两个0凑足一个字节。这样就把一个3字节为一组的数据重新编码成了4个字节。当所要编码的数据的字节数不是3的整倍数，也就是说在分组时最后一组不够3个字节。这时在最后一组填充1到2个0字节。并在最后编码完成后在结尾添加1到2个"="
 
-(注BASE64字符表:ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/)从以上编码规则可以得知，通过Base64编码，原来的3个字节编码后将成为4个字节，即字节增加了33.3%，数据量相应变大。所以20M的数据通过Base64编码后大小大概为20M\*133.3%=26.67M
+(注BASE64字符表:ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/)从以上编码规则可以得知，通过Base64编码，原来的3个字节编码后将成为4个字节，即字节增加了33.3%，数据量相应变大。所以20M的数据通过Base64编码后大小大概为20M*133.3%=26.67M
 
 #### babel
 
-<font style="color:rgb(0, 0, 0);">Babel是现代JavaScript开发中不可或缺的工具，它允许开发者使用最新的JavaScript特性，同时确保代码在旧浏览器中也能正常运行。下面我将全面讲解Babel的工作原理、配置和使用方法。</font>
+Babel是现代JavaScript开发中不可或缺的工具，它允许开发者使用最新的JavaScript特性，同时确保代码在旧浏览器中也能正常运行。下面我将全面讲解Babel的工作原理、配置和使用方法。
 
 ##### 什么是Babel？
 
-<font style="color:rgb(0, 0, 0);">Babel是一个JavaScript编译器（或转译器），主要功能是将ECMAScript 2015+（ES6+）代码转换为向后兼容的JavaScript版本，以便在当前和旧版浏览器环境中运行。</font>
+Babel是一个JavaScript编译器（或转译器），主要功能是将ECMAScript 2015+（ES6+）代码转换为向后兼容的JavaScript版本，以便在当前和旧版浏览器环境中运行。
 
 ##### Babel的核心工作原理
 
-<font style="color:rgb(0, 0, 0);">Babel的工作流程可以分为三个主要阶段：</font>
+Babel的工作流程可以分为三个主要阶段：
 
-1. \*\*\*\***<font style="color:rgb(0, 0, 0);">解析（Parsing）</font>**<font style="color:rgb(0, 0, 0);">：将源代码转换为抽象语法树（AST）</font>
-2. \*\*\*\***<font style="color:rgb(0, 0, 0);">转换（Transforming）</font>**<font style="color:rgb(0, 0, 0);">：对AST进行遍历和修改</font>
-3. **<font style="color:rgb(0, 0, 0);">生成（Generation）</font>**<font style="color:rgb(0, 0, 0);">：将修改后的AST转换为新代码</font>
+1. **解析（Parsing）**：将源代码转换为抽象语法树（AST）
+2. **转换（Transforming）**：对AST进行遍历和修改
+3. **生成（Generation）**：将修改后的AST转换为新代码
 
 ##### 现代Babel最佳实践
 
-1. \*\*\*\***<font style="color:rgb(0, 0, 0);">使用@babel/preset-env</font>**<font style="color:rgb(0, 0, 0);">：根据目标环境自动确定需要的转换和polyfill</font>
-2. \*\*\*\***<font style="color:rgb(0, 0, 0);">按需引入polyfill</font>**<font style="color:rgb(0, 0, 0);">：使用</font><code><font style="color:rgb(0, 0, 0);">useBuiltIns: "usage"</font></code><font style="color:rgb(0, 0, 0);">减少打包体积</font>
-3. \*\*\*\***<font style="color:rgb(0, 0, 0);">使用core-js@3</font>**<font style="color:rgb(0, 0, 0);">：提供更完整的ES+特性支持</font>
-4. \*\*\*\***<font style="color:rgb(0, 0, 0);">配置浏览器目标</font>**<font style="color:rgb(0, 0, 0);">：使用browserslist定义支持的范围</font>
-5. **<font style="color:rgb(0, 0, 0);">区分开发和生产环境</font>**<font style="color:rgb(0, 0, 0);">：开发环境可包含调试工具，生产环境优化体积</font>
+1. **使用@babel/preset-env**：根据目标环境自动确定需要的转换和polyfill
+2. **按需引入polyfill**：使用`useBuiltIns: "usage"`减少打包体积
+3. **使用core-js@3**：提供更完整的ES+特性支持
+4. **配置浏览器目标**：使用browserslist定义支持的范围
+5. **区分开发和生产环境**：开发环境可包含调试工具，生产环境优化体积
 
-#### <font style="color:#DF2A3F;">XSS（必背）</font>
+#### XSS（必背）
 
-<font style="color:rgb(15, 17, 21);">XSS 的核心是 </font>**<font style="color:rgb(15, 17, 21);">“向网页中注入恶意脚本，在用户浏览器中执行”</font>**<font style="color:rgb(15, 17, 21);">。攻击者想方设法将可执行的恶意代码（通常是 JavaScript）注入到网页中，当其他用户浏览该网页时，代码就会执行。</font>
+XSS 的核心是 **“向网页中注入恶意脚本，在用户浏览器中执行”**。攻击者想方设法将可执行的恶意代码（通常是 JavaScript）注入到网页中，当其他用户浏览该网页时，代码就会执行。
 
-<font style="color:rgb(15, 17, 21);">类型：反射性XSS,存储型XSS,DOM型XSS</font>
+类型：反射性XSS,存储型XSS,DOM型XSS
 
 防范措施：输入过滤，输出编码，CSP,设置cookie的httponly
 
-#### <font style="color:#DF2A3F;">CSRF（必背）</font>
+#### CSRF（必背）
 
-<font style="color:rgb(15, 17, 21);">CSRF 的核心是 </font>**<font style="color:rgb(15, 17, 21);">“利用用户的登录状态，冒充用户执行非本意的操作”</font>**<font style="color:rgb(15, 17, 21);">。攻击者诱骗已经登录了目标网站（如银行网站）的用户，去访问一个恶意链接或页面，从而以用户的身份执行一些操作（如转账、改密码）。</font>
+CSRF 的核心是 **“利用用户的登录状态，冒充用户执行非本意的操作”**。攻击者诱骗已经登录了目标网站（如银行网站）的用户，去访问一个恶意链接或页面，从而以用户的身份执行一些操作（如转账、改密码）。
 
-<font style="color:rgb(15, 17, 21);">过程：用户访问A,未退出，点击表单或者链接跳转的接口为转账，服务器识别到为正确的cookie，成功转账。</font>
+过程：用户访问A,未退出，点击表单或者链接跳转的接口为转账，服务器识别到为正确的cookie，成功转账。
 
-<font style="color:rgb(15, 17, 21);">防范措施：同源策略检查，csrf tokens，设置cookie的samesite，双重cookie</font>
+防范措施：同源策略检查，csrf tokens，设置cookie的samesite，双重cookie
 
-#### <font style="color:#DF2A3F;">CommonJS和ESM（必背）</font>
+#### CommonJS和ESM（必背）
 
-1. <font style="color:rgb(26, 32, 41);">CommonJS规范最初是为了让JavaScript能够在任何地方运行而制定的，在Node.js环境中得到了广泛应用</font>
+1. CommonJS规范最初是为了让JavaScript能够在任何地方运行而制定的，在Node.js环境中得到了广泛应用
 
-* <font style="color:rgb(26, 32, 41);">CommonJS的核心思想是将每个文件视为一个独立模块，每个模块拥有自己的作用域，不会污染全局作用域</font>
-* <font style="color:rgb(26, 32, 41);">在CommonJS中，通过</font><code><font style="color:rgb(26, 32, 41);">module.exports</font></code><font style="color:rgb(26, 32, 41);">或</font><code><font style="color:rgb(26, 32, 41);">exports</font></code><font style="color:rgb(26, 32, 41);">对象导出模块功能，通过</font><code><font style="color:rgb(26, 32, 41);">require()</font></code><font style="color:rgb(26, 32, 41);">函数导入其他模块</font>
-* <font style="color:rgb(26, 32, 41);">这种规范的特点是动态加载，模块的依赖关系在运行时确定，因此可以在条件语句中使用</font><code><font style="color:rgb(26, 32, 41);">require()</font></code>
-* <font style="color:rgb(26, 32, 41);">CommonJS主要适用于服务器端JavaScript开发，特别是Node.js环境</font>
+* CommonJS的核心思想是将每个文件视为一个独立模块，每个模块拥有自己的作用域，不会污染全局作用域
+* 在CommonJS中，通过`module.exports`或`exports`对象导出模块功能，通过`require()`函数导入其他模块
+* 这种规范的特点是动态加载，模块的依赖关系在运行时确定，因此可以在条件语句中使用`require()`
+* CommonJS主要适用于服务器端JavaScript开发，特别是Node.js环境
 
-2. <font style="color:rgb(26, 32, 41);">ESM（ES6 Module）则是ECMAScript 2015引入的官方模块化标准，旨在为JavaScript提供统一的模块化解决方案。</font>
+2. ESM（ES6 Module）则是ECMAScript 2015引入的官方模块化标准，旨在为JavaScript提供统一的模块化解决方案。
 
-* <font style="color:rgb(26, 32, 41);">ESM的设计思想是尽可能静态化，使得编译时就能确定模块的依赖关系以及输入和输出的变量。</font>
-* <font style="color:rgb(26, 32, 41);">在ESM中，使用</font><code><font style="color:rgb(26, 32, 41);">export</font></code><font style="color:rgb(26, 32, 41);">关键字导出模块功能，使用</font><code><font style="color:rgb(26, 32, 41);">import</font></code><font style="color:rgb(26, 32, 41);">关键字导入其他模块</font><font style="color:rgb(26, 32, 41);">。</font>
-* <font style="color:rgb(26, 32, 41);">与CommonJS不同，ESM支持静态分析和树摇（tree-shaking）优化，有助于减少最终打包文件的体积</font><font style="color:rgb(26, 32, 41);">。</font>
-* <font style="color:rgb(26, 32, 41);">ESM既适用于浏览器环境，也适用于Node.js环境，是现代前端开发的主流模块化方案</font>
+* ESM的设计思想是尽可能静态化，使得编译时就能确定模块的依赖关系以及输入和输出的变量。
+* 在ESM中，使用`export`关键字导出模块功能，使用`import`关键字导入其他模块。
+* 与CommonJS不同，ESM支持静态分析和树摇（tree-shaking）优化，有助于减少最终打包文件的体积。
+* ESM既适用于浏览器环境，也适用于Node.js环境，是现代前端开发的主流模块化方案
 
-<font style="color:rgb(26, 32, 41);">两种规范的主要区别在于：</font>
+两种规范的主要区别在于：
 
-* <font style="color:rgb(26, 32, 41);">CommonJS是同步加载的，更适合服务器端环境；而ESM支持异步加载，更适合浏览器环境</font>
-* <font style="color:rgb(26, 32, 41);">此外，CommonJS的模块是运行时加载的，而ESM的模块是编译时加载的，这使得ESM在性能优化方面具有优势</font>
-* <font style="color:rgb(26, 32, 41);">在实际开发中，Node.js默认使用CommonJS，但也支持ESM；而浏览器环境则主要使用ESM</font>
+* CommonJS是同步加载的，更适合服务器端环境；而ESM支持异步加载，更适合浏览器环境
+* 此外，CommonJS的模块是运行时加载的，而ESM的模块是编译时加载的，这使得ESM在性能优化方面具有优势
+* 在实际开发中，Node.js默认使用CommonJS，但也支持ESM；而浏览器环境则主要使用ESM
 
-
-> 更新: 2025-12-14 04:52:36  
+> 更新: 2025-12-14 04:52:36
 > 原文: <https://www.yuque.com/u56987424/lwyx/ngcpgangiuihcq4g>

@@ -1,16 +1,25 @@
+---
+tags:
+  - 前端
+  - 八股
+  - HTML
+  - 标签
+  - 语义化
+---
+
 # HTML
 
 笔者将从以下方面展开Html八股的学习
 
-> 1. <font style="color:rgba(0, 0, 0, 0.6);background-color:rgb(252, 252, 252);">HTML5语义化与结构</font>
-> 2. <font style="color:rgba(0, 0, 0, 0.6);background-color:rgb(252, 252, 252);">浏览器渲染机制</font>
-> 3. <font style="color:rgba(0, 0, 0, 0.6);background-color:rgb(252, 252, 252);">资源加载与性能优化</font>
-> 4. <font style="color:rgba(0, 0, 0, 0.6);background-color:rgb(252, 252, 252);">移动适配与响应式</font>
-> 5. <font style="color:rgba(0, 0, 0, 0.6);background-color:rgb(252, 252, 252);">HTML基础与规范</font>
+> 1. HTML5语义化与结构
+> 2. 浏览器渲染机制
+> 3. 资源加载与性能优化
+> 4. 移动适配与响应式
+> 5. HTML基础与规范
 
-### <font style="color:#F297CC;background-color:rgb(252, 252, 252);">HTML5语义化与结构</font>
+### HTML5语义化与结构
 
-#### <font style="color:#DF2A3F;">HTML5语义标签化  （必背）</font>
+#### HTML5语义标签化  （必背）
 
 1. 使用带有语义化的标签构建页面 header footer main aside article section  ,避免长篇幅无语义的<div>
 2. 易于用户阅读 样式文件未加载时 页面结构清晰
@@ -19,7 +28,7 @@
 5. 易于开发和维护 使得代码更具可读性 更好维护
 6. 并未广泛使用 京东、淘宝仍然使用<div> 设置id为header或者footer 作用不大 不用重写网页
 
-#### <font style="color:#DF2A3F;">slot（必背）</font>
+#### slot（必背）
 
 1. slot插槽，一般在封装组件的时候使用，在组件内不知道以那种形式来展示内容时，可以用slot来占据位置，最终展示形式由父组件以内容形式传递过来
 2. 默认插槽：又名匿名插槽，当slot没有指定name属性值时一个默认显示插槽，一个组件内只有有一个匿名插槽
@@ -59,14 +68,14 @@ SEO主要分为内部和外部两个方向。
 * drop:事件主体是目标元素，在目标元素完全接受被拖放元素时触发
 * dragend:事件主体是被拖放元素，在整个拖放操作结束时触发。
 
-#### <font style="color:#DF2A3F;">HTML5有哪些更新 （必背）</font>
+#### HTML5有哪些更新 （必背）
 
 * 新的选择器 `document.querySelector`、`document.querySelectorAll`
 * 媒体播放的 `video` 和 `audio` 标签
   * 以前用的 flash 实现
 * 本地存储 `localStorage` 和 `sessionStorage`
 * 浏览器通知 `Notifications`
-* **<u>语义化标签，例如 </u>**<code>**<u>header</u>**</code>**<u>，</u>**<code>**<u>nav</u>**</code>**<u>，</u>**<code>**<u>footer</u>**</code>**<u>，</u>**<code>**<u>section</u>**</code>**<u>，</u>**<code>**<u>article</u>**</code>**<u> 等标签</u>**
+***语义化标签，例如 **`header`**，**`nav`**，**`footer`**，**`section`**，**`article`** 等标签**
 * 地理位置 `Geolocation`
 * 多任务处理 `web worker`
 
@@ -100,12 +109,12 @@ SEO主要分为内部和外部两个方向。
 
 | **属性** | **类型/值** | **描述与注意事项** |
 | :--- | :--- | :--- |
-| <code>**src**</code> | URL | **最重要**的属性。用于指定要播放的音频文件的路径（可以是相对路径或绝对URL）。没有它，音频标签就没有内容可播放。 |
-| <code>**controls**</code> | Boolean (布尔属性) | 如果出现，则**向用户显示播放控件**（如播放/暂停按钮、进度条、音量控制）。**强烈建议始终添加此属性**，除非您想完全通过自定义 JavaScript 按钮来控制播放，以确保良好的用户体验。 |
-| <code>**autoplay**</code> | Boolean (布尔属性) | 如果出现，则音频在**就绪后会自动尝试播放**。**注意**：现代浏览器（如 Chrome）出于用户体验和节省流量的考虑，通常会**阻止自动播放**。除非用户之前与页面有过交互（如点击），否则带 `autoplay`的视频或音频可能无法生效。 |
-| <code>**loop**</code>\*\* | Boolean (布尔属性) | 如果出现，则每当**音频播放结束后会自动重新开始播放**，实现循环播放的效果。常用于背景音乐或氛围音效。 |
-| <code>**muted**</code> | Boolean (布尔属性) | 如果出现，则音频的**输出会被静音**（默认无声）。**实用技巧**：与 `autoplay`搭配使用。由于浏览器限制，**静音的音频通常允许自动播放**。可以先设置 `muted`和 `autoplay`让视频自动背景播放，然后让用户通过控件取消静音。 |
-| <code>**preload**</code> | `none``metadata``auto` | 建议**根据优先级选择值**，而不是依赖默认的 `auto`。用于提示浏览器在页面加载时应该如何加载音频数据。它不是强制命令，浏览器可能会根据自身策略（如为用户节省流量）调整行为。 |
+| `src` | URL | **最重要**的属性。用于指定要播放的音频文件的路径（可以是相对路径或绝对URL）。没有它，音频标签就没有内容可播放。 |
+| `controls` | Boolean (布尔属性) | 如果出现，则**向用户显示播放控件**（如播放/暂停按钮、进度条、音量控制）。**强烈建议始终添加此属性**，除非您想完全通过自定义 JavaScript 按钮来控制播放，以确保良好的用户体验。 |
+| `autoplay` | Boolean (布尔属性) | 如果出现，则音频在**就绪后会自动尝试播放**。**注意**：现代浏览器（如 Chrome）出于用户体验和节省流量的考虑，通常会**阻止自动播放**。除非用户之前与页面有过交互（如点击），否则带 `autoplay`的视频或音频可能无法生效。 |
+| `loop`** | Boolean (布尔属性) | 如果出现，则每当**音频播放结束后会自动重新开始播放**，实现循环播放的效果。常用于背景音乐或氛围音效。 |
+| `muted` | Boolean (布尔属性) | 如果出现，则音频的**输出会被静音**（默认无声）。**实用技巧**：与 `autoplay`搭配使用。由于浏览器限制，**静音的音频通常允许自动播放**。可以先设置 `muted`和 `autoplay`让视频自动背景播放，然后让用户通过控件取消静音。 |
+| `preload` | `none``metadata``auto` | 建议**根据优先级选择值**，而不是依赖默认的 `auto`。用于提示浏览器在页面加载时应该如何加载音频数据。它不是强制命令，浏览器可能会根据自身策略（如为用户节省流量）调整行为。 |
 
 ***
 
@@ -135,9 +144,9 @@ HTML5新增的表单控件类型包括:
 * color(颜色选择器
 * search(搜索框)等
 
-#### <font style="color:rgb(0, 0, 0);">DOM节点类型</font>
+#### DOM节点类型
 
-<font style="color:rgb(0, 0, 0);">DOM（文档对象模型）树将HTML或XML文档表示为一系列节点（Node）的层次结构，这些节点共同描述了文档的内容与结构。理解不同类型的节点是进行DOM操作的基础。下面我将为你详细讲解DOM树中的几种主要节点类型。</font>
+DOM（文档对象模型）树将HTML或XML文档表示为一系列节点（Node）的层次结构，这些节点共同描述了文档的内容与结构。理解不同类型的节点是进行DOM操作的基础。下面我将为你详细讲解DOM树中的几种主要节点类型。
 
 | **节点类型** | **nodeType 值** | **nodeName** | **nodeValue** | **描述** |
 | :--- | :--- | :--- | :--- | :--- |
@@ -145,12 +154,12 @@ HTML5新增的表单控件类型包括:
 | **Text** | 3 | `#text` | 文本内容 | 包含元素内的文本内容，包括空格和换行符 |
 | **Comment** | 8 | `#comment` | 注释内容 | 表示HTML文档中的注释（`<!-- 注释内容 -->`） |
 | **Document** | 9 | `#document` | `null` | 代表整个文档的根节点，是DOM树的入口点 |
-| **DocumentType** | 10 | `html` | `null` | 表示文档类型声明（`<!DOCTYPE html>`）。<br/> |
-| **Attribute** | 2 | 属性名 | 属性值 | 表示元素的属性（如 `id="myId"`）。<br/>**<font style="background-color:rgba(0, 0, 0, 0.05);"></font>**<br/>**注意**：在DOM标准中，属性节点被视为其所属元素节点的一部分，并非DOM树中独立的子节点。 |
+| **DocumentType** | 10 | `html` | `null` | 表示文档类型声明（`<!DOCTYPE html>`）。  |
+| **Attribute** | 2 | 属性名 | 属性值 | 表示元素的属性（如 `id="myId"`）。  **注意**：在DOM标准中，属性节点被视为其所属元素节点的一部分，并非DOM树中独立的子节点。 |
 
-### <font style="color:#E4495B;background-color:rgb(252, 252, 252);">浏览器渲染机制</font>
+### 浏览器渲染机制
 
-#### <font style="color:#DF2A3F;">浏览器输入URL（必背）</font>
+#### 浏览器输入URL（必背）
 
 * 输入URL
 * 判断是否存在http缓存（如果是强制缓存且在有效期内 直接从浏览器获取，如果不是继续向下执行）
@@ -159,9 +168,16 @@ HTML5新增的表单控件类型包括:
 * 发起http请求（如果是协商缓存 服务器发现资源未变返回304 使用本地缓存；服务器发现资源已变返回200，浏览器接受新数据并更新本地缓存）
 * 渲染页面 加载css html js 加载到脚本的时候 页面的渲染会被阻塞 所以一般css放在header中 js放在body的底部 避免阻塞页面的解析与渲染 渲染过程是 1.html-dom 2.css-cssom 3.根据dom和stylesheet生成渲染树
 
-4.布局 5.分层 6.绘制 7.合成
+4. 布局 5.分层 6.绘制 7.合成
 
-#### <font style="color:#DF2A3F;">浏览器如何渲染页面（必背）</font>
+**项目实践 - 慕课乐高编辑器：**
+
+在乐高低代码编辑器项目中，用户访问编辑器页面时会经历完整的URL加载流程：
+- 首次访问时，Webpack打包的JS/CSS资源会被下载并缓存，后续访问利用强缓存（Cache-Control）加速
+- 编辑器核心组件（如画布、属性面板）的代码通过路由懒加载实现，避免首屏加载过多资源阻塞渲染
+- 项目中CSS放在`<head>`中通过`mini-css-extract-plugin`提取，JS通过`defer`属性延迟执行，确保页面快速呈现
+
+#### 浏览器如何渲染页面（必背）
 
 1. 构建DOM树：解析HTML文件，识别标签、属性、文本，每个元素对应一个节点
 2. 构建CSSOM树：根据css规则，识别选择器、属性、值，每个css规则对应一个节点
@@ -169,9 +185,9 @@ HTML5新增的表单控件类型包括:
 4. 布局：根据DOM计算每个节点的布局信息，确定在页面中的位置和大小
 5. 分层：渲染树分为多个图层，优化渲染，根据transform、z-index将节点分配到不同图层，每个图层独立渲染，避免不必要的重绘
 6. 绘制、光栅化：将每个图层的节点转换为绘制指令，生成绘制列表，转换为像素，生成位图、存储与显存中
-7. 合成：将多个图层的页面按照层级关系合称为最终页面
+7. 合成：将多个图层的页面按照层级关系
 
-#### <font style="color:#DF2A3F;">重绘和重排的区别（必背）</font>
+#### 重绘和重排的区别（必背）
 
 1. 重排：dom元素的几何属性发生改变，浏览器将重新计算所有元素的布局
 
@@ -185,11 +201,11 @@ HTML5新增的表单控件类型包括:
 
 #### 讲讲强制重绘和强制重排
 
-<font style="color:rgb(0, 0, 0);">浏览器会尝试通过</font>**<font style="color:rgb(0, 0, 0);">队列机制</font>**<font style="color:rgb(0, 0, 0);">批量处理样式更改以减少重排和重绘次数，</font>但当你通过 JavaScript 请求某些特定样式信息时，浏览器为了返回最新值，会**立即清空队列并进行重排**，这就是“强制”发生的时候
+浏览器会尝试通过**队列机制**批量处理样式更改以减少重排和重绘次数，但当你通过 JavaScript 请求某些特定样式信息时，浏览器为了返回最新值，会**立即清空队列并进行重排**，这就是“强制”发生的时候
 
 ##### 触发强制重排的操作
 
-<font style="color:rgb(0, 0, 0);">当你读取以下属性或调用以下方法时，通常会强制浏览器清空队列并进行重排</font>
+当你读取以下属性或调用以下方法时，通常会强制浏览器清空队列并进行重排
 
 | **类别** | **属性/方法** |
 | :--- | :--- |
@@ -202,21 +218,21 @@ HTML5新增的表单控件类型包括:
 
 ##### 触发重绘的操作
 
-<font style="color:rgb(0, 0, 0);">修改以下主要影响元素外观而非布局的CSS属性，通常会触发重绘</font>
+修改以下主要影响元素外观而非布局的CSS属性，通常会触发重绘
 
-<code><font style="color:rgb(0, 0, 0);">color</font></code>
+`color`
 
-<code><font style="color:rgb(0, 0, 0);">background-color</font></code><font style="color:rgb(0, 0, 0);">/ </font><code><font style="color:rgb(0, 0, 0);">background-image</font></code>
+`background-color`/ `background-image`
 
-<code><font style="color:rgb(0, 0, 0);">border-color</font></code><font style="color:rgb(0, 0, 0);">/ </font><code><font style="color:rgb(0, 0, 0);">border-style</font></code><font style="color:rgb(0, 0, 0);">/ </font><code><font style="color:rgb(0, 0, 0);">outline</font></code>
+`border-color`/ `border-style`/ `outline`
 
-<code><font style="color:rgb(0, 0, 0);">visibility</font></code><font style="color:rgb(0, 0, 0);">(注意：与</font><code><font style="color:rgb(0, 0, 0);">display: none</font></code><font style="color:rgb(0, 0, 0);">不同，</font><code><font style="color:rgb(0, 0, 0);">visibility: hidden</font></code><font style="color:rgb(0, 0, 0);">只触发重绘)</font>
+`visibility`(注意：与`display: none`不同，`visibility: hidden`只触发重绘)
 
-<code><font style="color:rgb(0, 0, 0);">opacity</font></code><font style="color:rgb(0, 0, 0);">(注意：修改</font><code><font style="color:rgb(0, 0, 0);">opacity</font></code><font style="color:rgb(0, 0, 0);">通常只会触发重绘，而不会触发重排，尤其是在现代浏览器中)</font>
+`opacity`(注意：修改`opacity`通常只会触发重绘，而不会触发重排，尤其是在现代浏览器中)
 
-<code><font style="color:rgb(0, 0, 0);">text-decoration</font></code>
+`text-decoration`
 
-#### <font style="color:#DF2A3F;">浏览器垃圾回收机制（必背）</font>
+#### 浏览器垃圾回收机制（必背）
 
 1. 栈垃圾回收：用于存储执行上下文，遵循后进先出，函数执行结束，JS引擎移动栈指针销毁函数执行上下文，释放栈空间
 2. 堆垃圾回收：存储复杂对象，V8引擎分为新生代和老生代，新生代（scavenge）-标记、复制清除、角色互换  老生代-标记清除、标记整理
@@ -310,7 +326,7 @@ Firefox，Chrome 和 Opera 都会在 DOMContentLoaded 中自动填充表单例�
 
 **总结**
 
-*<u>页面生命周期事件:</u>*
+* 页面生命周期事件:*
 
 当 DOM 准备就绪时，document 上的 DOMContentLoaded 事件就会被触发。在这个阶段，我们可以将JavaScript 应用于元素。
 
@@ -323,25 +339,25 @@ Firefox，Chrome 和 Opera 都会在 DOMContentLoaded 中自动填充表单例�
 
 当用户最终离开时，window上的 unload 事件就会被触发。在外理程序中，我们只能执行不涉及延迟或询问用户的简单操作。正是由于这个限制，它很少被使用。我们可以使用 naviqatorsendBeacon 来发送网络请求,
 
-#### <font style="color:rgb(26, 32, 41);">MutationObserver</font>
+#### MutationObserver
 
-<font style="color:rgb(26, 32, 41);">MutationObserver 是一个用于监听 DOM变化的 JavaScript API。它能够监控 DOM 树中的各种变动，例如元素的添加、删除、属性变化以及文本内容的修改，并在这些变化发生时触发回调函数</font><font style="color:rgb(26, 32, 41);">。</font>
+MutationObserver 是一个用于监听 DOM变化的 JavaScript API。它能够监控 DOM 树中的各种变动，例如元素的添加、删除、属性变化以及文本内容的修改，并在这些变化发生时触发回调函数。
 
-**<font style="color:rgb(26, 32, 41);">一、工作原理</font>**
+**一、工作原理**
 
-<font style="color:rgb(26, 32, 41);">MutationObserver 采用异步机制监听 DOM 变化，与同步触发的事件不同，它会在 DOM 操作完成后批量通知变化。这种特性不仅提高了性能，还避免了频繁的回调函数执行</font><font style="color:rgb(26, 32, 41);">。</font>
+MutationObserver 采用异步机制监听 DOM 变化，与同步触发的事件不同，它会在 DOM 操作完成后批量通知变化。这种特性不仅提高了性能，还避免了频繁的回调函数执行。
 
-**<font style="color:rgb(26, 32, 41);">二、应用场景</font>**
+**二、应用场景**
 
-**<font style="color:rgb(26, 32, 41);">动态内容加载</font>**<font style="color:rgb(26, 32, 41);">\ </font><font style="color:rgb(26, 32, 41);">当页面内容通过 JavaScript 动态加载时，MutationObserver 可以监听新增的 DOM 节点，并为其绑定事件或执行其他逻辑</font><font style="color:rgb(26, 32, 41);">。</font>
+**动态内容加载**\ 当页面内容通过 JavaScript 动态加载时，MutationObserver 可以监听新增的 DOM 节点，并为其绑定事件或执行其他逻辑。
 
-**<font style="color:rgb(26, 32, 41);">属性变化监控</font>**<font style="color:rgb(26, 32, 41);">\ </font><font style="color:rgb(26, 32, 41);">可以监听元素属性的变化，例如样式、类名等的修改，并触发相应的操作</font><font style="color:rgb(26, 32, 41);">。</font>
+**属性变化监控**\ 可以监听元素属性的变化，例如样式、类名等的修改，并触发相应的操作。
 
-**<font style="color:rgb(26, 32, 41);">Vue 生态中的联动</font>**<font style="color:rgb(26, 32, 41);">\ </font><font style="color:rgb(26, 32, 41);">在 Vue 等前端框架中，MutationObserver 可用于与响应式系统联动，优化 DOM 监听和更新机制</font><font style="color:rgb(26, 32, 41);">。</font>
+**Vue 生态中的联动**\ 在 Vue 等前端框架中，MutationObserver 可用于与响应式系统联动，优化 DOM 监听和更新机制。
 
-**<font style="color:rgb(26, 32, 41);">三、与事件的区别</font>**
+**三、与事件的区别**
 
-<font style="color:rgb(26, 32, 41);">MutationObserver 与传统事件机制不同，事件是同步触发的，而 MutationObserver 是异步批量处理的。这种设计使其在处理复杂 DOM 操作时更加高效</font>
+MutationObserver 与传统事件机制不同，事件是同步触发的，而 MutationObserver 是异步批量处理的。这种设计使其在处理复杂 DOM 操作时更加高效
 
 #### iframe
 
@@ -359,7 +375,7 @@ iframe 元素 可以在一个网站里面嵌入另一个网站内容
 3. 兼容性差
 4. 阻塞主页面的 onload 事件
 
-#### <font style="color:#DF2A3F;">前端跨页面通信，你知道哪些方法?（必背）</font>
+#### 前端跨页面通信，你知道哪些方法?（必背）
 
 在前端中，有几种方法可用于实现跨页面通信:
 
@@ -377,58 +393,68 @@ iframe 元素 可以在一个网站里面嵌入另一个网站内容
 
 DOM(Document Object Model)和 BOM(Browser Object Model)是JavaScript 中常用的两个概念，用于描述浏览器中的不同对象模型。
 
-1.DOM(Document Object Model):
+1. DOM(Document Object Model):
 
-* **DOM 是表示 HTML 和 XML 文档的标准的对象模型**。它将文档中的每个组件(如元素、属性、文本等)都看作是一个对象，开发者可以使用 JavaScript 来操作这些对象，从而动态地改变页面的内容、结构和样式。
-* **DOM 以树状结构组织文档的内容**，其中树的根节点是 document对象，它代表整个文档。document 对象有各种方法和属性，可以用来访问和修改文档的内容和结构。
+***DOM 是表示 HTML 和 XML 文档的标准的对象模型**。它将文档中的每个组件(如元素、属性、文本等)都看作是一个对象，开发者可以使用 JavaScript 来操作这些对象，从而动态地改变页面的内容、结构和样式。
+***DOM 以树状结构组织文档的内容**，其中树的根节点是 document对象，它代表整个文档。document 对象有各种方法和属性，可以用来访问和修改文档的内容和结构。
 
-2.BOM(Browser Object Model):
+2. BOM(Browser Object Model):
 
-* **BOM 是表示浏览器窗口及其各个组件的对象模型**。它提供了一组对象，用于访问和控制浏览器窗口及其名。
-* **BOM 的核心对象是 window 对象**，它表示浏览器窗口，并且是 JavaScript 中的全局对象。window 对象提供了许多属性和方法，用于控制浏览器窗口的各个方面，如页面导航、定时器、对话框等
+***BOM 是表示浏览器窗口及其各个组件的对象模型**。它提供了一组对象，用于访问和控制浏览器窗口及其名。
+***BOM 的核心对象是 window 对象**，它表示浏览器窗口，并且是 JavaScript 中的全局对象。window 对象提供了许多属性和方法，用于控制浏览器窗口的各个方面，如页面导航、定时器、对话框等
 * BOM 还提供了其他一些对象，如 navigator(提供浏览器相关信息)、location(提供当前文档的。URL信息)、history(提供浏览器历史记录)、screen(提供屏幕信息)等。
 
 总的来说，**DOM 是用于访问和操作网页文档的对象模型，而 BOM 是用于控制浏览器窗口及其各个组件的对象模型**。在 JavaScript 编程中，开发者通常会同时使用 DOM 和 BOM 来完成各种任务，如操作网页元素、导航控制,事件处理等。
 
-### <font style="color:#F3BB2F;background-color:rgb(252, 252, 252);">资源加载与性能优化</font>
+### 资源加载与性能优化
 
-#### <font style="color:#DF2A3F;">页面导入样式时，使用 link 和 @import 有什么区别？（必背）</font>
+#### 页面导入样式时，使用 link 和 @import 有什么区别？（必背）
 
-<font style="color:rgb(51, 51, 51);">1.从属关系区别:</font>
-
-```
-- <font style="color:rgb(51, 51, 51);">link是html提供的标签，不仅可以加载css还可以定义rss，rel连接属性，引入网站图标；</font>
-- <font style="color:rgb(51, 51, 51);">@import 是 </font>**CSS 提供**<font style="color:rgb(51, 51, 51);">的语法规则，只有导入样式表的作用；</font>
-```
-
-2.加载顺序：
+1. 从属关系区别:
 
 ```
+
+- link是html提供的标签，不仅可以加载css还可以定义rss，rel连接属性，引入网站图标；
+- @import 是 **CSS 提供**的语法规则，只有导入样式表的作用；
+
+```
+
+2. 加载顺序：
+
+```
+
 - link 标签引入的 CSS **被同时加载**
 - @import 引入的 CSS 将在**页面加载完毕**后被加载
-```
-
-3.兼容性
 
 ```
+
+3. 兼容性
+
+```
+
 - link全兼容
 - @import 只可在 IE5+ 才能识别
-```
-
-4.dom操作
 
 ```
-- <font style="color:rgb(51, 51, 51);">link支持使用JS控制DOM改变样式</font>
-- <font style="color:rgb(51, 51, 51);">@import不支持</font>
-```
 
-5.权重
+4. dom操作
 
 ```
+
+- link支持使用JS控制DOM改变样式
+- @import不支持
+
+```
+
+5. 权重
+
+```
+
 - link的权重更高
+
 ```
 
-#### <font style="color:#DF2A3F;">script标签中defer和async的区别（必背）</font>
+#### script标签中defer和async的区别（必背）
 
 如果没有defer或async属性，浏览器会**立即加载并执行相应**的**脚本**。它不会等待后续加载的文档元素，读取到就会开始加载和执行，这样就阻塞了后续文档的加载。
 
@@ -440,15 +466,15 @@ DOM(Document Object Model)和 BOM(Browser Object Model)是JavaScript 中常用�
 
 **defer 和 async属性都是去异步加载外部的JS脚本文件，它们都不会阻塞页面的解析**，其区别如下：
 
-* \*\*执行顺序：\*\*多个带async属性的标签，不能保证加载的顺序；多个带defer属性的标签，按照加载顺序执行；
-* <font style="color:rgb(77, 77, 77);">defer 和 async 的共同点是都是可以并行加载JS文件，不会阻塞页面的加载，不同点是 defer的加载完成之后，JS会等待整个页面全部加载完成了再执行，而带async属性的JS是加载完成之后，会马上执行</font>
-* <font style="color:rgb(77, 77, 77);"> </font><font style="color:rgb(20.000000%, 20.000000%, 20.000000%);background-color:rgb(99.600000%, 99.600000%, 99.600000%);">JS脚本的执行需要等待文档所有元 素解析完之后，load和DOMContentLoaded事件之前执行 </font>
+***执行顺序：**多个带async属性的标签，不能保证加载的顺序；多个带defer属性的标签，按照加载顺序执行；
+* defer 和 async 的共同点是都是可以并行加载JS文件，不会阻塞页面的加载，不同点是 defer的加载完成之后，JS会等待整个页面全部加载完成了再执行，而带async属性的JS是加载完成之后，会马上执行
+*  JS脚本的执行需要等待文档所有元 素解析完之后，load和DOMContentLoaded事件之前执行
 
 #### 上传图片后，怎么通过浏览器预览上传图片
 
-1.window.URL.createObjectURL(img.files\[0])
+1. window.URL.createObjectURL(img.files\[0])
 
-2.FileReader
+2. FileReader
 
 * 创造FileReader对象
 * readAsDataURL读取文件
@@ -497,6 +523,7 @@ capture属性用于指定文件上传控件中媒体拍摄的方式。
 
 ```html
 <input type='file' accept='image/*;' capture='camera'>
+
 ```
 
 #### input上传文件可以同时选择多张吗?怎么设置?
@@ -505,6 +532,7 @@ capture属性用于指定文件上传控件中媒体拍摄的方式。
 
 ```html
 <input type="file" name="files" multiple/>
+
 ```
 
 #### 如何禁止input展示输入的历史记录?
@@ -515,13 +543,14 @@ autocomplete="off"
 
 ```html
 <input type="text" autocomplete="off"/>
+
 ```
 
 autocomplete 属性是用来规定输入字段是否启用自动完成的功能。
 
-#### <font style="color:rgb(0, 0, 0);">preload、prefetch、preconnect 和 prerender </font>
+#### preload、prefetch、preconnect 和 prerender
 
-| **特性** | <code>**preload**</code> | <code>**prefetch**</code> | <code>**preconnect**</code> | <code>**prerender**</code> |
+| **特性** | `preload` | `prefetch` | `preconnect` | `prerender` |
 | :--- | :--- | :--- | :--- | :--- |
 | **核心目的** | **当前页面**关键资源高优先级加载 | **未来页面/资源**低优先级预获取 | **提前建立连接**（DNS, TCP, TLS） | **后台预渲染**整个未来页面 |
 | **加载时机** | 立即，**高优先级** | 浏览器**空闲时**，低优先级 | 立即 | 浏览器空闲时 |
@@ -529,46 +558,50 @@ autocomplete 属性是用来规定输入字段是否启用自动完成的功能�
 | **语法示例** | `<link rel="preload" href="font.woff2" as="font">` | `<link rel="prefetch" href="next-page.html">` | `<link rel="preconnect" href="https://cdn.example.com">` | `<link rel="prerender" href="https://example.com/next">` |
 | **注意点** | 需配合 `as`属性，否则可能重复加载 | 可能浪费带宽；注意预测准确性 | 每个预连接都有开销，**慎用于过多域名** | **开销巨大**；兼容性与统计问题；需谨慎使用 |
 
-### <font style="color:#8CCF17;background-color:rgb(252, 252, 252);">移动适配与响应式</font>
+### 移动适配与响应式
 
-#### <font style="color:#ED740C;">meta标签（选背）</font>
+#### meta标签（选背）
 
 表示网页的基础配置
 
 使用 `name` 和 `content` 属性进行定义
 
-<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">name </font><font style="color:rgb(51, 51, 51);">和 </font><font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">content </font><font style="color:rgb(51, 51, 51);">一起使用，前者表示元数据的</font><font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">名称</font><font style="color:rgb(51, 51, 51);">，后者是元数据的</font><font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">值</font>
+name 和 content 一起使用，前者表示元数据的名称，后者是元数据的值
 
-<font style="color:rgb(38, 38, 38);">常用的meta标签：</font>
+常用的meta标签：
 
-1. <font style="color:rgb(38, 38, 38);">charset，用来描述HTML文档的编码类型：</font><font style="color:rgb(38, 38, 38);background-color:rgb(250, 250, 250);"><</font><font style="color:rgb(34, 134, 58);background-color:rgb(250, 250, 250);">meta </font><font style="color:rgb(111, 66, 193);background-color:rgb(250, 250, 250);">charset</font><font style="color:rgb(225, 0, 35);background-color:rgb(250, 250, 250);">=</font><font style="color:rgb(102, 153, 0);background-color:rgb(250, 250, 250);">"UTF-8"</font><font style="color:rgb(38, 38, 38);background-color:rgb(250, 250, 250);">></font>
-2. <font style="color:rgb(38, 38, 38);">keywords，页面关键词：</font><font style="color:rgb(38, 38, 38);background-color:rgb(250, 250, 250);"><</font><font style="color:rgb(34, 134, 58);background-color:rgb(250, 250, 250);">meta </font><font style="color:rgb(111, 66, 193);background-color:rgb(250, 250, 250);">name</font><font style="color:rgb(225, 0, 35);background-color:rgb(250, 250, 250);">=</font><font style="color:rgb(102, 153, 0);background-color:rgb(250, 250, 250);">"keywords" </font><font style="color:rgb(111, 66, 193);background-color:rgb(250, 250, 250);">content</font><font style="color:rgb(225, 0, 35);background-color:rgb(250, 250, 250);">=</font><font style="color:rgb(102, 153, 0);background-color:rgb(250, 250, 250);">"关键词"</font><font style="color:rgb(38, 38, 38);background-color:rgb(250, 250, 250);">/></font>
-3. <font style="color:rgb(38, 38, 38);">description，页面描述：</font><font style="color:rgb(38, 38, 38);background-color:rgb(250, 250, 250);"><</font><font style="color:rgb(34, 134, 58);background-color:rgb(250, 250, 250);">meta </font><font style="color:rgb(111, 66, 193);background-color:rgb(250, 250, 250);">name</font><font style="color:rgb(225, 0, 35);background-color:rgb(250, 250, 250);">=</font><font style="color:rgb(102, 153, 0);background-color:rgb(250, 250, 250);">"description" </font><font style="color:rgb(111, 66, 193);background-color:rgb(250, 250, 250);">content</font><font style="color:rgb(225, 0, 35);background-color:rgb(250, 250, 250);">=</font><font style="color:rgb(102, 153, 0);background-color:rgb(250, 250, 250);">"页面描述内容"</font><font style="color:rgb(38, 38, 38);background-color:rgb(250, 250, 250);">/></font>
-4. <font style="color:rgb(38, 38, 38);">refresh，页面重定向和刷新：</font><font style="color:rgb(38, 38, 38);background-color:rgb(250, 250, 250);"><</font><font style="color:rgb(34, 134, 58);background-color:rgb(250, 250, 250);">meta </font><font style="color:rgb(111, 66, 193);background-color:rgb(250, 250, 250);">http-equiv</font><font style="color:rgb(225, 0, 35);background-color:rgb(250, 250, 250);">=</font><font style="color:rgb(102, 153, 0);background-color:rgb(250, 250, 250);">"refresh"</font><font style="color:rgb(111, 66, 193);background-color:rgb(250, 250, 250);">content</font><font style="color:rgb(225, 0, 35);background-color:rgb(250, 250, 250);">=</font><font style="color:rgb(102, 153, 0);background-color:rgb(250, 250, 250);">"0;url="</font><font style="color:rgb(38, 38, 38);background-color:rgb(250, 250, 250);">/></font>
-5. <font style="color:rgb(38, 38, 38);">viewport，适配移动端，可以控制视口的大小和比例：\ </font><font style="color:rgb(38, 38, 38);background-color:rgb(250, 250, 250);"><</font><font style="color:rgb(34, 134, 58);background-color:rgb(250, 250, 250);">meta </font><font style="color:rgb(111, 66, 193);background-color:rgb(250, 250, 250);">name</font><font style="color:rgb(225, 0, 35);background-color:rgb(250, 250, 250);">=</font><font style="color:rgb(102, 153, 0);background-color:rgb(250, 250, 250);">"viewport" </font><font style="color:rgb(111, 66, 193);background-color:rgb(250, 250, 250);">content</font><font style="color:rgb(225, 0, 35);background-color:rgb(250, 250, 250);">=</font><font style="color:rgb(102, 153, 0);background-color:rgb(250, 250, 250);">"width=device-width, initial-scale=1, maximum-scale=1"</font><font style="color:rgb(38, 38, 38);background-color:rgb(250, 250, 250);">></font>
+1. charset，用来描述HTML文档的编码类型：<meta charset="UTF-8">
+2. keywords，页面关键词：<meta name="keywords" content="关键词"/>
+3. description，页面描述：<meta name="description" content="页面描述内容"/>
+4. refresh，页面重定向和刷新：<meta http-equiv="refresh"content="0;url="/>
+5. viewport，适配移动端，可以控制视口的大小和比例：\ <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-<font style="color:rgb(38, 38, 38);">其中，content 参数有以下几种：</font>
-
-```
-- <font style="color:rgb(38, 38, 38);">width viewport ：宽度(数值/device-width)</font>
-- <font style="color:rgb(38, 38, 38);">height viewport ：高度(数值/device-height)</font>
-- <font style="color:rgb(38, 38, 38);">initial-scale ：初始缩放比例</font>
-- <font style="color:rgb(38, 38, 38);">maximum-scale ：最大缩放比例</font>
-- <font style="color:rgb(38, 38, 38);">minimum-scale ：最小缩放比例</font>
-- <font style="color:rgb(38, 38, 38);">user-scalable ：是否允许用户缩放(yes/no）</font>
-```
-
-6\. <font style="color:rgb(38, 38, 38);"></font><font style="color:rgb(38, 38, 38);background-color:#FBF5CB;">搜索引擎索引方式：</font><font style="color:rgb(38, 38, 38);">\ </font><font style="color:rgb(38, 38, 38);background-color:rgb(250, 250, 250);"><</font><font style="color:rgb(34, 134, 58);background-color:rgb(250, 250, 250);">meta </font><font style="color:rgb(111, 66, 193);background-color:rgb(250, 250, 250);">name</font><font style="color:rgb(225, 0, 35);background-color:rgb(250, 250, 250);">=</font><font style="color:rgb(102, 153, 0);background-color:rgb(250, 250, 250);">"robots" </font><font style="color:rgb(111, 66, 193);background-color:rgb(250, 250, 250);">content</font><font style="color:rgb(225, 0, 35);background-color:rgb(250, 250, 250);">=</font><font style="color:rgb(102, 153, 0);background-color:rgb(250, 250, 250);">"index,follow"</font><font style="color:rgb(38, 38, 38);background-color:rgb(250, 250, 250);">/></font>
-
-<font style="color:rgb(38, 38, 38);">其中，content 参数有以下几种：</font>
+其中，content 参数有以下几种：
 
 ```
-- <font style="color:rgb(38, 38, 38);">all：文件将被检索，且页面上的链接可以被查询；</font>
-- <font style="color:rgb(38, 38, 38);">none：文件将不被检索，且页面上的链接不可以被查询；</font>
-- <font style="color:rgb(38, 38, 38);">index：文件将被检索；</font>
-- <font style="color:rgb(38, 38, 38);">follow：页面上的链接可以被查询；</font>
-- <font style="color:rgb(38, 38, 38);">noindex：文件将不被检索；</font>
-- <font style="color:rgb(38, 38, 38);">nofollow：页面上的链接不可以被查询。</font>
+
+- width viewport ：宽度(数值/device-width)
+- height viewport ：高度(数值/device-height)
+- initial-scale ：初始缩放比例
+- maximum-scale ：最大缩放比例
+- minimum-scale ：最小缩放比例
+- user-scalable ：是否允许用户缩放(yes/no）
+
+```
+
+6\. 搜索引擎索引方式：\ <meta name="robots" content="index,follow"/>
+
+其中，content 参数有以下几种：
+
+```
+
+- all：文件将被检索，且页面上的链接可以被查询；
+- none：文件将不被检索，且页面上的链接不可以被查询；
+- index：文件将被检索；
+- follow：页面上的链接可以被查询；
+- noindex：文件将不被检索；
+- nofollow：页面上的链接不可以被查询。
+
 ```
 
 #### mete标签中的viewport有什么用
@@ -587,14 +620,15 @@ viewport翻译为中文可以叫做“视区”
 
 ```html
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 ```
 
-* **width**：控制viewport的大小，可以指定的一个值，如600，或者特殊的值，如`device-width`为设备的宽度（单位为缩放为100%时的CSS的像素）
-* **height**：和width相对应，指定高度
-* **initial-scale**：初始缩放比例，也即是当页面第一次load的时候缩放比例
-* **maximum-scale**：允许用户缩放到的最大比例
-* **minimum-scale**：允许用户缩放到的最小比例
-* **user-scalable**：用户是否可以手动缩放
+***width**：控制viewport的大小，可以指定的一个值，如600，或者特殊的值，如`device-width`为设备的宽度（单位为缩放为100%时的CSS的像素）
+***height**：和width相对应，指定高度
+***initial-scale**：初始缩放比例，也即是当页面第一次load的时候缩放比例
+***maximum-scale**：允许用户缩放到的最大比例
+***minimum-scale**：允许用户缩放到的最小比例
+***user-scalable**：用户是否可以手动缩放
 
 #### img标签title、alt、srcset
 
@@ -604,7 +638,7 @@ title：鼠标移动到图片上时，显示title的内容，为设置该属性�
 
 响应式页面中经常用到根据屏幕密度设置不同的图片。这时就用到了 img 标签的srcset属性。srcset属性用于设置不同屏幕密度下，img 会自动加载不同的图片
 
-<font style="color:rgb(53, 55, 64);">srcset属性用于指定不同分辨率的图像</font>
+srcset属性用于指定不同分辨率的图像
 
 #### img的srcset
 
@@ -612,6 +646,7 @@ title：鼠标移动到图片上时，显示title的内容，为设置该属性�
 
 ```html
 <img src="image-128.png" srcset="image-256.png 2x"/>
+
 ```
 
 使用上面的代码，就能实现在屏幕密度为1x的情况下加载image-128.png，屏幕密度为2x时加载image-256.png
@@ -622,6 +657,7 @@ title：鼠标移动到图片上时，显示title的内容，为设置该属性�
 <img src="image-128.png"
   srcset="image-128.png 128w，image-256.png 256w，image-512.png 512w"
   sizes="(max-width: 360px) 340px，128px"/>
+
 ```
 
 其中srcset指定图片的地址和对应的图片质量。sizes用来设置图片的尺寸零界点。对于srcset中的w单位，可以理解成图片质量。如果可视区域小于这个质量的值，就可以使用。浏览器会自动选择一个最小的可用图片
@@ -630,6 +666,7 @@ sizes语法如下：
 
 ```javascript
 sizes="[media query] [length], [media query] [length]..."
+
 ```
 
 sizes就是指默认显示128px，如果视区宽度大于360px，则显示340px
@@ -645,6 +682,7 @@ sizes就是指默认显示128px，如果视区宽度大于360px，则显示340px
   <div id="topAnchor"></div>
   <a href="#topAnchor" style="position:fixed;right:0;bottom:0">回到顶部</a>
 </body>
+
 ```
 
 1. **scrollTop**
@@ -660,6 +698,7 @@ sizes就是指默认显示128px，如果视区宽度大于360px，则显示340px
     }
   </script>
 </body>
+
 ```
 
 **3. scrollTo**
@@ -684,6 +723,7 @@ sizes就是指默认显示128px，如果视区宽度大于360px，则显示340px
     }
   </script>
 </body>
+
 ```
 
 总结：
@@ -696,23 +736,23 @@ sizes就是指默认显示128px，如果视区宽度大于360px，则显示340px
 
 #### Canvas和SVG有什么区别?
 
-##### **<font style="color:rgb(63, 74, 84);">1. 基础概念</font>**
+##### **1. 基础概念**
 
-| **<font style="color:rgb(63, 74, 84);">特性</font>** | **<font style="color:rgb(63, 74, 84);">Canvas</font>** | **<font style="color:rgb(63, 74, 84);">SVG</font>** |
+| **特性** | **Canvas** | **SVG** |
 | --- | --- | --- |
-| **<font style="color:rgb(63, 74, 84);">类型</font>** | **<font style="color:rgb(63, 74, 84);">位图</font>**<font style="color:rgb(63, 74, 84);">（基于像素的栅格图形）</font> | **<font style="color:rgb(63, 74, 84);">矢量图</font>**<font style="color:rgb(63, 74, 84);">（基于数学描述的图形）</font> |
-| **<font style="color:rgb(63, 74, 84);">DOM 支持</font>** | <font style="color:rgb(63, 74, 84);">无（通过 JavaScript API 绘制）</font> | <font style="color:rgb(63, 74, 84);">是（XML 格式，可通过 DOM 操作）</font> |
-| **<font style="color:rgb(63, 74, 84);">渲染方式</font>** | <font style="color:rgb(63, 74, 84);">逐像素渲染，绘制后无法直接修改</font> | <font style="color:rgb(63, 74, 84);">保留模式，可动态修改属性或结构</font> |
+| **类型** | **位图**（基于像素的栅格图形） | **矢量图**（基于数学描述的图形） |
+| **DOM 支持** | 无（通过 JavaScript API 绘制） | 是（XML 格式，可通过 DOM 操作） |
+| **渲染方式** | 逐像素渲染，绘制后无法直接修改 | 保留模式，可动态修改属性或结构 |
 
-##### **<font style="color:rgb(63, 74, 84);">2. 核心区别</font>**
+##### **2. 核心区别**
 
-| **<font style="color:rgb(63, 74, 84);">对比维度</font>** | **<font style="color:rgb(63, 74, 84);">Canvas</font>** | **<font style="color:rgb(63, 74, 84);">SVG</font>** |
+| **对比维度** | **Canvas** | **SVG** |
 | --- | --- | --- |
-| **<font style="color:rgb(63, 74, 84);">性能</font>** | <font style="color:rgb(63, 74, 84);">适合高频重绘（如游戏、动画）</font> | <font style="color:rgb(63, 74, 84);">适合静态或少量动态图形（DOM 操作有性能开销）</font> |
-| **<font style="color:rgb(63, 74, 84);">缩放适应性</font>** | <font style="color:rgb(63, 74, 84);">放大时会模糊（位图特性）</font> | <font style="color:rgb(63, 74, 84);">无限缩放不失真（矢量特性）</font> |
-| **<font style="color:rgb(63, 74, 84);">事件交互</font>** | <font style="color:rgb(63, 74, 84);">需手动计算坐标实现交互（复杂）</font> | <font style="color:rgb(63, 74, 84);">原生支持事件绑定（如</font><font style="color:rgb(63, 74, 84);"> </font><code><font style="color:rgb(63, 74, 84);background-color:rgba(175, 184, 193, 0.2);">onclick</font></code><br/><font style="color:rgb(63, 74, 84);">）</font> |
-| **<font style="color:rgb(63, 74, 84);">SEO/可访问性</font>** | <font style="color:rgb(63, 74, 84);">内容不可被搜索引擎抓取</font> | <font style="color:rgb(63, 74, 84);">文本和结构可被索引</font> |
-| **<font style="color:rgb(63, 74, 84);">复杂度</font>** | <font style="color:rgb(63, 74, 84);">适合复杂动态场景（如数据可视化）</font> | <font style="color:rgb(63, 74, 84);">适合结构化图形（如图标、图表）</font> |
+| **性能** | 适合高频重绘（如游戏、动画） | 适合静态或少量动态图形（DOM 操作有性能开销） |
+| **缩放适应性** | 放大时会模糊（位图特性） | 无限缩放不失真（矢量特性） |
+| **事件交互** | 需手动计算坐标实现交互（复杂） | 原生支持事件绑定（如 `onclick` ） |
+| **SEO/可访问性** | 内容不可被搜索引擎抓取 | 文本和结构可被索引 |
+| **复杂度** | 适合复杂动态场景（如数据可视化） | 适合结构化图形（如图标、图表） |
 
 #### canvas在标签上设置宽高，与在style中设置宽高有什么区别?
 
@@ -721,22 +761,22 @@ sizes就是指默认显示128px，如果视区宽度大于360px，则显示340px
 
 如果canvas的width和height没指定或值不正确，就被设置成默认值。
 
-### <font style="color:#2F8EF4;background-color:rgb(252, 252, 252);">HTML基础与规范</font>
+### HTML基础与规范
 
-#### <font style="color:#DF2A3F;">DOCTYPE 的作用是什么？（必背）</font>
+#### DOCTYPE 的作用是什么？（必背）
 
 * <!DOCTYPE>声明位于 HTML文档中的第一行。告知浏览器的解析器用什么文档标准解析这个文档。
 * DOCTYPE 不存在或格式不正确会导致文档以兼容模式呈现。
-* **标准模式**的渲染方式和 JS 引擎的解析方式都是以该浏览器支持的**最高标准**运行。在**兼容模式**中，页面**以宽松的向后兼容**的方式显示，模拟老式浏览器的行为以防止站点无法工作。
+***标准模式**的渲染方式和 JS 引擎的解析方式都是以该浏览器支持的**最高标准**运行。在**兼容模式**中，页面**以宽松的向后兼容**的方式显示，模拟老式浏览器的行为以防止站点无法工作。
 
 PS: HTML5 不基于 SGML，因此不需要对 DTD 进行引用
 
-#### <font style="color:rgb(51, 51, 51);">标准模式与兼容模式各有什么区别？</font><font style="color:#DF2A3F;">（必背）</font>
+#### 标准模式与兼容模式各有什么区别？（必背）
 
 * 标准模式的渲染方式和 JS 引擎的解析方式都是以该浏览器支持的最高标准运行。
 * 在兼容模式中，页面以宽松的向后兼容的方式显示
 
-#### 行内元素有哪些?块级元素有哪些?空(void)元素有那些?<font style="color:#DF2A3F;">（必背）</font>
+#### 行内元素有哪些?块级元素有哪些?空(void)元素有那些?（必背）
 
 HTML 中的行内元素(inline elements)通常用于在一行内显示，不会独占一行的空间。常见的行内元素有。
 
@@ -763,9 +803,9 @@ HTML 中的行内元素(inline elements)通常用于在一行内显示，不会�
 * <meta>:用于指定页面元数据
 * <link>:用于引入外部资源。
 * <hr>:用于创建水平分隔线。
-* <br>:用于插入换行符
+*  :用于插入换行符
 
-注意，HTML5 中的空元素可以使用自闭合的格式，例如<br/>、\<img src="...” alt="...” />。
+注意，HTML5 中的空元素可以使用自闭合的格式，例如 、\<img src="...” alt="...” />。
 
 #### title与h1的区别、b与strong的区别、i与em的区别?
 
@@ -779,18 +819,18 @@ title 和 h1 的区别
 
 h1 标签用于表示文档的主标题，通常显示在页面内容区域的顶部。
 
-* 2.所在位置不同:**title** 标签应该放在\*\*<head>标签**内，而 **h1 标签**则应该放在**<body>标签\*\*内。
-* 3.数量不同：**tile**<font style="color:rgb(63, 74, 84);">每个页面</font>\*\*<font style="color:rgb(63, 74, 84);">唯一,</font>\*\***h1 标签**<font style="color:rgb(63, 74, 84);">可多个（但建议单个，保持语义清晰）</font>
+* 2.所在位置不同:**title** 标签应该放在**<head>标签**内，而 **h1 标签**则应该放在**<body>标签**内。
+* 3.数量不同：**tile**每个页面**唯一,h1 标签**可多个（但建议单个，保持语义清晰）
 
 b和 strong 的区别
 
-* b **<font style="color:rgb(63, 74, 84);background-color:rgb(246, 248, 250);">纯视觉强调</font>**
-* strong **<font style="color:rgb(63, 74, 84);background-color:rgb(246, 248, 250);">语义化强调</font>**
+* b **纯视觉强调**
+* strong **语义化强调**
 
 i 和 em 的区别
 
-* i\*\*<font style="color:rgb(63, 74, 84);background-color:rgb(246, 248, 250);">纯视觉斜体</font>\*\*
-* em **<font style="color:rgb(63, 74, 84);background-color:rgb(246, 248, 250);">语义化强调</font>**
+* i**纯视觉斜体**
+* em **语义化强调**
 
 最后
 
@@ -800,9 +840,9 @@ i 和 em 的区别
 
 * HTML:超文本标记语言，是**语法较为松散**的、不严格的Web语言;
 * XML:可扩展的标记语言，**语法严格**，主要用于**存储数据化结构**，可扩展，**可自定义标签**。
-* XHTML:可扩展的超文本标记语言，<font style="color:rgb(63, 74, 84);">HTML 的 XML 化，</font>**<font style="color:rgb(63, 74, 84);">语法更严谨</font>**。
+* XHTML:可扩展的超文本标记语言，HTML 的 XML 化，**语法更严谨**。
 
-#### <font style="color:#DF2A3F;">head 标签有什么作用（必背）</font>
+#### head 标签有什么作用（必背）
 
 * <head> 标签用于**定义文档的头部**，它是所有头部元素的容器。<head> 中的元素可以**引用脚本**、**指示样式**表、**提供元信息，seo优化**等。
 * 下面这些标签可用在 head 部分：<title><meta> <link><style><script><base>
@@ -820,13 +860,12 @@ Webp:WebP 格式，谷歌(google)开发的一种旨在**加快图片加载速度
 
 Apng:全称是“Animated Portable Network Graphics”,是PNG的**位图动画扩展**， 可以实现png格式的动态图片效果。04年诞生，但一直得不到各大浏览器厂商的支持，直到日前得到 i0s safari 8 的支持，有望代替 GIF 成为下一代动态图标准
 
-#### <font style="color:#DF2A3F;">src和href的区别（必背）</font>
+#### src和href的区别（必背）
 
 src和href都是用来加载外部资源，区别如下
 
 * src当浏览器解析到该元素时，会**暂停其他资源的加载和处理**，直到该资源加载完成。它会**将资源内容嵌入到当前标签所在的位置**，将其指向的资源下载应用到文档内，如js脚本等。常用在img、script、iframe等标签。
 * href指向**外部资源所在的位置**，和当前元素位置建立链接，当浏览器解识别到它指向的位置，将其下载的时候**不会阻止其他资源的加载解析**。常用在a 、 link标签。
 
-
-> 更新: 2025-12-17 14:28:49  
+> 更新: 2025-12-17 14:28:49
 > 原文: <https://www.yuque.com/u56987424/lwyx/amgdcznyd86l6y4k>
