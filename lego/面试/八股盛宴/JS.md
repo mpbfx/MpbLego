@@ -20,7 +20,7 @@ tags:
 > 7. 高级主题与安全
 
 ### 基本概念与数据类型
-
+d
 #### js底层是什么
 
 * 不同的 JavaScript 引擎可能有不同的底层实现，但大多数主流引擎（如 V8）都使用 C/C++ 编写
@@ -595,17 +595,46 @@ JSON.stringify(o); //=>"{a:1,b:2,c:3}
 
 #### 判断数组的方式（必背）
 
-1. 通过Object.prototype.toString.call()做判断 Object.prototype.toString.call(obj).slice(8,-1) === 'Array';
-2. 通过原型链做判断 obj.**proto** === Array.prototype;
-3. 通过ES6的Array.isArray()做判断 Array.isArrray(obj);
-4. 通过instanceof做判断 obj instanceof Array
+1. 通过Object.prototype.toString.call()做判断 `Object.prototype.toString.call(obj).slice(8,-1) === 'Array'`;
+2. 通过原型链做判断 `obj.__proto__ === Array.prototype`;
+3. 通过ES6的Array.isArray()做判断 `Array.isArray(obj)`;
+4. 通过instanceof做判断 `obj instanceof Array`
+
+**深度解析与区别：**
+*   **`Array.isArray()`**：**项目首选**。语法简洁，且能跨 `iframe` 正确识别数组，是现代开发的标准。
+*   **`Object.prototype.toString.call()`**：**最稳健**。它是 JS 底层最可靠的类型识别方案，返回 `[object Array]`，常用于编写底层通用库。
+*   **`instanceof`**：**原理性检查**。检查构造函数的 `prototype` 是否出现在对象的原型链上。缺点是在多窗口（multi-window/iframe）环境下会失效。
+*   **`__proto__`**：**理解原型链**。直接对比原型对象。缺点是原型可被篡改，且 `__proto__` 非标准属性，生产环境严禁使用。
+
+**LEGO 项目实战案例：**
+
+*   **多属性批量更新 (`editor.ts`)**：
+    *   **场景**：在编辑器中，有些操作（如“重置大小”）需要同时修改 `width` 和 `height`。我们的 `updateComponent` 指令支持传入单个字符串或字符串数组。
+    *   **应用**：代码中通过 `Array.isArray(key)` 来实现分流逻辑。如果是数组，则启用 `map` 循环处理；如果是字符串，则走单值更新流程。这保证了底层接口的**高度灵活和复用性**。
+*   **撤销重做逻辑**：
+    *   **场景**：在记录操作历史（History）时，我们需要存储属性的旧值。
+    *   **应用**：通过判断 `key` 是否为数组，决定是缓存单变量值还是缓存一个值的数组快照，确保撤销操作时数据结构的严格一致。
 
 #### 伪数组转化成数组（必背）
 
-1. 通过 call 调用数组的 slice 方法来实现转换 Array.prototype.slice.call(arrayLike)
-2. 通过 call 调用数组的 splice 方法来实现转换 Array.prototype.splice.call(arrayLike, 0)
-3. 通过 apply 调用数组的 concat 方法来实现转换 Array.prototype.concat.apply(\[], arrayLike)
-4. 通过 Array.from 方法来实现转换 Array.from(arrayLike)
+1. **ES6 展开运算符**：`[...arrayLike]` （最推荐，代码最简洁）
+2. **`Array.from()`**：`Array.from(arrayLike)` （最语义化，且能处理没有 `iterator` 接口但有 `length` 的对象）
+3. **借用 `slice` 方法**：`Array.prototype.slice.call(arrayLike)`
+4. **借用 `splice` 方法**：`Array.prototype.splice.call(arrayLike, 0)`
+5. **借用 `concat` 方法**：`Array.prototype.concat.apply([], arrayLike)`
+
+**LEGO 项目实战案例：**
+
+*   **多文件批量预处理 (`Uploader.vue`)**：
+    *   **场景**：用户多选图片上传时，`input.files` 返回的是一个 **`FileList`**（伪数组）。
+    *   **应用**：如果我们需要对这些文件先进行过大的文件过滤（`filter`）或者批量计算尺寸，就必须先转换。
+    *   **代码实战**：`const files = [...e.target.files];` 转换后即可流畅使用 `files.forEach` 或 `files.filter` 等 ES6 数组方法。
+*   **编辑器批量图层操作**：
+    *   **场景**：虽然项目主要使用数据驱动（Vue），但在某些原生交互插件中（如热键逻辑），如果使用 `document.querySelectorAll` 获取了一组 DOM 节点。
+    *   **应用**：通过 `Array.from(nodes)` 转换后，可以方便地利用 `map` 将 DOM 节点转换为对应的属性 ID 集合，进行后续的业务处理。
+
+**面试核心提示：**
+*   **展开运算符 vs Array.from**：展开运算符要求对象必须是 **可迭代的 (Iterable)**；而 `Array.from` 更强大，只要对象有 `length` 属性就能转。在 LEGO 项目这类现代 TS/JS 环境中，直接用这两种方式即可，不需要再用旧式的 `call/apply` 方法。
 
 #### 深拷贝浅拷贝的方法（必背）
 
@@ -733,6 +762,23 @@ const deepCopy = _.cloneDeep(original);
 | 深拷贝（JSON）   | `JSON.parse(JSON.stringify(obj))`      | 纯 JSON 数据，简单嵌套     |
 | 深拷贝（第三方） | Lodash `cloneDeep()`                   | 大型项目，复杂数据类型     |
 
+**LEGO 项目实战案例：**
+
+*   **浅拷贝的应用 (Vuex 状态更新)**：
+    *   **场景**：在编辑器中修改页面基础设置（如标题、描述）时。
+    *   **应用**：利用解构赋值 `state.page = { ...state.page, title: '新标题' }`。
+    *   **意图**：符合 Vue 的单向数据流和响应式原理，通过生成一个“新引用”的对象触发视图更新。
+    *   **深度辨析（为什么是浅拷贝？）**：展开运算符 `{ ...state.page }` 只会克隆对象的第一层属性。对于 `PageData` 中的 `title` (String) 和 `id` (Number)，确实生成了独立的副本；但对于嵌套的 **`props` (Object)**，它仅仅复制了内存地址的引用。
+    *   **证明**：执行 `const newPage = { ...state.page }` 后，`newPage.props === state.page.props` 依然返回 `true`。这就意味着如果你修改 `newPage.props.backgroundColor`，原始的 `state.page.props` 也会跟着变。所以在处理多层结构且需要完全隔离时，必须退回到 `cloneDeep`。
+*   **深拷贝的应用 (撤销重做 History)**：
+    *   **场景**：在 `src/store/editor.ts` 中，每当产生一步可撤销的操作时，需要记录快照。
+    *   **应用**：使用 `data: cloneDeep(component)` 存入 `histories` 数组。
+    *   **关键原因**：组件的 `props` 是一个深度嵌套的对象。如果不进行深拷贝，历史快照中的属性将与当前状态共享同一块内存内存；当用户后续继续操作时，历史记录里的值会同步“变掉”，导致撤销功能失效。
+*   **深拷贝的应用 (组件复制粘贴)**：
+    *   **场景**：用户执行“拷贝图层”并“粘贴”的操作。
+    *   **应用**：使用 `const clone = cloneDeep(state.copiedComponent)` 创建副本。
+    *   **意图**：确保创建出的新图层是一个完全独立的副本。修改新图层属性时（如改变背景色），绝对不能影响到被原始图层。
+
 #### object.assign和扩展运算法是深拷贝还是浅拷贝，两者区别
 
 1. 都是浅拷贝
@@ -758,6 +804,22 @@ const deepCopy = _.cloneDeep(original);
 * map():创建一个新数组，其中包含对原始数组中的每个元素进行操作后的结果
 * reduce():将数组中的元素进行累积操作，返回一个单一的值
 * foreach():对数组中的每个元素执行提供的函数
+
+**LEGO 项目实战场景：**
+
+*   **`push()`**：当用户点击左侧组件列表时，在 `editor.ts` 的 `addComponent` 中使用 `state.components.push(component)` 将新元素添加到画布数组末尾。
+*   **`filter()`**：
+    *   **删除图层**：在 `deleteComponent` 中使用 `state.components.filter(c => c.id !== id)`。
+        *   **逻辑理解**：`filter` 会保留返回 `true` 的项。这里的条件是“ID 不相等”，所以除了要删除的那一项外，其他项都会被**保留**，从而实现删除效果。
+    *   **文件列表**：在 `Uploader.vue` 中，通过 `filter` 移除已选中的文件或筛选状态为 `'ready'` 的待上传文件。
+*   **`map()`**：
+    *   **URL 参数生成**：在 `helper.ts` 的 `objToQueryString` 中，利用 `map` 将对象键值对转换为 `key=value` 字符串数组，再配合 `join('&')` 生成请求参数。
+    *   **模板预设**：将原始组件模板数组通过 `map` 注入默认属性（`defaultProps`）生成最终的渲染数据。
+*   **`find()` / `findIndex()`**：
+    *   在编辑器中，通过 `state.components.find()` 查找当前选中的元素（Active Element）以渲染右侧属性面板。
+    *   使用 `findIndex()` 记录被删除元素的原始索引，以便在“撤销 (Undo)”操作时能将其精确地插回原位。
+*   **`includes()`**：在 `beforeUploadCheck` 工具函数中，通过 `['image/jpeg', 'image/png'].includes(file.type)` 快速校验上传文件格式。
+*   **`slice()`**：在历史记录管理中，当用户在撤销过程中执行了新操作，利用 `state.histories.slice(0, state.historyIndex)` 删掉废弃的“未来”快照。
 
 #### 空数组调用reduce会发生什么
 
@@ -813,7 +875,31 @@ console.log(sum); //输出:154
 
 reduce()方法非常强大，可以用于解决各种累积计算问题，如求和、求平均值、查找最大/最小值等。
 
-它提供了一种简洁而灵活的方式来处理数组数据，并生成一个单一的结果
+它提供了一种简洁而灵活的方式来处理数组数据，并生成一个单一的结果。
+
+**LEGO 项目实战场景：**
+
+*   **属性表单转换 (`PropsTable.tsx`)**：
+    *   **场景**：在属性设置面板中，我们需要将组件的原始 `props`（单纯的数据）转换为一套包含“表单类型”、“校验规则”的复杂 UI 配置对象。
+    *   **实现**：利用 `reduce` 遍历属性对象，将每个属性名映射为对应的 `FormProps` 配置。
+    ```typescript
+    const finalProps = computed(() => {
+      return reduce(props.props, (result, value, key) => {
+        const item = mapPropsToForms[key]
+        if (item) {
+          result[key] = { ...item, value } // 将单一值累积成复杂的 UI 配置对象
+        }
+        return result
+      }, {} as { [key: string]: FormProps })
+    })
+    ```
+*   **编辑器图层状态统计**：
+    *   **场景**：计算当前画布中“已隐藏”的图层总数。
+    *   **实现**：`const hiddenCount = components.reduce((acc, c) => c.isHidden ? acc + 1 : acc, 0)`。相比 `filter().length`，它可以在一次遍历中直接产出统计数值。
+
+**面试核心避坑点：**
+*   **初值异常**：如果数组为空且没有提供初始值参数（第二个参数），调用 `reduce` 会抛出 **`TypeError`**。在 LEGO 这类处理动态接口数据的项目中，**养成手动给初值（如 0 或 {}）的习惯至关重要**。
+*   **计算属性性能**：在 Vue 的 `computed` 中使用 `reduce` 进行大数据量转换时，避免在回调内部执行 `cloneDeep` 等高开销操作，应直接操作累积器 `result`。
 
 #### '1'.toString()为什么不会报错?
 
@@ -904,11 +990,52 @@ function mySetInterval(fn,timeout){
   }
   // 启动定时器
   setTimeout(interval,timeout);
-  // 返回控制器20
+  // 返回控制器
   return timer;
 }
 
+// 通俗理解：
+// 这就是“跑完一圈，再约下一圈”。
+// 1. interval 函数执行时，先干活 (fn())。
+// 2. 活干完了，通过 setTimeout(interval, timeout) 再预约下一次执行。
+// 3. 这里的 timer.flag 就像一个电闸，开关一拉（设为 false），递归链条就断了，定时器也就停了。
+// 4. 相比原生 setInterval，这种写法能保证前一个任务执行完，休息够 timeout 时间后，才开始下一个任务，避免了“任务堆积”问题。
+
+**LEGO 项目实战场景：**
+
+*   **输入防抖 (Debounce) 的变种**：
+    *   **场景**：在 `editor.ts` 中，我们有一个 `debounceChange` 函数，用于将频繁的属性修改操作合并成一次历史记录。
+    *   **原理**：虽然它是为了“推迟执行”，但和这个模拟逻辑有异曲同工之妙——**利用 `setTimeout` 控制执行时机**。每次新操作进来，先 `clearTimeout`（拉电闸取消上一轮预约），然后重新 `setTimeout`（预约新的一轮）。
+*   **作品自动保存 (轮询)**：
+    *   **场景**：如果项目需要实现“每隔 30 秒自动保存草稿”。
+    *   **应用**：**强烈建议使用这种递归 `setTimeout` 写法**。
+    *   **原因**：因为“保存”是一个异步请求接口，受网络影响可能耗时很久。如果用 `setInterval`，可能会导致上一轮保存请求还没返回，下一轮请求又发出去了，导致请求排队甚至雪崩。用递归正如上图逻辑：**“等这次保存完了，再等 30 秒，再发起下一次”**，稳健性极高。
+
+**LEGO 项目中的真实实现 (`useSaveWork.ts`)：**
+我们采用了**组合式 Hook** 来封装保存逻辑，实现了三重保障：
+1.  **自动保存 (setInterval)**：
+    *   在 `onMounted` 中启动一个 `50秒` 的定时器。
+    *   **关键判定**：通过 `isDirty` 标识（Vuex 中的状态，只要修改过属性就变 true）。只有当 `isDirty && currentWorkId` 时才真正调用接口，避免无效请求。
+2.  **路由拦截 (onBeforeRouteLeave)**：
+    *   当用户跳转页面时，检查 `isDirty`。如果未保存，弹出 `AntD Modal` 询问用户“是否保存？”，阻断路由跳转。
+3.  **手动保存**：允许用户点击顶部导航栏的主动保存按钮。
+
+```typescript
+// useSaveWork.ts 核心代码简化
+if (!disableSideEffects) {
+  onMounted(() => {
+    timer = setInterval(() => {
+      // 只有“脏了”才保存
+      if (isDirty.value) {
+        saveWork()
+      }
+    }, 1000 * 50)
+  })
+}
 ```
+**面试官追问：这里为什么用了 `setInterval` 而不是刚才推荐的递归 `setTimeout`？**
+*   **答**：因为 50 秒的间隔足够长，且我们的 `isDirty` 检查非常轻量（纯本地 boolean 判断）。且项目体量目前较小，并发冲突概率低。但在高并发或保存频率极高（如 5秒一次）的场景下，我会重构为递归 `setTimeout` 方案。
+
 
 #### 匿名函数（选背）
 
@@ -976,7 +1103,7 @@ test();// 测试
 ```javascript
 test();// 报错:TypeError:test is not a function1
 var test =function(){
-  console.log(“测试");
+  console.log("测试");
 };
 
 ```
@@ -999,6 +1126,27 @@ var greeting = function(){
 * 函数声明中的 函数名 是必需的，而函数表达式中的 函数名则是可选的
 * 函数表达式可以在定义的时候直接在表达式后面加()执行，而函数声明则不可以
 * 自执行函数即使带有函数名，它里面的函数还是属于函数表达式
+
+**LEGO 项目实战场景：**
+
+*   **函数声明 (Function Declaration)**：
+    *   **场景**：在 `PropsTable.tsx` 和 `helper.ts` 等文件中，定义工具函数。
+    *   **代码**：`function capitalizeFirstLetter(string: string) { ... }`
+    *   **优势**：利用**变量提升**特性，这些工具函数可以在文件的任何地方被调用（哪怕调用写在定义之前），让代码结构更灵活，主逻辑更清晰。
+*   **函数表达式 (Function Expression)**：
+    *   **场景**：在 `store/index.ts` 中定义的 `actionWrapper` 高阶函数。
+    *   **代码**：
+    ```typescript
+    export function actionWrapper(...) {
+      // 返回一个异步函数表达式
+      return async (context: ActionContext<any, any>, payload: ActionPayload = {}) => {
+        // 具体业务逻辑...
+      }
+    }
+    ```
+    *   **优势**：这里返回的 `async` 函数就是一个典型的匿名函数表达式。它被赋值给变量或作为返回值传递。在闭包、回调函数、高阶函数（如防抖、节流）中，我们几乎总是使用函数表达式。
+*   **立即执行函数 (IIFE)**：
+    *   **场景**：虽然现代模块化（ES Modules）已经天然隔离了作用域，但在某些老旧的第三方库初始化代码中，你依然会看到 `(function(){ ... })()` 的身影，用于防止全局变量污染。
 
 #### forEach中return有效果吗?如何中断forEach循环?（选背）
 
