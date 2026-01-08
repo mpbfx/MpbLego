@@ -1173,6 +1173,13 @@ var greeting = function(){
 * pending -> rejected：Rejected（已拒绝）
 * 一旦从进行状态变成为其他状态就永远不能更改状态了。
 
+**通俗理解：Promise 就像一个“外卖订单”**
+*   **Pending**：骑手正在送餐路上，结果未知。
+*   **Fulfilled/Resolved**：外卖安全送达，你收到了餐（Data）。
+*   **Rejected**：骑手摔了或者店家没货，订单取消，你收到了致歉（Error）。
+*   **状态不可逆**：外卖要么送达，要么取消，不可能既送达了又取消。一旦结果定下来（Settled），就再也不会变了。
+*   **Promise 嵌套**（文档中的情况二）：就像汉堡店接了单，但发现没面包了，要先去隔壁买面包。那么“汉堡订单”的成败，完全取决于“买面包”这个内部行动的结果。
+
 **在通过new创建Promise对象时，我们需要传入一个回调函数，我们称之为executor **
 
 ✓ 这个回调函数会被立即执行，并且给传入另外两个回调函数resolve、reject；
@@ -1206,6 +1213,30 @@ reject的回调函数：当状态变成reject时会回调的函数；
 ✓ 情况三：返回一个thenable值；
 
 当then方法抛出一个异常时，那么它处于reject状态
+
+**LEGO 项目实战场景：**
+
+*   **文件上传全生命周期 (`Uploader.vue`)**：
+    *   **场景**：文件上传是一个典型的异步链式操作（准备 -> 校验 -> 上传 -> 响应）。
+    *   **代码分析**：
+    ```typescript
+    // 1. 发起请求：axios.post 本身返回一个 Promise
+    axios.post(url, data).then(resp => {
+      // 2. Fulfilled 状态：上传成功，修改文件状态为 success
+      readyFile.status = 'success'
+      emit('success', { resp })
+    }).catch(e => {
+      // 3. Rejected 状态：网络错误或后端报错，修改状态为 error
+      readyFile.status = 'error'
+      emit('error', { error: e }) 
+    }).finally(() => {
+      // 4. Finally：无论成功失败，都清空 input 以便下次选择
+      fileInput.value.value = ''
+    })
+    ```
+*   **支持异步校验的钩子函数**：
+    *   **场景**：组件不仅支持同步校验文件（返回 boolean），还支持异步校验（如查询后端该文件名是否已存在）。
+    *   **实现**：判断 `props.beforeUpload` 的返回值。如果返回值是 `Promise` 实例（`result instanceof Promise`），则等待其 `resolve` 后再执行上传；如果 `reject` 则中断流程。这是 Promise 在设计组件接口时的经典应用。
 
 #### Promise方法（必背）
 
@@ -1316,13 +1347,23 @@ Ap.catch(onRejected);
 
 ```javascript
 Promise.resolve(1)
-  .then(2)// 注意这里
-  .then(Promise.resolve(3))
-  .then(console.log)
+  .then(2)// 注意这里传入的是数字，不是函数！发生穿透，数据 1 直接流过
+  .then(Promise.resolve(3)) // 传入的是对象，不是函数！继续穿透，数据 1 继续流过
+  .then(console.log) // 传入的是函数，接收到数据 1，输出 1
 
 ```
-
 上面代码的输出是 1
+
+**通俗理解：**
+`.then()` 就像接力赛的选手，它**只接受“函数”**作为接棒者。如果你往 `.then()` 里塞了数字、对象或者 `undefined`，Promsie 机制会认为“这里没人接棒”，于是直接把手里的数据“穿透”传给下一棒。
+
+**如何修复（不穿透）？**
+必须用**函数**包裹你的逻辑：
+```javascript
+Promise.resolve(1)
+    .then(() => 2) // 传入了一个函数，该函数返回 2
+    .then(data => console.log(data)) // 输出 2
+```
 
 #### 对async/await的理解（必背）
 
@@ -1340,6 +1381,38 @@ Promise.resolve(1)
 * async会返回一个{PromiseStatus:pending}的Promise(发生切换，异步等待Promise的执行结果)
 * Promise的resolve会使得await的代码节点获得相应的返回结果，并继续向下执行
 * Promise的reject 会使得await的代码节点自动抛出相应的异常，终止向下继续执行
+
+**LEGO 项目实战场景 (`Editor.vue` - publish函数)：**
+
+我们来看看“发布作品”这个功能的实现，它完美展示了 `async/await` 的价值：
+```typescript
+const publish = async () => {
+  // 1. 同步代码：清空选中状态
+  store.commit('setActive', '')
+  
+  // 2. 异步等待：等待 Vue DOM 更新完成
+  // 如果用 .then，这里就要开始缩进一层了
+  await nextTick() 
+  
+  try {
+    // 3. 异步等待：截图并上传（耗时操作）
+    // await 会“暂停”在这里，直到 publishWork 完成（Resolve）
+    // 如果 publishWork 内部报错（Reject），会直接跳到 catch
+    await publishWork(el) 
+    
+    // 4. 只有上面成功了，才会执行这一行
+    showPublishForm.value = true
+  } catch(e) {
+    // 5. 捕获上面 await 抛出的错误（Reject）
+    console.error(e)
+  } finally {
+    // 6. 无论成功失败，都执行清理操作
+    canvasFix.value = false
+  }
+}
+```
+**总结：**
+如果不用 `async/await`，上面那段代码会变成 `nextTick().then(() => publishWork().then(...).catch(...))` 的嵌套地狱。使用 `await` 后，代码逻辑从上到下像流水账一样清晰，错误处理也回归到了最原始的 `try/catch`。
 
 #### generator 是怎么做到中断和恢复的?
 
@@ -1375,6 +1448,22 @@ gen.next();//输出 Step 3
 3. 对错误处理友好，可以通过try/catch捕获，Promise的错误捕获非常冗余
 4. async/await基于Promise。async把promise包装了一下，async函数更简洁，不需要像promise一样需要写then，不需要写匿名函数处理promise的resolve值。
 
+**深度对比解析：**
+
+1.  **错误捕获的大一统能力**：
+    *   **Promise**: 需要同时维护同步的 `try/catch` 和异步的 `.catch()`，容易遗漏。
+    *   **Async/Await**: **同一个 `try/catch` 块** 可以同时捕获同步逻辑错误（如 JSON 解析失败）和异步请求错误（如网络 404），大大降低了心智负担。
+2.  **避免“变量传递噩梦”**：
+    *   **场景**：当步骤 3 需要用到步骤 1 的结果时。
+    *   **Promise**: 必须使用嵌套（回调地狱）或者定义外部变量。
+    *   **Async/Await**: 代码像同步逻辑一样执行，`const res1 = await step1()` 定义的变量在后续每一行都能直接访问，完全消灭了作用域隔离问题。
+    ```javascript
+    // Async/Await: 清晰、扁平、变量共享方便
+    const user = await getUser(id);
+    const posts = await getPosts(user.id); // 直接使用上一行的 user
+    const comments = await getComments(posts[0].id); // 直接使用上一行的 posts
+    ```
+
 #### async/await对Generator的改进（必背）
 
 1. 内置执行器：async内置了执行器，无需手动调用next方法
@@ -1402,6 +1491,15 @@ gen.next();//输出 Step 3
 * 常见微任务：Primise的回调，MutationObserver的回调，process.nextTick
 
 4. 常见执行顺序：调用栈中的同步任务、所有微任务、渲染页面、取出任务队列中的下一个宏任务、重复
+
+**通俗理解（消除"谁先谁后"的误区）：**
+*   **第一个"宏任务"就是整个 `<script>` 标签里的同步代码。** 代码从上到下执行时，遇到 `setTimeout` 就扔进"宏任务队列"，遇到 `Promise.then` 就扔进"微任务队列"。
+*   **当前这轮宏任务（同步代码）执行完毕后**，会**优先清空微任务队列**（全部执行完！），然后才会去取下一个宏任务。
+*   **执行顺序流程图**：
+    ```
+    宏任务(script) -> [清空所有微任务] -> 渲染 -> 宏任务(setTimeout回调) -> [清空所有微任务] -> ...
+    ```
+*   **经典面试题输出**：`console.log(1); setTimeout(cb, 0); Promise.resolve().then(cb2); console.log(4);` 输出为 `1 -> 4 -> cb2 -> cb`。
 
 #### 如果最后一个微任务又产生了新的微任务（必背）
 
@@ -1575,6 +1673,24 @@ function myNew(fn, ...args) {
 
 * 在**非严格模式**下，`this`会指向全局对象（浏览器中为 `window`，Node.js 中为 `global`）
 * 在**严格模式**（`'use strict'`）下，`this`为 `undefined`
+
+**通俗理解（员工离职比喻）：**
+*   **正常上班**：`company.sayName()` -> 员工通过公司门禁刷卡，他知道自己属于这个公司（`this` 指向 `company`）。
+*   **被猎头挖走**：`const fn = company.sayName; fn();` -> 员工被"拆"出来单独工作，没有刷任何公司的卡，他就迷失了（`this` 丢失）。
+
+**代码证明：**
+```javascript
+const person = { name: '张三', greet() { console.log(this.name); } };
+person.greet();        // 输出: 张三 (通过 person 调用，this 指向 person)
+const { greet } = person;
+greet();               // 输出: undefined (解构后直接调用，this 丢失)
+```
+
+**解决方案**：使用 `bind` 提前绑定 `this`。
+```javascript
+const bindedGreet = person.greet.bind(person);
+bindedGreet(); // 输出: 张三
+```
 
 ##### 如何保持原 `this`指向
 
