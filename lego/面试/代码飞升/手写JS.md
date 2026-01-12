@@ -21,6 +21,13 @@
 #### 1.new
 
 ```javascript
+// [原子模型]: 创空对象 -> 链原型 -> 绑定this执行 -> 返结果
+// [逻辑骨架]:
+// 1. const obj = {}
+// 2. obj.__proto__ = fn.prototype
+// 3. res = fn.apply(obj, args)
+// 4. return (res instanceof Object ? res : obj)
+// [通俗讲解]: “模具冲压”。先拿块白板(obj)，贴上模具标签(__proto__)，再按图纸(fn)加工内容，最后看成品是否合格，不合格就返回原始白板。
 function myNew(fn, ...args) {
   if(Object.prototype.toString.call(fn) !== "[object Function]") {
     return "Error in params"
@@ -35,12 +42,18 @@ function myNew(fn, ...args) {
 #### 2.instanceof
 
 ```javascript
-function instanceof(left, right) {
+// [原子模型]: 取左侧原型 -> 循环对比右侧原型 -> 爬坡直到null
+// [逻辑骨架]:
+// 1. let proto = Object.getPrototypeOf(left)
+// 2. while(proto) { if(proto === right.prototype) return true; proto = getPrototypeOf(proto); }
+// 3. return false
+// [通俗讲解]: “溯源追分”。拿着产品看它身上的模具标签，如果不是目标模具，就顺着标签往上找“模具的模具”，直到找到或者源头为空。
+function myInstanceof(left, right) {
   const prototype = right.prototype
   let proto = Object.getPrototypeOf(left)
   while(true) {
     if(proto === null) return false
-    if(proto === prototype) return ture
+    if(proto === prototype) return true
     proto = Object.getPrototypeOf(proto)
   }
 }
@@ -49,6 +62,11 @@ function instanceof(left, right) {
 #### 3.Object.create（选背）
 
 ```javascript
+// [原子模型]: 创建临时构造函数 -> 指向原型 -> 返回实例
+// [逻辑骨架]:
+// 1. function Fn() {}
+// 2. Fn.prototype = proto; return new Fn();
+// [通俗讲解]: “复印图纸”。直接拿一张现成的图纸(proto)作为新模具的底稿，吐出一个完全符合该图纸规范的新产品。
 //实现Object.create方法
 function create(proto) {
     function Fn() {};
@@ -61,6 +79,10 @@ function create(proto) {
 #### 4.定义不可枚举的属性（选背）
 
 ```javascript
+// [原子模型]: 使用 Object.defineProperty -> 设置 enumerable: false
+// [逻辑骨架]:
+// 1. Object.defineProperty(obj, key, { value, enumerable: false })
+// [通俗讲解]: “深藏不露”。给产品装个隐形零件。虽然零件在那执行功能，但别人在清点零件清单(keys)时，根本看不到它。
 const obj = {};
 
 // 定义一个不可枚举的属性
@@ -82,6 +104,12 @@ console.log(Object.keys(obj)); // 返回空数组，因为 'nonEnumerable' 不�
 #### 5.对象支持for of
 
 ```javascript
+// [原子模型]: 实现 [Symbol.iterator] 接口 -> 返回包含 next() 方法的对象 -> next() 返回 {value, done}
+// [逻辑骨架]:
+// 1. obj[Symbol.iterator] = function() {
+//      return { next: () => { if(index < len) return {value, done:false}; else return {done:true}; } }
+//    }
+// [通俗讲解]: “自动传送带”。给一个大仓库(对象)装上自动传送带，只要外面喊“下一个”，仓库就弹出一个货物，直到清空。
 // 为 Object 原型添加可迭代能力
 Object.prototype[Symbol.iterator] = function () {
   // 获取对象自身的可枚举键（排除原型链上的属性）
@@ -114,6 +142,13 @@ for (const [key, value] of person) {
 #### 6.对象比较
 
 ```javascript
+// [原子模型]: 剥洋葱 -> 基础类型直比 -> 键数对比 -> 递归对比每一项
+// [逻辑骨架]:
+// 1. if (!isObj) return a === b
+// 2. if (keyLenA !== keyLenB) return false
+// 3. for(key in a) if(!isEqual(a[key], b[key])) return false
+// 4. return true
+// [通俗讲解]: “严密质检”。不是看两个包装盒像不像，而是拆开盒子，数数零件数对不对，再把每个零件拿出来一一比对。
 
 function isEqual (obj1, obj2) {
   //不是对象,直接返回比较结果
@@ -157,20 +192,25 @@ console.log(isEqual(obj1, obj2)) //false
 #### 7.url解析
 
 ```javascript
+// [原子模型]: 分割 ? 取参数串 -> 按 & 分割项 -> 按 = 分割键值对 -> decodeURIComponent 处理
+// [逻辑骨架]:
+// 1. queryString = url.split('?')[1];
+// 2. queryString.split('&').forEach(str => { [k,v] = str.split('='); res[k] = decode(v) })
+// [通俗讲解]: “拆箱清点”。物流车到了，先把车厢里的货单(?后面)拿出来，按“&”符号剪成一个个长条，再按“=”切开，把左边当标签、右边当货物收纳。
 const parseUrl = (url) => {
-  const tmpUrl = url.split("?")[1]
+  if (!url.includes("?")) return {}
+  const queryString = url.split("?")[1]
   const resObj = {}
-  for(const str of tmpUrl.split("&")) {
+  queryString.split("&").forEach(str => {
     let [key, value] = str.split("=")
-    value = decodeURIComponent(value)
-    if(resObj.hasOwnProperty(key)) {
+    if (!key) return
+    value = value !== undefined ? decodeURIComponent(value) : true
+    if (resObj.hasOwnProperty(key)) {
       resObj[key] = [].concat(resObj[key], value)
-    } else if(value == "undefined") { // !!!
-      resObj[key] = true
     } else {
-      resObj[key] = value 
+      resObj[key] = value
     }
-  }
+  })
   return resObj
 }
 https://example.com/search?q=nodejs&lang=en&lang=zh&user=John%20Doe&flag&empty=&status=undefined&value=null&special=a%25b&malformed=a%&noValue&=onlyKey
@@ -204,30 +244,45 @@ const arr = [
 ];
 
 // * 数组转树  递归求解
+// [原子模型]: ID映射映射表(Map) -> 遍历找父级 -> 挂载children
+// [逻辑骨架]:
+// 1. for(item of list) map[item.id] = { ...item, children: [] }
+// 2. for(item of list) { if(hasPid) map[pid].children.push(node); else res.push(node); }
+// [通俗讲解]: “车间组装”。先让所有零件(扁平数组)按工号在架子上站好(Map)，然后指挥：有上级的零件直接跳进上级的口袋(children)，剩下的就是总装部的领头羊。
 //  */
-function toTree(list, parId) {
-  let len = list.length;
-  function loop(parId) {
-    let res = [];
-    for (let i = 0; i < len; i++) {
-      let item = list[i];
-      if (item.pid === parId) {
-        item.children = loop(item.id);
-        res.push(item);
+function toTree(list) {
+  const map = {}
+  const res = []
+  list.forEach(item => {
+    map[item.id] = { ...item, children: [] }
+  })
+  list.forEach(item => {
+    const node = map[item.id]
+    if (item.pid) {
+      if (map[item.pid]) {
+        map[item.pid].children.push(node)
       }
+    } else {
+      res.push(node)
     }
-    return res;
-  }
-  return loop(parId);
+  })
+  return res
 }
 
-let result = toTree(arr, "");
+let result = toTree(arr);
 console.log(result);
 ```
 
 #### 2.将数字每千分位用逗号隔开
 
 ```javascript
+// [原子模型]: 转字符串 -> 倒序遍历 -> 计数器(count)满3个插逗号 -> 反转结果
+// [逻辑骨架]:
+// 1. for(i = len-1; i >= 0; i--) { 
+//      count++; res.push(n[i]); 
+//      if(count === 3) { res.push(','); count = 0; } 
+//    }
+// [通俗讲解]: “包装分箱”。把漫长的零件(数字)从传送带尾部往前推，每数3个就塞一个隔板(逗号)，让数量一眼就能看清。
 toLocaleString()
 const n=123456
 const thousandSeparator = function (n) {
@@ -249,9 +304,16 @@ const thousandSeparator = function (n) {
 
 ```
 
-#### <font style="color:rgb(52, 53, 65);">3.洗牌算法</font>
+#### 3.洗牌算法
 
 ```javascript
+// [原子模型]: 倒序遍历 -> 生成随机索引 j -> 交换当前项 i 与 j
+// [逻辑骨架]:
+// 1. for(i = len-1; i > 0; i--) {
+//      const j = floor(random() * (i + 1));
+//      [a[i], a[j]] = [a[j], a[i]];
+//    }
+// [通俗讲解]: “零件乱序”。仓库盘点时，从最后一个货架开始，随机找个前面的货架交换货物，直到最前面一个，保证货物分布彻底随机。
 function shuffle(arr) {
   for(let i = arr.length-1; i > 0; i --) {
     let j = Math.floor(Math.random() * (i + 1))
@@ -265,19 +327,26 @@ function shuffle(arr) {
 
 ```javascript
 //大数相加  ~~i （字符串转数字）
+// [原子模型]: 倒序遍历 -> 逐位相加 -> 维护进位(carry) -> 结果反转
+// [逻辑骨架]:
+// 1. while(i >= 0 || j >= 0 || carry)
+// 2. sum = a[i] + b[j] + carry; carry = Math.floor(sum / 10); res.push(sum % 10)
+// 3. return res.reverse().join('')
+// [通俗讲解]: “垂直堆叠加法”。因为计算器位不够(超大数)，只能像小学生列竖式一样，从个位开始一个个算，满了10就给左边的工位送个信(carry)。
+//大数相加
 const getBigInt = (a, b) => {
   a = a + "";
   b = b + "";
   let i = a.length - 1;
   let j = b.length - 1;
-  let curry = 0; 
+  let carry = 0; 
   const res = [];
-  while (i >= 0 || j >= 0 || curry !== 0) {
+  while (i >= 0 || j >= 0 || carry !== 0) {
     let left = i >= 0 ? Number(a[i]) : 0;
     let right = j >= 0 ? Number(b[j]) : 0;
-    let result = left + right + curry;
+    let result = left + right + carry;
     res.push(result % 10);
-    curry = Math.floor(result / 10);
+    carry = Math.floor(result / 10);
     i--;
     j--;
   }
@@ -285,18 +354,24 @@ const getBigInt = (a, b) => {
 };
 ```
 
-#### 5.写函数实现，找出当前页面DOM树中出现次数最多的html标签及次数？
+#### 5.最频繁标签统计
 
 ```javascript
+// [原子模型]: 遍历所有元素 -> Map 计数 -> 维护 maxCount 和 tagName
+// [逻辑骨架]:
+// 1. docs.querySelectorAll('*').forEach(el => map[el.tagName]++)
+// 2. iterate map find max
+// [通俗讲解]: “热销榜单”。派个机器人扫描全工厂所有零件盒的标签，统计每种标签出现的次数，最后看看哪个标签卖得最好。
 findMostFrequentTag(); ==> { name: 'div', num: 100 }
 function findMostFrequentTag(){
-  const obj=new Map()
-  document.querySelectorAll('*').foreach(item=>{
-    if(obj.has(item.tagName)){
-      obj.set(item.tagName,obj.get(item)+1)
+  const obj = new Map()
+  document.querySelectorAll('*').forEach(item => {
+    const tagName = item.tagName.toLowerCase()
+    if(obj.has(tagName)){
+      obj.set(tagName, obj.get(tagName) + 1)
     }
     else{
-      obj.set(item.tagName,1)
+      obj.set(tagName, 1)
     }
   })
   let max=0
@@ -314,6 +389,11 @@ function findMostFrequentTag(){
 #### 6.比较版本号
 
 ```javascript
+// [原子模型]: split('.') 转数组 -> 逐位对比数字 -> 缺失补 0
+// [逻辑骨架]:
+// 1. v1Arr = v1.split('.'); v2Arr = v2.split('.');
+// 2. for(i = 0; i < maxLen; i++) { if(v1[i] > v2[i]) return 1; ... }
+// [通俗讲解]: “版本检阅”。按点号(.)把版本号拆成一节节的管道，从最左边那一节比，如果一样大就比下一节，直到比出输赢。
 function compareVersions(v1, v2) {
   // 分割版本字符串为数字数组，缺失部分补0
   const v1Parts = v1.split('.').map(Number);
@@ -417,34 +497,40 @@ const child = new Child(18, 'Tom');
 #### 原型式继承
 
 ```javascript
-let Parent={
-  name:'parent',
-  getName:function(){
+let Parent = {
+  name: 'parent',
+  getName: function() {
     console.log(this.name)
   },
-  arrayList:[1,3,4,21,12,1]
+  arrayList: [1, 3, 4, 21, 12, 1]
 }
-const children=object.create(Parent)
+const children = Object.create(Parent)
 ```
 
 #### 寄生式继承
 
 ```javascript
-function createchild(parent){
-  let child=object.create(parent);
-  chiid.sayhe1lo = function(){
-    console.log(he11o');
+function createChild(parent) {
+  let child = Object.create(parent);
+  child.sayHello = function() {
+    console.log('hello');
   };
   return child;
 }
-let parent={name:parent};
-let child=createchild(parent);
-child.sayhello();//"he1lo"
+let parent = { name: 'parent' };
+let child = createChild(parent);
+child.sayHello(); // "hello"
 ```
 
-#### 寄生组合式继承
+#### 极简/寄生组合式继承
 
 ```javascript
+// [原子模型]: 构造函数里call(属性) -> Object.create建原型 -> 修正constructor
+// [逻辑骨架]:
+// 1. function Child(...args) { Parent.call(this, ...args); }
+// 2. Child.prototype = Object.create(Parent.prototype);
+// 3. Child.prototype.constructor = Child;
+// [通俗讲解]: “技术集成”。新款产品(Child)不仅雇佣了老款的设计师(Parent.call)来加装基础属性，还直接借用了老款的高级图纸(Object.create)来学会高级技能，最后贴上自己的商标。
 function Parent(age){
     this.age=age
 }
@@ -455,40 +541,50 @@ function Child(age,name){
     Parent.call(this,age)
     this.name=name
 }
-Child.prototype=Object.create(Parent.prototype)
-Child.prototype.construct=Child
+Child.prototype = Object.create(Parent.prototype)
+Child.prototype.constructor = Child
 ```
 
 #### ES6class
 
 ```javascript
-class parent{
-  constructor(name){
+class Parent {
+  constructor(name) {
     this.name = name;
   }
-  sayname(){
-    conso1e.log(this.name);
+  sayName() {
+    console.log(this.name);
   }
 }
-c1ass Chiid extends parent{
-  constructor(name,age){
+class Child extends Parent {
+  constructor(name, age) {
     super(name);
     this.age = age;
   }
-  sayAge(){
-   console.log(this.age); 
+  sayAge() {
+    console.log(this.age);
   }
 }
-letchild = new child('child',10);
-chiid.sayname();//"chi1d"
-chi1d.sayage()//10
+let child = new Child('child', 10);
+child.sayName(); // "child"
+child.sayAge(); // 10
 ```
 
 ### <font style="color:rgb(26, 32, 41);">📦</font><font style="color:rgb(26, 32, 41);">四、异步编程与并发控制</font>
 
-#### <font style="color:rgb(44, 62, 80);">1.异步并发数限制</font>
+#### 1.异步并发数限制
 
 ```javascript
+// [原子模型]: 任务池(tasks) + 执行池(doing) -> 递归加入任务 -> Promise.race 等空位
+// [逻辑骨架]:
+// 1. enqueue() { 
+//      if(allStarted) return;
+//      const task = Promise.resolve().then(() => iterateFunc()); 
+//      doing.push(task.then(() => doing.remove(task)));
+//      if(doing.length >= count) await Promise.race(doing);
+//      return enqueue();
+//    }
+// [通俗讲解]: “产能限制”。工厂只有几条生产线(limit)，所有订单得排队，跑得最快的那条线一旦空出来(race)，立马就把队头的新订单塞进去。
 function limit(count, array, iterateFunc) {
   const tasks = []  // 存储所有任务的 Promise 对象
   const doingTasks = []  // 存储正在执行的任务的 Promise 对象
@@ -518,6 +614,11 @@ limit(2, [1000, 1000, 1000, 1000], timeout).then((res) => {
 #### 2.异步并发限制
 
 ```javascript
+// [原子模型]: 队列存储(que) + 计数器(count) -> 任务完成递归触发 run
+// [逻辑骨架]:
+// 1. push(task) { que.push(task); run(); }
+// 2. run() { if(count < limit && que.len) { task = que.shift(); count++; task().finally(() => { count--; run(); }) } }
+// [通俗讲解]: “值班调度”。门口有个计数器(count)，只要在干活的人没满，就让排队的人进去开工。干完一个，计数器减一，再喊下一个开工。
 //模拟接口请求
 function getData(src) {
   return new Promise((resolve,reject)=>{
@@ -540,11 +641,14 @@ function limitRequest(limit) {
   //执行任务
   this.run = function() {
     //1.如果队列非空,并且当前正在运行个数<limit
-    if(this.que.length && this.count<this.limit) {
+    if(this.que.length && this.count < this.limit) {
       let task = this.que.shift()
       this.count++
-      task.fn(task.src).then(msg=>{
+      task.fn(task.src).then(msg => {
         console.log(msg)
+      }).catch(err => {
+        console.error(err)
+      }).finally(() => {
         this.count--
         this.run()
       })
@@ -564,6 +668,12 @@ p.push({fn:getData,src:1})
 #### 3.最多请求3次
 
 ```javascript
+// [原子模型]: 递归调用请求 -> catch 时判断次数 -> 没满就 setTimeout 重试
+// [逻辑骨架]:
+// 1. makeRequest() {
+//      fn().catch(err => { if(count < max) setTimeout(makeRequest, delay); else reject(err); })
+//    }
+// [通俗讲解]: “顽强快递员”。送货失败了不气馁，等几秒钟再送一次，直到送了3次还没成功才死心反馈失败。
 function retryRequest(requestFunction, maxAttempts, delay) {
   return new Promise((resolve, reject) => {
     let attempts = 0;
@@ -613,6 +723,12 @@ retryRequest(fakeApiRequest, maxAttempts, delay)
 #### 4.promise.all
 
 ```javascript
+// [原子模型]: 返回新Promise -> 计数器(len) + 结果数组(res) -> 遍历执行
+// [逻辑骨架]:
+// 1. return new Promise((resolve, reject) => {
+//      promises.forEach((p, i) => Promise.resolve(p).then(v => { res[i] = v; count--; if(!count) resolve(res); }).catch(reject))
+//    })
+// [通俗讲解]: “团队同步”。一队业务员出去谈生意，只要有一个谈崩了全队就失败；要是全都谈成了，就带上所有合同(结果数组)风光回厂。
 function promiseAll(promises) {
   return new Promise((resolve, reject) => {
     const res = []
@@ -682,40 +798,50 @@ Promise.allSettled(promises)
 #### 6.Promise手写红绿灯
 
 ```javascript
-function red(){
+// [原子模型]: 封装延时函数 light(timer, cb) -> 链式调用 .then() -> 递归触发循环
+// [逻辑骨架]:
+// 1. light(t, cb) { return new Promise(res => { cb(); setTimeout(res, t); }) }
+// 2. step() { light(red).then(() => light(green)).then(() => light(yellow)).then(step); }
+// [通俗讲解]: “流水线红绿灯”。设定好每个灯亮的时长(Promise+setTimeout)，只要前一个灯灭了，下一个灯立马通过 .then() 收到信号并亮起，循环往复。
+function red() {
   console.log("red");
 }
-function green(
+function green() {
   console.log("green");
 }
-function yellow(){
-  conso1e.log("ye11ow");
+function yellow() {
+  console.log("yellow");
 }
 
-const light = function(timer,cb){
-  return new promise(resolve=>{
+const light = function (timer, cb) {
+  return new Promise(resolve => {
     cb();
-    settimeout(()=>{
+    setTimeout(() => {
       resolve()
-    },timer);
+    }, timer);
   });
 }
-const step = function(){
-  promise.resolve().then(()=>{
-    return light(3000,red)
-      .then(()=>{
-        return light(2000,green)
-      }.then(()=>{
-        return light(1000,yellow)
-      }).then(()=>{
-        return step()
-      })
+const step = function () {
+  Promise.resolve().then(() => {
+    return light(3000, red)
+  }).then(() => {
+    return light(2000, green)
+  }).then(() => {
+    return light(1000, yellow)
+  }).then(() => {
+    return step()
+  })
+}
 step();
 ```
 
 #### 7.定时器hooks（选背）
 
 ```javascript
+// [原子模型]: useState 存秒数 -> useEffect 开 setInterval -> 组件卸载或更新时 clearInterval
+// [逻辑骨架]:
+// 1. useEffect(() => { const timer = setInterval(() => setSeconds(s-1), 1000); return () => clearInterval(timer); }, [seconds])
+// [通俗讲解]: “车间计时器”。在工作台上装个表，每秒(setInterval)跳动一下更新状态，如果工作台关了(组件卸载)或表坏了，就必须清理掉旧计时器。
 import React, { useState, useEffect } from 'react';
 
 // 自定义定时器 Hook
@@ -756,9 +882,14 @@ export default useTimer;
 
 ```
 
-#### 8.越来越可怕的异步
+#### 8.越来越可怕的异步（串行任务队列）
 
 ```javascript
+// [原子模型]: 任务队列(queue) -> 链式调用(return this) -> 异步触发执行(execute)
+// [逻辑骨架]:
+// 1. sleep/print(fn) { queue.push(fn); return this; }
+// 2. execute() { for(task of queue) await task(); }
+// [通俗讲解]: “预排班计划”。先开一个空的排班表(queue)，把所有的“睡觉”、“打印”任务先写在表上。最后拉闸启动(execute)，按表里的顺序一个等一个地执行。
 class Task {
   constructor() {
     this.queue = [];
@@ -818,18 +949,18 @@ example();
 #### 9.实现sleep
 
 ```javascript
-function sleep(fn, time) {
-    return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            resolve(fn);
-        }, time);
-    });
+function sleep(fn, time, ...args) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(fn(...args));
+    }, time);
+  });
 }
-let saySomething = (name) => console.log(`hello,${name}`)
+let saySomething = (name) => console.log(`hello, ${name}`)
 async function autoPlay() {
-    let demo = await sleep(saySomething('TianTian'),1000)
-    let demo2 = await sleep(saySomething('李磊'),1000)
-    let demo3 = await sleep(saySomething('掘金的好友们'),1000)
+  await sleep(saySomething, 1000, 'TianTian')
+  await sleep(saySomething, 1000, '李磊')
+  await sleep(saySomething, 1000, '掘金的好友们')
 }
 autoPlay()
 ```
@@ -841,6 +972,13 @@ autoPlay()
 #### 1.防抖
 
 ```javascript
+// [原子模型]: 闭包存储 timer -> 每次触发先 clear -> 重新计时
+// [逻辑骨架]:
+// 1. return (...args) => {
+//      if (timer) clearTimeout(timer);
+//      timer = setTimeout(() => fn(...args), delay);
+//    }
+// [通俗讲解]: “急躁的工人”。工人一干活就要先等5秒，如果这5秒内老板又喊他干活，他之前的等待就作废，重新开始记5秒。
 function debounce(fn, delay) {
     let timer = null;
     
@@ -863,6 +1001,12 @@ function debounce(fn, delay) {
 #### 2.节流
 
 ```javascript
+// [原子模型]: 闭包存储 lastTime -> 检查当前时间差 -> 够了就执行并更新时间
+// [逻辑骨架]:
+// 1. return (...args) => {
+//      if (now - lastTime > delay) { fn(...args); lastTime = now; }
+//    }
+// [通俗讲解]: “冷静的闸机”。不管多少人挤破头想进厂，检票闸机每隔10分钟才开一次门，没到点谁也进不来。
 function throttle(fn,delay){
     let lastTime=0
     return function(...agrs){
@@ -881,6 +1025,13 @@ function throttle(fn,delay){
 作用：参数复用、延迟计算
 
 ```javascript
+// [原子模型]: 闭包存参数 -> 比较参数长度 -> 够了就执行，不够就递归返新函数
+// [逻辑骨架]:
+// 1. curry(fn, ...args) {
+//      if(args.length >= fn.length) return fn(...args);
+//      return (...rest) => curry(fn, ...args, ...rest);
+//    }
+// [通俗讲解]: “零件分步组装”。原本要一口气装完的设备，现在可以先装一部分零件，剩下的零件什么时候送达，什么时候再继续装，直到装完。
 const curry = (fn, ...args) => {
   if(args.length >= fn.length) {
     return fn(...args)
@@ -976,22 +1127,26 @@ function shallow(obj) {
   return newObj
 }
 
-function deepCopy(obj) {
-  if(obj instanceof Date) return new Date(obj)
-  if(obj instanceof RegExp) return new RegExp(obj)
-  if(obj instanceof Error) return new Error(obj.message)
-  if(obj instanceof Function) return funtion(...args) {
+#### 1.深拷贝
+
+```javascript
+// [原子模型]: 类型判断(基础类型/Date/RegExp) -> 递归剥洋葱 -> 闭包解决循环引用(可选)
+// [逻辑骨架]:
+// 1. if(!isObject) return obj;
+// 2. newObj = isArray ? [] : {};
+// 3. for(key in obj) newObj[key] = deepCopy(obj[key]);
+// [通俗讲解]: “原材料克隆”。不只是把货物的标签抄一遍，而是递归进去，把盒子里的零件、零件里的螺丝也全按照原样复制一份新的出来。
+  if (obj === null || typeof obj !== "object") return obj
+  if (obj instanceof Date) return new Date(obj)
+  if (obj instanceof RegExp) return new RegExp(obj)
+  if (obj instanceof Error) return new Error(obj.message)
+  if (obj instanceof Function) return function (...args) {
     return obj.call(this, ...args)
   }
-  if(!obj || typeof obj !== "object") return obj
   const newObj = Array.isArray(obj) ? [] : {}
   for (const key in obj) {
-    if(obj.hasOwnProperty(key)){
-      if(typeof obj[key] === "object") { // att obj[key]
-        newObj[key] = deepCopy(obj[key])
-      } else {
-        newObj[key] = obj[key]
-      }
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      newObj[key] = deepCopy(obj[key])
     }
   }
   return newObj
@@ -1001,6 +1156,13 @@ function deepCopy(obj) {
 #### 2.flat数组扁平化
 
 ```javascript
+// [原子模型]: 循环遍历 -> 递归剥开一层数组(depth-1) -> concat 合并
+// [逻辑骨架]:
+// 1. for(item of arr) {
+//      if(isArray(item) && depth > 0) res = res.concat(flat(item, depth-1))
+//      else res.push(item)
+//    }
+// [通俗讲解]: “大箱拆小箱”。收到一个套娃式的包裹，只要发现里面还有小箱子，就拆开把里面的东西倒出来，直到全铺在传送带上。
 const flat = (arr, depth = 1) => {
   let res = [] // 必须是 let
   for(let i = 0; i < arr.length; i++) {
@@ -1039,6 +1201,11 @@ console.log(objectFlat(source));
 #### 3.实现数组 API
 
 ```javascript
+// [原子模型]: 循环遍历(for) -> 执行回调 fn(this[i], i, this) -> push 到新数组或累计结果
+// [逻辑骨架]:
+// 1. map: res.push(fn(item))
+// 2. filter: if(fn(item)) res.push(item)
+// 3. reduce: res = fn(res, item)
 Array.prototype.map = function(fn) {
   const res = []
   for(let i = 0; i < this.length; i++) {
@@ -1075,6 +1242,13 @@ Array.prototype.reduce = function(fn, initValue) {
 #### 6.实现call,apply,bind
 
 ```javascript
+// [原子模型]: 上下文扩充属性 -> 用 Symbol 避名冲突 -> 隐式绑定执行 (thisArg.fn())
+// [逻辑骨架]:
+// 1. myCall(thisArg, ...args) {
+//      const fn = Symbol(); thisArg[fn] = this;
+//      const res = thisArg[fn](...args); delete thisArg[fn]; return res;
+//    }
+// [通俗讲解]: “临时外派”。我这个高级技师(函数)，临时去你的地盘(thisArg)干活，在你的设备上干完活我就卷铺盖走人，不留痕迹。
 // 实现call
 Function.prototype.mycall = function () {
     let [thisArg, ...args] = [...arguments]   
@@ -1086,14 +1260,13 @@ Function.prototype.mycall = function () {
     return result
 }
 // 实现apply
-Function.prototype.myapply = function () {
-    let [thisArg, args] = [...arguments];  
-    thisArg = Object(thisArg)
-    let fn = Symbol()
-    thisArg[fn] = this;
-    let result = thisArg[fn](...args);
-    delete thisArg.fn;
-    return result;
+Function.prototype.myapply = function (thisArg, args) {
+  thisArg = Object(thisArg) || window
+  let fn = Symbol()
+  thisArg[fn] = this
+  let result = thisArg[fn](...(args || []))
+  delete thisArg[fn]
+  return result
 }
 
 // 实现bind
@@ -1125,6 +1298,9 @@ xhr.send();
 #### 2.二进制转base64（选背）
 
 ```javascript
+// [原子模型]: 3个字节(24bit) 为一组 -> 拆为 4个 6bit 索引 -> 查表转换为字符 -> 不足补 '='
+// [逻辑骨架]:
+// 1. while(i < binary.length) { index = get6Bit(); res += base64Table[index]; }
 // 将二进制数据每 6bit 位替换成一个 base64 字符
 function binaryTobase64(code) {
   let base64Code = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
@@ -1334,27 +1510,37 @@ try {
 #### 1.发布订阅模式
 
 ```javascript
+// [原子模型]: 结构 { 事件名: [回调函数] } -> 存(on) -> 删(off) -> 循环并执行(emit)
+// [逻辑骨架]:
+// 1. on(name, fn) { events[name].push(fn) }
+// 2. off(name, fn) { events[name].remove(fn) }
+// 3. emit(name, args) { events[name].forEach(fn => fn(args)) }
+// [通俗讲解]: “工厂大喇叭”。工厂里设个广播台，有人想听通知就去登记(on)。一旦有事发生了，大喇叭一喊(emit)，所有登记过的人都会收到消息并执行。
 class EventEmitter {
   constructor() {
-    this.arrayList = {}
+    this.events = {}
   }
   on(name, fn) {
-    if(this.arrayList[name] && !this.arrayList[name].include(fn)) {
-      this.arrayList[name].push(fn)
+    if (this.events[name]) {
+      if (!this.events[name].includes(fn)) {
+        this.events[name].push(fn)
+      }
     } else {
-      this.arrayList[name] = [fn]
+      this.events[name] = [fn]
     }
   }
   off(name, fn) {
-    if(this.arrayList[name]) {
-      let idx = this.arrayList[name].indexOf(name)
-      this.arrayList[name].splice(idx, 1)
+    if (this.events[name]) {
+      let idx = this.events[name].indexOf(fn)
+      if (idx !== -1) {
+        this.events[name].splice(idx, 1)
+      }
     }
   }
   emit(name, ...args) {
-    if(this.arrayList[name]) {
-      let task = [...arrayList[name]]
-      for(const fn of task) {
+    if (this.events[name]) {
+      let tasks = [...this.events[name]]
+      for (const fn of tasks) {
         fn.call(this, ...args)
       }
     }
@@ -1365,6 +1551,10 @@ class EventEmitter {
 #### 2.发布订阅模式升级版（选背）
 
 ```javascript
+// [原子模型]: 事件配置对象({fn, once, priority}) -> 存储结构调整为 Map + Array -> emit 时排序执行
+// [逻辑骨架]:
+// 1. on(name, fn, options) { handlers.push({fn, ...options}); handlers.sort((a,b)=>b.priority-a.priority); }
+// 2. emit(name) { for(sub of handlers) { sub.fn(); if(sub.once) remove(sub); } }
 class AdvancedEventEmitter {
     constructor() {
         // 存储事件及其对应的订阅者信息
@@ -1611,6 +1801,10 @@ console.log('Groups for groupEvent after off:', [...eventBus.getGroups('groupEve
 #### 3.观察者模式
 
 ```javascript
+// [原子模型]: 被观察者(Subject)维护观察者列表 -> 状态改变通知所有观察者执行 update
+// [逻辑骨架]:
+// 1. Subject { attach(o) { observers.push(o) }; setState(s) { observers.forEach(o => o.update(this)) } }
+// 2. Observer { update(subject) { ... } }
 class Subject {  // 被观察者：小宝宝
   constructor(name)  {
     this.name = name;
@@ -1652,6 +1846,12 @@ baby.setState("我饿了");
 #### 4.useState
 
 ```javascript
+// [原子模型]: 外部数组 + 当前索引(cursor) -> 闭包保存索引 -> 更新后重置索引并 render
+// [逻辑骨架]:
+// 1. const index = currentIndex++;
+// 2. const setState = (newVal) => { queue[index] = newVal; currentIndex = 0; render(); }
+// 3. return [queue[index], setState]
+// [通俗讲解]: “工位记录本”。在工厂传送带旁放一排本子，每个工人(useState调用)按顺序领一个固定的本子记录进度。只要顺序不变，他们就能各司其职不认错本子。
 let stateQueue = [];
 let currentIndex = 0;
 // 模拟 useState 实现
