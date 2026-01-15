@@ -1655,7 +1655,7 @@ requestIdleCallback 可以帮助我们优化 Web 应用程序的性能和响应�
 
 1. 都可以改变函数执行时的this指向 call、apply在改变this指向时 立刻执行函数 / 返回一个改变了this指向的新函数 不会立刻执行
 2. func.call(thisArg,arg1,arg2.....)   对象继承、伪数组转换为真数组
-3. func.apply(thisArg,\[argsArray]) 获取数组中的max-min、数组合并
+3. func.apply(thisArg,[argsArray]) 获取数组中的max-min、数组合并
 4. func.bind(thisArg,arg1,arg2.....) vue或者react框架中绑定this
 
 **通俗理解（“借调外部顾问”）：**
@@ -1663,7 +1663,7 @@ requestIdleCallback 可以帮助我们优化 Web 应用程序的性能和响应�
 - **bind（长期顾问合同）**：不立刻出差，而是和 A 公司的技术员签一张“为 B 公司效力”的终身合约，以后他无论何时干活，潜意识里都默认是在为 B 公司服务。
 
 #### new变量时发生了什么
-
+ 
 创建⼀个新对象，并将其原型指向构造函数的 prototype，然后调用构造函数初始化对象。
 
 ```javascript
@@ -1936,37 +1936,142 @@ ToPrimitive 是一个抽象操作，用于将一个值转换为原始值(primiti
 
 1. 特点：
 
-* 没有this
-* 不能使用new
-* 没有arguments
-* 没有原型和super
-* 不能使用yield
-* 不能直接返回对象字面量
+* **没有自己的 `this`**：继承自外层词法作用域。
+* **不能使用 `new`**：没有 `[[Construct]]` 方法，无法作为构造函数。
+* **没有 `arguments`**：需使用 `...args` 剩余参数。
+* **没有原型 (`prototype`) 和 `super`**。
+* **不能使用 `yield`**：不能用作 Generator 函数。
+* **返回对象字面量需加括号**：`() => ({ name: 'viking' })`。
 
 2. 场景：
 
-* 简单的函数表达式、内层函数表达式
-* 定义对象上的方法、事件处理程序
+* 简单的函数表达式、内层回调（如：`setTimeout`, `Promise.then`）。
+* Vue 3 组合式 API 中的 `computed`、`watch`、`hooks`。
+
+---
+
+#### 🚀 项目实战解析 (LEGO)
+
+在我们的 **LEGO 项目** 中，箭头函数是绝对的主角，主要体现在以下几个方面：
+
+**1. Vue 3 Composition API & Hooks (高频)**
+在 `setup` 或自定义 Hooks（如 `useComponentCommon.ts`）中，几乎所有逻辑都由箭头函数驱动：
+```typescript
+// useComponentCommon.ts 中的典型用法
+const useComponentCommon = (props: any) => {
+  // computed 内部通过箭头函数定义派生状态
+  const styleProps = computed(() => pick(props, picks))
+  
+  const handleClick = () => {
+    // 事件处理函数：简洁且不用担心上下文指向
+    if (props.actionType === 'url') {
+      window.location.href = props.url
+    }
+  }
+  return { styleProps, handleClick }
+}
+```
+
+**2. 默认 Props 的工厂函数**
+在 Vue 组件定义 `props` 时，如果默认值是对象或数组，必须用工厂函数返回。箭头函数能极其简洁地完成这项任务：
+```typescript
+// MyProfile.vue
+props: {
+  user: {
+    type: Object,
+    // 关键点：返回对象字面量时需要包上一层小括号，否则 {} 会被识别为函数体
+    default: () => ({ name: 'viking', age: 30 })
+  }
+}
+```
+
+**3. 数组变换与过滤**
+在编辑器处理组件列表（如：找出当前选中的组件）时，箭头函数配合 `filter/find` 让代码可读性极高：
+```typescript
+// 在编辑器 state 中查找选中的组件
+const selectedComponent = components.find(component => component.id === currentElementId)
+
+// 计算当前画布中所有文本组件的数量
+const textCount = components.filter(c => c.name === 'l-text').length
+```
+
+**4. 单元测试 (Jest/Vitest)**
+在项目的测试用例中，`describe` 和 `it` 块标配箭头函数，配合 `async/await` 处理异步渲染：
+```typescript
+it('LText should trigger click event', async () => {
+  const wrapper = mount(LText, { props: { ... } })
+  await wrapper.trigger('click')
+  expect(window.location.href).toBe('...')
+})
+```
+
+---
 
 #### 箭头函数和普通函数（必背）
 
-| **特性**                   | **普通函数**                                      | **箭头函数**                                       |
-| :------------------------- | :------------------------------------------------ | :------------------------------------------------- |
-| **语法**                   | 使用 `function`  关键字声明                       | 使用箭头 `=>`  定义，通常更简洁                    |
-| **this 绑定**              | 动态绑定，取决于调用方式                          | 静态绑定，继承自定义时的父级词法作用域             |
-| **构造函数**               | 可用作构造函数，支持 `new`  调用                  | 不能用作构造函数，不支持 `new`  调用               |
-| **arguments 对象**         | 有自己的 `arguments`  对象                        | 没有自己的 `arguments`  对象，需用 rest 参数替代   |
-| **prototype 属性**         | 有 `prototype`  属性                              | 没有 `prototype`  属性                             |
-| **call/apply/bind 重定向** | 可使用这些方法改变 `this`  指向                   | 无法通过这些方法改变 `this`  指向                  |
-| **适用场景**               | 方法、构造函数、需要动态上下文或 arguments 的场景 | 回调函数、需要继承外部 this 的场景、简短函数表达式 |
+| **特性**                   | **普通函数**                                                    | **箭头函数**                                                        |
+| :------------------------- | :-------------------------------------------------------------- | :------------------------------------------------------------------ |
+| **this 绑定**              | **动态绑定**：取决于“谁调用它”。容易产生 `that = this` 的代码。 | **静态绑定**：继承自外层。在 Vue 3 `setup` 这种闭包环境下极其稳定。 |
+| **构造能力**               | **可 new**：拥有 `prototype` 属性，可作为类。                   | **不可 new**：没有 `prototype`，体积更小，性能略优。                |
+| **参数获取**               | 使用 `arguments` 类数组。                                       | 使用 `...args` 真正数组（更符合现代 TS 开发）。                     |
+| **prototype 属性**         | 有 `prototype`  属性                                            | 没有 `prototype`  属性                                              |
+| **call/apply/bind 重定向** | 可使用这些方法改变 `this`  指向                                 | 无法通过这些方法改变 `this`  指向                                   |
+| **适用场景**               | 方法、构造函数、需要动态上下文或 arguments 的场景               | 回调函数、需要继承外部 this 的场景、简短函数表达式                  |
+| **LEGO 推荐**              | 定义组件导出（如 `install` 插件方法）时可见。                   | **首选**。回调、计算属性、Hooks、数组方法。                         |
 
 #### 拓展符的使用场景（必背）
 
-* 函数调用时展开数组，等价于apply
-* 数组构造时展开数组，多个数组合并为一个数组
-* 字符串展开为字符数组
-* 对象构造时展开对象，只适用于可迭代对象
-* 剩余参数
+*   **函数调用时展开数组**：等价于 `apply`。
+*   **数组构造时展开数组**：多个数组合并为一个数组。
+*   **字符串展开为字符数组**：`[...'hello']` 得到 `['h', 'e', 'l', 'l', 'o']`。
+*   **对象构造时展开对象**：常用于浅拷贝或合并对象。
+*   **剩余参数 (Rest parameters)**：用于获取函数多余的参数。
+
+---
+
+#### 🚀 项目实战解析 (LEGO)
+
+在我们的 **LEGO 拖拽平台** 中，扩展运算符几乎是保持 **数据不可变性 (Immutability)** 的基石：
+
+**1. 对象合并：组件属性更新（高频场景）**
+当用户在右侧面板修改 `LText` 组件的 `fontSize` 时，我们需要更新 Vuex 中的状态。为了触发视图更新，我们必须返回一个新的对象：
+```typescript
+// 模拟项目中属性合并的逻辑
+const oldProps = { text: 'Hello', fontSize: '14px', color: '#000' }
+const newProps = { fontSize: '20px' }
+
+// 使用扩展运算符：后面的属性会覆盖前面的
+const updatedProps = { ...oldProps, ...newProps } 
+// 结果: { text: 'Hello', fontSize: '20px', color: '#000' }
+```
+
+**2. 数组操作：组件列表的增删改**
+在编辑器中添加一个新组件到 `components` 数组时，我们避免使用 `push`（会修改原数组），而是：
+```typescript
+// 添加组件
+const newComponents = [...state.components, newComponent]
+
+// 删除组件（利用解构与 filter 或组合）
+const index = state.components.findIndex(c => c.id === id)
+const listAfterDelete = [
+  ...state.components.slice(0, index),
+  ...state.components.slice(index + 1)
+]
+```
+
+**3. 剩余参数：封装通用事件处理函数**
+在 `PropsTable` 组件中，我们需要监听各种输入框的变化。由于每个表单项传出的参数个数可能不同，我们使用剩余参数统一接收：
+```typescript
+// 统一处理属性变化请求
+const onValueChange = (propName: string, ...args: any[]) => {
+  const value = args[0] // 拿到主要的 value
+  store.dispatch('updateComponent', { key: propName, value })
+}
+```
+
+**💡 避坑指南：**
+*   **浅拷贝限制**：扩展运算符执行的是**浅拷贝**。如果对象内部嵌套了对象（如 `props.style`），直接展开 `...props` 不会克隆 `style` 的深度副本，修改新对象的 `style` 依然会影响旧对象。
+*   **不可迭代对象**：扩展运算符 `...` 应用于对象（ES2018）和应用于数组（ES2015）的原理不同。数组扩展要求对象必须是 **Iterable（可迭代）** 的，而对象扩展处理的是其自身的可枚举属性。
 
 #### let const var 相关（必背）
 
@@ -1990,6 +2095,53 @@ if (true) {
 
 const实际保证的并不是变量的值，而是变量指向的内存地址
 
+---
+
+#### 🚀 项目实战解析 (LEGO)
+
+在我们的 **LEGO 编辑器** 中，`const` 和 `let` 的选择直接体现了对**代码安全**和**数据流可预测性**的极致追求：
+
+**1. `const`：定义“不可变”的逻辑骨架（最高频）**
+在 Vue 3 的 `setup` 函数中，我们几乎 90% 的变量声明都使用 `const`。即使它是一个响应式的 `ref` 或 `reactive` 对象，其**引用地址**在整个组件生命周期内也是不应该被重写的。
+
+```typescript
+// PropsTable.vue 中的典型场景
+const finalProps = computed(() => { ... }) // 计算属性的引用是固定的
+const handleValueChange = (e: any) => { ... } // 回调函数绝对不应被重新赋值
+```
+在 `editor.ts` 存储模块中，`const editor: Module<EditorProps, GlobalDataProps>` 锁定了模块的结构，确保了 Vuex 状态管理的稳定性。
+
+**2. `let`：管理“瞬时”的状态变更**
+`let` 只出现在确实需要**重新赋值**的场景。最典型的实战例子是**防抖（Debounce）函数**中的定时器：
+
+```typescript
+// editor.ts
+const debounceChange = (callback: (...args: any) => void, timeout = 1000) => {
+  let timer = 0 // 必须用 let，因为每次清除后需要重新赋予新的计时器 ID
+  return (...args: any) => {
+    clearTimeout(timer)
+    timer = window.setTimeout(() => {
+         timer = 0
+         callback(...args)
+    }, timeout) 
+  }
+}
+```
+
+**3. 坚决弃用 `var` 的理由**
+*   **防止全局污染**：LEGO 作为一个复杂的低代码编辑器，内部逻辑极多。使用 `var` 声明的变量会挂载到全局，极易引发命名冲突。
+*   **规避“作用域穿透”引起的 Bug**：在处理图层列表（LayerList）的循环渲染或事件绑定时，如果使用 `var`，其作用域缺失会导致在闭包捕获时变量值永远是最后一次循环的结果。
+*   **变量提升灾难**：在处理复杂的**撤销重做（Undo/Redo）**逻辑时，如果逻辑依赖变量顺序，`var` 的变量提升会掩盖“未声明先使用”的错误，导致难以排查的逻辑溢出。
+
+---
+
+**💡 避雷/避股精要：**
+*   **优先 `const` 指导思想**：在 LEGO 规范中，默认所有变量都应是 `const`，除非该变量明确需要被修改（如循环索引、累加值），才降级为 `let`。
+*   **内存地址 vs 值**：面试官常问：`const list = []` 为什么能 `push`？
+    *   **LEGO 回答**：因为 `const` 锁死的是“保险箱的位置（内存地址）”，而不是“保险箱里的内容”。在编辑器中，我们经常改变组件列表的内容，但引用始终是同一个响应式 Proxy。
+
+---
+
 #### ES6新特性（必背）
 
 1. **变量声明**：
@@ -1999,7 +2151,7 @@ const实际保证的并不是变量的值，而是变量指向的内存地址
 
 2. **箭头函数**：箭头函数简化了函数表达式的语法，并且自动绑定外层函数的this值，避免了传统函数中this指向不明确的问题
 3. **模板字符串** 特点： 使用反引号（\`）包裹字符串，可以直接嵌入变量或表达式，支持多行字符串。
-4. **解构赋值 **特点：可以从数组或对象中提取值，并赋给多个变量
+4. **解构赋值** 特点：可以从数组或对象中提取值，并赋给多个变量
 5. **类与模块化** 特点
 
 * 类：提供了一种更直观的面向对象编程方式，是ES5构造函数的语法糖
@@ -2019,7 +2171,7 @@ const实际保证的并不是变量的值，而是变量指向的内存地址
 **ES7 (2016)**
 
 ***数组 includes 方法**：解决 `indexOf`无法检测 `NaN`以及语义不直观的问题。
-***指数运算符 **``：解决幂运算依赖 `Math.pow`函数，使代码更简洁。
+***指数运算符**``：解决幂运算依赖 `Math.pow`函数，使代码更简洁。
 
 **ES8 (2017)**
 
@@ -2052,6 +2204,69 @@ const实际保证的并不是变量的值，而是变量指向的内存地址
 ***Promise.any**：解决等待一组异步操作中第一个成功的需求，与 `Promise.race`（关注第一个完成的）不同，它忽略失败，直到有一个成功。
 ***WeakRef**：解决直接创建对对象的“弱引用”，允许其被垃圾回收，主要用于实现大型对象的缓存或映射，而不会导致内存泄漏。
 
+---
+
+#### 🚀 项目实战解析 (LEGO)
+
+在 **LEGO 这种大型前端应用** 中，ESNext（ES6+）的新特性不仅仅是语法糖，更是解决复杂业务逻辑的利器：
+
+**1. ES11 可选链 (`?.`) & 空值合并 (`??`) —— 代码“防崩”核心**
+在编辑器中，`currentElement` 可能为 `null`（未选中组件）。使用 `?.` 可以极大地精简代码：
+```typescript
+// 传统写法：冗长且易错
+const fontSize = currentElement && currentElement.props && currentElement.props.fontSize
+
+// LEGO 实战：优雅且安全
+const fontSize = currentElement?.props?.fontSize ?? '14px' // 如果属性不存在，自动兜底 14px
+```
+
+**2. ES8 `async/await` —— 异步流的“同步化”处理**
+在保存并发布作品的流程中，我们需要：**截图 -> 上传截图 -> 保存数据 -> 弹出成功提示**。利用 `async/await` 可以像写本地代码一样处理这些耗时操作：
+```typescript
+// helper.ts
+export async function takeScreenshotAndUpload(ele: HTMLElement) {
+  const canvas = await html2canvas(ele, { ... }) // 1. 先截图
+  const canvasBlob = await getCanvasBlob(canvas)    // 2. 转 Blob
+  if (canvasBlob) {
+    const data = await uploadFile(canvasBlob)      // 3. 上传并等待返回数据
+    return data
+  }
+}
+```
+
+**3. ES11 动态导入 (`import()`) —— 性能优化的杀手锏**
+LEGO 编辑器体积庞大，我们不希望用户在首页就加载整个编辑器代码。通过路由拦截实现**懒加载**：
+```typescript
+// routes/index.ts
+const routes = [
+  {
+    path: '/editor/:id',
+    component: () => import(/* webpackChunkName: "editor" */ '../views/Editor.vue')
+  }
+]
+```
+
+**4. ES8 `Object.values` & `Object.entries` —— 批量属性转换**
+在更新组件位置（坐标）时，我们将 `left/top` 的数值批量转换为带 `px` 的字符串：
+```typescript
+// Editor.vue
+const updatePosition = (data: { left: number; top: number; id: string }) => {
+  const updatedData = pickBy(data, (v, k) => k !== 'id')
+  const keysArr = Object.keys(updatedData) // ['left', 'top']
+  const valuesArr = Object.values(updatedData).map(v => v + 'px') // ['10px', '20px']
+  store.commit('updateComponent', { key: keysArr, value: valuesArr, id })
+}
+```
+
+**5. ES6 模板字符串 —— 动态 URL 与样式拼接**
+在 `axios` 请求拦截器或生成分享二维码时，模板字符串让逻辑一目了然：
+```typescript
+axios.defaults.headers.common.Authorization = `Bearer ${token}`
+const shareUrl = `${process.env.VUE_APP_BASE_URL}/p/${workId}`
+```
+
+---
+
 #### ES6中的 Reflect 对象有什么用?
 
 Reflect 对象不是构造函数，所以创建时不是用 new 来进行创建。在 ES6 中增加这个对象的目的:
@@ -2083,6 +2298,49 @@ var loggedobj= new Proxy(obj,{
 
 上面代码中，每一个 Proxy 对象的拦截操作(get、delete、has)，内部都调用对应的 Reflect 方法，保证原生行为能够正常执行。添加的工作，就是将每一个操作输出一行日志。
 
+---
+
+#### 🚀 项目实战解析 (LEGO)
+
+在我们的 **LEGO 拖拽平台** 中，你可能没有手动写过 `new Proxy`，但它却是整个项目运行的**灵魂插件**（Vue 3 的基石）：
+
+**1. Vue 3 响应式“隐形”引擎**
+在编辑器中，当我们修改一个组件的颜色或是拖动它的位置时，界面能够实时更新，全靠 `Proxy`。
+*   **为何不用 `Object.defineProperty` (ES5)**：在处理 `components` 数组时（如：增加/删除一个图层），ES5 无法监听数组索引或长度的变化。
+*   **LEGO 实战**：Vue 3 将整个 `editor.state.components` 包装成一个 `Proxy` 对象。当你执行 `state.components.push(newComp)` 时，`Proxy` 的 `set` 或是 `apply` 陷阱会被触发，从而通知画布（Canvas）重新渲染。
+
+**2. `Reflect` 处理“继承”与“Receiver”陷阱**
+在我们的业务组件（如 `LText`, `LImage`）中，很多属性是在原型链上通过继承得到的。Vue 3 在内部拦截这些属性时，**必须使用 `Reflect.get(target, key, receiver)`**：
+*   **痛点**：如果对象内部有 `get` 访问器（getter）且依赖 `this`，直接用 `target[key]` 会导致 `this` 指向错误（指向原始对象而非代理对象）。
+*   **LEGO 场景**：在使用 `computed` 依赖嵌套的组件 props 时，`Reflect` 确保了依赖收集（Track）能准确关联到当前的代理对象。
+
+**3. “防错”与“状态上报”的潜在应用**
+如果我们要为编辑器增加一个高级功能，比如**“属性修改白名单”**或**“非法值自动拦截”**，我们可以手动创建一个 `Proxy`：
+
+```typescript
+// 伪代码：在非 Vuex 环境下拦截组件属性
+const componentProxy = new Proxy(componentData, {
+  set(target, key, value, receiver) {
+    if (key === 'fontSize' && value < 0) {
+      console.error('字号不能为负数！')
+      return false // 拦截非法修改
+    }
+    // 使用 Reflect 保证默认的赋值行为，并返回结果
+    const result = Reflect.set(target, key, value, receiver)
+    if (result) {
+      console.log(`属性 ${String(key)} 已更新，触发自动保存...`)
+    }
+    return result
+  }
+})
+```
+
+**💡 避坑指南/面试金句：**
+*   **Proxy 是“降维打击”**：它不是修改原对象，而是直接在对象外面套了一层“监视器”。
+*   **Reflect 是“文明执法”**：传统的 `delete obj.a` 万一操作失败（比如属性不可配置），程序会悄悄失败或报错。而 `Reflect.deleteProperty` 会返回 `false`，让逻辑控制更具确定性。
+
+---
+
 #### 什么是尾调用优化和尾递归
 
 | 特性         | 尾调用 (Tail Call)                                          | 尾递归 (Tail Recursion)                                |
@@ -2091,6 +2349,48 @@ var loggedobj= new Proxy(obj,{
 | **核心目的** | 优化函数调用机制，减少栈帧开销。                            | 优化递归算法，避免深层递归时的栈溢出。                 |
 | **优化关键** | 调用后无需保留当前函数的任何上下文。                        | 递归调用后没有其他操作，结果直接返回。                 |
 | **优化效果** | 可复用当前栈帧，使调用栈深度与循环类似，维持在常数级 O(1)。 | 将递归的空间复杂度从 O(n) 降为 O(1)。                  |
+
+---
+
+#### 🚀 项目实战解析 (LEGO)
+
+在 **LEGO** 这种涉及大量 DOM 操作和数据处理的项目中，虽然我们很少直接接触“引擎级”的尾调用优化，但**“避免深度递归”**的意识却是核心：
+
+**1. 为什么我们在项目中倾向于“迭代”而非“普通递归”？**
+在 `helper.ts` 中，我们有一个查找父级元素的工具函数 `getParentElement`。它没有使用递归，而是使用了 `while` 循环。这就是一种**手动实现的“尾调用优化”**：
+
+```typescript
+// helper.ts - 迭代写法（LEGO 实际采用）
+export const getParentElement = (element: HTMLElement, className: string) => {
+  while (element) { // 类似尾递归的逻辑，但通过循环实现
+    if (element.classList && element.classList.contains(className)) {
+      return element
+    } else {
+      element = element.parentNode as HTMLElement
+    }
+  }
+  return null
+}
+
+// 模拟递归写法（不推荐）
+const getParentRecursive = (element: HTMLElement, className: string): HTMLElement | null => {
+  if (!element) return null
+  if (element.classList?.contains(className)) return element
+  return getParentRecursive(element.parentNode as HTMLElement, className) // 这是一个标准的尾递归
+}
+```
+**实战思考**：虽然 `getParentRecursive` 写起来很优雅，但在浏览器中，如果 DOM 层级极深，它会不断压入执行栈。而 LEGO 采用的 `while` 写法永远只占用**一个栈帧**，性能最稳。
+
+**2. 深度克隆（Deep Clone）的隐患**
+在编辑器处理“撤销重做（Undo/Redo）”逻辑时，我们需要频繁备份 `state.components`。我们调用了 `lodash-es` 的 `cloneDeep`。
+*   **避坑点**：如果组件数据结构变成了无限嵌套（虽然在 LEGO 中是扁平的），普通递归克隆会导致 **RangeError: Maximum call stack size exceeded**（栈溢出）。
+*   **LEGO 策略**：始终保持 `components` 数组是**扁平化（Flatten）**的主流结构，而不是树形嵌套结构。这样在遍历或克隆时，逻辑深度始终为 1，从源头上消灭了递归过深的问题。
+
+**💡 避坑指南/面试金句：**
+*   **现状残酷**：目前的 JS 引擎（除了 Safari）对 ES6 的尾调用优化（TCO）支持非常有限。所以，不要迷信“只要我写成尾递归，引擎就会帮我优化”。
+*   **手动转循环**：在 LEGO 中，遇到需要无限向上找或者向下挖的逻辑，**第一反应应该是 `while` 循环**，这是最高效、最安全的“尾调用优化”。
+
+---
 
 #### const修饰常量怎么让它可变（选背）
 
@@ -2190,12 +2490,109 @@ console.log(mutableConst.value); // 10
 
 • 适用于需要灵活拦截操作的场景（如数据校验）。
 
+---
+
+#### 🚀 项目实战解析 (LEGO)
+
+在 **LEGO 编辑器** 的开发中，理解“`const` 锁死地址而非内容”这一特性，是掌握 **Vue 3 响应式系统** 的门槛：
+
+**1. `const` + `ref/reactive`：响应式数据的标准姿势**
+在 `useClickOutside.ts` 等 Hooks 中，我们大量使用 `const` 定义响应式变量。虽然变量被声明为常量，但其内部的值是高度可变的：
+
+```typescript
+// useClickOutside.ts
+const isClickOutside = ref(false) // isClickOutside 是一个 const 对象（RefImpl）
+const handler = (e: MouseEvent) => {
+  // 我们改变的是 .value，而不是 isClickOutside 本身
+  isClickOutside.value = true 
+}
+```
+**实战思考**：为什么不直接用 `let`？使用 `const` 可以防止我们在逻辑复杂时不小心给整个 `Ref` 对象重新赋值（例如：`isClickOutside = true`），从而导致 Vue 的响应式链接断裂。
+
+**2. 闭包：封装私有状态（Hooks 的本质）**
+LEGO 的自定义 Hooks（如 `useLoadMore.ts`）本质上就是**使用闭包封装可变状态**的高级应用：
+
+```typescript
+// useLoadMore.ts
+const useLoadMore = (actionName: string, ...) => {
+  // 私有的可变状态：requestParams
+  const requestParams = reactive(params) 
+  
+  // 暴露出的修改接口（setter）
+  const loadMorePage = () => {
+    requestParams.pageIndex++ // 内部闭包修改状态
+    store.dispatch(...)
+  }
+  
+  return { loadMorePage, requestParams } // 只暴露必要的访问和修改权限
+}
+```
+通过这种方式，我们在 `const` 定义的 Hook 调用结果中，获得了对内部 `let` 或 `reactive` 状态的受控修改能力，实现了完美的逻辑复用。
+
+**3. 项目中的 Proxy 代理应用**
+Vue 3 本身就是基于 `Proxy` 实现的。在 LEGO 中，当我们在 `PropsTable` 中修改组件属性时，实际上是在操作一个由 Vue 提供的 `Proxy` 代理对象：
+*   **Case**：我们在 `Editor.vue` 中调用 `updatePosition`。
+*   **原理**：即使我们在本地代码中看起来是直接修改了对象属性，背后其实是 `Proxy` 拦截了赋值操作，触发了 Vuex 的状态流转和视图重绘。
+
+**💡 避坑指南/面试金句：**
+*   **“保险箱”理论**：在 LEGO 中，`const` 锁死的是数据的“身份标签（引用）”，而不是它的“衣服（属性）”。
+*   **安全性原则**：在低代码平台这种高频交互的应用中，能用 `const` 绝不用 `let`，这能减少 50% 以上因意外覆盖变量导致的致命 Bug。
+
+---
+
 #### 解释下如下代码的意图:Array.prototype.slice.apply(arguments)
 
 * arguments 为类数组对象，并不是真正的数组。
 * slice可以实现数组的浅拷贝。
 
 由于 arquments不是真正的数组，所以没有slice方法，通过apply可以调用数组对象的slice方法，从而将arquments 类数组转换为数组
+
+---
+
+#### 🚀 项目实战解析 (LEGO)
+
+在我们的 **LEGO 项目** 中，你几乎找不到 `slice.apply(arguments)` 的身影。这不是因为这个知识点不重要，而是因为我们使用了更现代、更优雅的 **ES6 剩余参数 (Rest Parameters)**：
+
+**1. 从“伪数组”到“真数组”的演进**
+以前的开发者需要苦哈哈地通过 `slice.apply` 把 `arguments` 转成数组才能调用 `map/filter`。在我们的编辑器逻辑中，类似的场景已经变成了：
+
+```typescript
+// editor.ts - 防抖函数中的参数透传
+const debounceChange = (callback: (...args: any) => void, timeout = 1000) => {
+  let timer = 0
+  // 使用 ...args 代替 arguments
+  return (...args: any) => {
+    clearTimeout(timer)
+    timer = window.setTimeout(() => {
+      timer = 0
+      // 这里的 args 已经是一个真正的数组，直接透传给 callback
+      callback(...args) 
+    }, timeout) 
+  }
+}
+```
+
+**2. 为什么 LEGO 抛弃了 `arguments`？**
+*   **语义更清晰**：`...args` 在函数定义时就明确告诉了阅读者：“这里会接收一堆参数”。而 `arguments` 是一个隐形存在的变量，可读性较差。
+*   **性能考量**：现代 JS 引擎（如 V8）对剩余参数的优化比对 `arguments` 这个“具有特殊行为的对象”要好得多。
+*   **TypeScript 的天然支持**：正如上面的 `editor.ts` 代码所示，`...args: any[]` 可以方便地进行类型标注，而 `arguments` 处理类型起来非常别扭。
+
+**3. 在通用事件处理中的应用**
+在 `PropsTable.vue` 等复杂表单组件中，我们经常需要监听多个组件的多种事件（如 `onChange`, `onBlur`）。由于不同组件传出的参数个数不定，我们会统一接收：
+
+```typescript
+// 伪代码示例：通用事件转发逻辑
+const handleEvent = (eventName: string, ...args: any[]) => {
+  console.log(`收到事件: ${eventName}, 参数个数: ${args.length}`)
+  // 可以在这里直接对 args 做数组操作，无需 slice 转换
+  store.dispatch('trackingEvent', { eventName, params: args })
+}
+```
+
+**💡 避坑指南/面试金句：**
+*   **“时代的选择”**：在面试中，当你解释完 `slice.apply(arguments)` 后，一定要补上一句：“但在我们的 **LEGO 项目** 实战中，为了保持代码的简洁性和 TS 的类型安全，我们统一采用了 **Rest Parameters (`...`)**。它是对类数组（Array-like）处理的最优解。”
+
+---
 
 ### 浏览器环境与API
 
@@ -2219,6 +2616,60 @@ console.log(mutableConst.value); // 10
 * 代码简洁，跨平台
 * 可拦截请求和响应，方便统一处理
 * 自动转换JSON ，自动将请求数据和响应数据转换为json
+
+---
+
+#### 🚀 项目实战解析 (LEGO)
+
+在 **LEGO 项目** 中，Axios 不仅仅是一个发请求的工具，它是我们**全局状态管理（Loading & Error）**的核心枢纽。配置主要集中在 `main.ts` 中：
+
+**1. 请求拦截器：开启 Loading 与 “洗地”**
+每当一个请求发出时，我们需要自动开启对应的 Loading 动画，并清除上一次的错误信息：
+```typescript
+// main.ts
+axios.interceptors.request.use(config => {
+  const newConfig = config as ICustomAxiosConfig
+  // 1. 清除之前的错误提示
+  store.commit('setError', { status: false, message: ''})
+  // 2. 根据 opName 开启局部或全局 Loading
+  store.commit('startLoading', { opName: newConfig.opName })
+  return config
+})
+```
+
+**2. 响应拦截器：业务错误码的“统一裁判”**
+后端返回 200 并不代表业务成功。我们通过拦截器统一处理 `errno`：
+```typescript
+// main.ts
+axios.interceptors.response.use(resp => {
+  const { config, data } = resp
+  // 1. 关闭 Loading
+  store.commit('finishLoading', { opName: config.opName })
+  
+  const { errno, message } = data
+  // 2. 统一处理非 0 错误码
+  if (errno && errno !== 0) {
+    store.commit('setError', { status: true, message })
+    return Promise.reject(data) // 抛出错误，后续代码无需再写 if 判断
+  }
+  return resp
+}, (e) => {
+  // 3. 处理网络崩溃等 500 情况
+  store.commit('setError', { status: true, message: '服务器错误' })
+  return Promise.reject(e)
+})
+```
+
+**3. 动态配置 BaseURL 与 Token 注入**
+根据环境变量切换接口地址，并在路由跳转时按需注入身份标识：
+*   **环境隔离**：开发环境（`182.xx`）与生产环境（`api.imooc-lego.com`）的自动切换。
+*   **Token 注入**：在 `routes/index.ts` 中，通过 `axios.defaults.headers.common.Authorization = Bearer ${token}` 实现无感鉴权。
+
+**💡 避坑指南/面试金句：**
+*   **“拦截器解耦逻辑”**：在 LEGO 中，我们通过 `opName` 配合拦截器，实现了“发请求自动转圈”的功能。这让我们的业务组件（如 `Login.vue`）只需要关注业务本身，不需要手动写 `try-catch` 去控制 `isLoading` 变量。
+*   **“Promise 链式控制”**：响应拦截器返回 `Promise.reject(data)` 是一种非常优雅的做法。它能让 UI 层的 `dispatch` 调用直接进入 `catch` 流程，避免了多层 `if (res.errno === 0)` 的嵌套。
+
+---
 
 #### ajax、axios、fetch有什么区别?（必背）
 
@@ -2277,6 +2728,47 @@ Axios 是一种基于Promise封装的HTTP客户端，其特点如下:
 | **浏览器支持**      | 支持现代浏览器，IE11 及以下需要 polyfill                      | 原生支持现代浏览器，IE11 及以下需要 polyfill                              |
 | **体积**            | 较大，需要额外引入库                                          | 较小，原生 fetch 不需要外部依赖                                           |
 
+---
+
+#### 🚀 项目实战解析 (LEGO)
+
+在 **LEGO 项目** 的技术选型中，我们毫不犹豫地选择了 **Axios** 作为唯一的通讯库。这背后的逻辑正是基于大型低代码平台的工程化需求：
+
+**1. 为什么“嫌弃”原生的 Fetch？**
+虽然 `fetch` 是浏览器原生的且体积小，但在 LEGO 中它会带来额外的维护成本：
+*   **重复造轮子**：`fetch` 没有拦截器。如果我们要实现全局 Loading 或 Token 注入，必须手写一层 Wrapper。而 Axios 已经提供了成熟的 `interceptors` 机制。
+*   **异常处理坑点**：`fetch` 遇到 404 或 500 不会报错（不会进入 `catch`）。在 LEGO 中，我们希望所有的非 0 业务错误码和网络异常都能统一进入 Vuex 的 `setError` 流程。使用 Axios，我们可以直接在响应拦截器中 `Promise.reject(data)`，一劳永逸。
+
+**2. 为什么不再看 Ajax (XHR) 一眼？**
+*   **异步模型落后**：Ajax 基于事件监听（`onreadystatechange`），在处理多层异步逻辑时极易陷入“回调地狱”，这与 LEGO 追求的 `async/await` 线性代码风格格入不入。
+*   **数据格式繁琐**：在 `Uploader.vue` 处理文件上传时，Axios 会自动识别 `FormData` 并设置正确的 `Content-Type`，而 raw XHR 需要手动设置复杂的请求头，非常低效。
+
+**3. LEGO 中的 Axios 实战：文件上传处理**
+在 `Uploader.vue` 中，我们通过 Axios 极简地实现了异步文件上传：
+```typescript
+// Uploader.vue
+const postFile = (readyFile: UploadFile) => {
+  const formData = new FormData()
+  formData.append(readyFile.name, readyFile.raw)
+  
+  // Axios 自动处理 Promise 和二进制流
+  axios.post(props.action, formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  }).then(resp => {
+    readyFile.status = 'success'
+    emit('success', { resp: resp.data, file: readyFile })
+  }).catch(e => {
+    readyFile.status = 'error'
+  })
+}
+```
+
+**💡 避坑指南/面试金句：**
+*   **“选稳不选新”**：在面试中，如果被问到为什么不用原生 `fetch`。你可以回答：“虽然 `fetch` 很现代，但在 LEGO 这种生产级别项目中，**拦截器的健壮性**、**CSRF 防护能力**以及**统一的错误处理机制**比‘原生’两个字更有价值。Axios 通过拦截器帮我们解耦了 Loading 状态和 UI 逻辑，极大地提升了开发效率。”
+*   **“业务零侵入”**：强调 LEGO 的业务代码不需要写 `isUploading = true/false`，这一切都在 Axios 的预设逻辑中自动完成了。
+
+---
+
 #### 跨域资源（必背）
 
 并非所有Web资源都不受跨域限制。事实上，许多资源的加载都受到跨域限制:
@@ -2286,13 +2778,91 @@ Axios 是一种基于Promise封装的HTTP客户端，其特点如下:
 * XMLHttpRequest和Fetch API的请求默认受跨域限制
 * WebGL纹理加载受跨域限制
 
+---
+
+#### 🚀 项目实战解析 (LEGO)
+
+在 **LEGO 这种前后端分离** 且大量依赖 **第三方资源（CDN/OSS）** 的项目中，跨域资源限制是每天都会撞上的“隐形的墙”：
+
+**1. 接口跨域 (XHR/Fetch CORS)**
+LEGO 的前端运行在 `http://localhost:8080`，而测试环境后端在 `http://182.92.168.192:8081`。
+*   **命中预检 (Preflight)**：由于我们使用了 Axios 并在请求拦截器中注入了 `Authorization: Bearer ${token}`（非简单头部），浏览器会先发一个 **OPTIONS** 请求探路。如果后端没配置好 `Access-Control-Allow-Headers`，登录就会卡死在第一步。
+*   **解决方案**：后端需要配置允许跨域，而前端在 `main.ts` 中通过环境变量动态配置 `axios.defaults.baseURL` 来适配不同的环境。
+
+**2. 画布中的“洗钱”行为 (Canvas Tainted)**
+在 `helper.ts` 的 `takeScreenshotAndUpload` 功能中，由于 `html2canvas` 必须读取图片的像素信息来重绘 Canvas。
+*   **痛点**：默认情况下，如果图片来自 `oss-cn-hangzhou.aliyuncs.com` 且没有 CORS 响应头，画布会被标为“被污染”，此时调用 `toBlob()` 会直接报安全性错误。
+*   **LEGO 策略**：
+    1.  **前端**：配置 `html2canvas(ele, { useCORS: true })`。
+    2.  **后端/OSS**：在阿里云后台将前端域名加入 **CORS 白名单**，并允许 `GET` 方法。
+    3.  **本地图片绕过**：对于部分用户预览图，我们有时会使用 `URL.createObjectURL` 生成本地临时链接，这种链接受同源策略保护，天然不存在跨域问题。
+
+**3. 字体与 WebGL 的限制**
+三方字体加载（如 Google Fonts）在某些旧版组件库中会遇到跨域无法加载的情况。
+*   **实战经验**：如果你的 LEGO 画布使用了特殊的艺术字体，必须确保字体文件（`.woff2`）的响应头包含 `Access-Control-Allow-Origin: *`，否则浏览器会拒绝渲染这些字体。
+
+**💡 避坑指南/面试金句：**
+*   **“三位一体”**：解决跨域不是前端一个人的事。在面试中你可以说：“在 LEGO 项目中，我们通过 **环境变量（客户端）+ 预检头配置（服务端）+ OSS 跨域规则（静态资源库）** 三位一体的方案，解决了包含接口鉴全、Canvas 截图、动态字体加载在内的全链路跨域问题。”
+*   **“受控的自由”**：强调 `Access-Control-Allow-Origin` 不要直接写 `*`，而是根据环境白名单（如开发环境、生产环境域名）进行动态匹配，这体现了对安全性的考量。
+
+---
+
 #### token可以放在cookie里吗
 
 1. token通常用于验证用户身份 uid 时间戳 签名
-2. 将token刚在cookie里，不设置过期时间，关闭浏览器cookie失效 方便管理 但需要注意CSRF
+2. 将token放在cookie里，不设置过期时间，关闭浏览器cookie失效 方便管理 但需要注意CSRF
 3. token签发验证流程：
 
 客户端登录 —— 服务端验证 —— 签发token —— 客户端存储token —— 客户端发送请求 —— 服务端验证token
+
+---
+
+#### 🚀 项目实战解析 (LEGO)
+
+在 **LEGO 项目** 中，我们采取了 **LocalStorage + Authorization Header** 的主流方案，而非将 Token 放入 Cookie。
+
+**1. 为什么我们“抛弃” Cookie？**
+虽然 Cookie 可以通过 `HttpOnly` 防止 XSS，但它天然的**自动发送特性**（浏览器发请求时会自动带上同域 Cookie）是 **CSRF (跨站请求伪造)** 攻击的温床。
+*   **场景**：如果 Token 在 Cookie 里，用户登录了 LEGO 后，误点了一个钓鱼网站。钓鱼网站后台偷偷发一个 `POST /api/delete-work` 请求，浏览器会自动带上 LEGO 的 Cookie，服务器一看 Cookie 对了，作品就被删了。
+*   **LEGO 策略**：我们把 Token 存在 **LocalStorage**。LocalStorage 不会自动随请求发送，必须由前端代码（Axios 拦截器）手动取出并塞入 Header。钓鱼网站无法读取我们的 LocalStorage，自然无法伪造请求。
+
+**2. LEGO 的 Token 全生命周期管理**
+
+*   **存储 (Storage)**：
+    用户登录成功后，我们在 `store` 的 `login` action 中将 Token 存入：
+    ```typescript
+    // store.ts
+    const { token } = data
+    localStorage.setItem('token', token)
+    // 第一时间注入 Axios，保证后续请求畅通
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+    ```
+
+*   **恢复 (Hydration)**：
+    当用户 F5 刷新页面时，Vuex 的内存状态会清空。我们在 `main.ts` 或 `App.vue` 中做初始化检查：
+    ```typescript
+    // main.ts
+    const token = localStorage.getItem('token')
+    if (token) {
+      // 1. 恢复 Axios Header
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+      // 2. 触发 fetchCurrentUser，验证 Token 有效性并拉取用户信息
+      store.dispatch('fetchCurrentUser')
+    }
+    ```
+
+*   **注销 (Logout)**：
+    点击退出时，必须执行“三清”操作：
+    ```typescript
+    // store.ts - logout
+    localStorage.removeItem('token') // 1. 清硬盘
+    delete axios.defaults.headers.common['Authorization'] // 2. 清请求头
+    state.user = { isLogin: false } // 3. 清内存
+    ```
+
+**💡 避坑指南/面试金句：**
+*   **“CSRF 免疫”**：在面试中被问到 LocalStorage 存 Token 安全吗？一定要回答：“它虽然不能防 XSS，但它**天然免疫 CSRF**。在现代 Vue/React 开发中，XSS 通常被框架自动防御了，所以 CSRF 才是更需要关注的点，这也是为什么我们选择 LocalStorage。”
+*   **“无感鉴权”**：强调我们在 `Axios` 初始化时对 Token 的自动注入，这体现了对用户体验（刷新免登）的考虑。
 
 #### Messagechannel是什么，有什么使用场景?
 
@@ -2301,8 +2871,43 @@ Axios 是一种基于Promise封装的HTTP客户端，其特点如下:
 
 * Web Workers 通信:在 Web 开发中，Messagechannel 通常用于在主线程和 Web Worker 之间建立通信通道，以便主线程与 Worker 之间传递消息和数据。
 * 不同浏览上下文(browsing context)之间的通信:在现代浏览器中，多个标签页、iframe 或者其他类型的browsing context 可以通过 Messagechannel 实现通信。
-* SharedWorker 通信: Messagechanne1 可以用于在主线程和 Shared Worker 之间建立通信通道4.服务端和客户端之间的通信: Messagechanne1 可以用于客户端(如浏览器)与服务端(如 WebSocket 服务器)之间的通信，特别是在与 WebSocket 或其他类似技术结合使用时。
-* 异步任务处理:在某些场景中，使用 essagechanne1可以更方便地处理异步任务，因为它提供了独立于主线程的通信通道。
+* SharedWorker 通信: Messagechannel 可以用于在主线程和 Shared Worker 之间建立通信通道。
+* 异步任务处理:在某些场景中，使用 MessageChannel 可以更方便地处理异步任务，因为它提供了独立于主线程的通信通道。
+
+---
+
+#### 🚀 项目实战解析 (LEGO)
+
+在 **LEGO 这种涉及复杂交互和多上下文** 的低代码平台中，`MessageChannel` 扮演着“特勤通讯员”的角色，主要应用于以下深度场景：
+
+**1. 编辑器与预览 Iframe 的“私密热线”**
+在 `PreviewForm.vue` 中，我们使用了 `iframe` 来展示预览页面。
+*   **痛点**：传统的 `postMessage` 像是在广场上大喊（所有监听到 `message` 事件的脚本都能听到），且难以建立稳定的“请求-响应”关系。
+*   **LEGO 进阶方案**：如果我们需要实现**实时同步编辑**（即在右侧改颜色，左侧预览瞬间变化），最优雅的做法是使用 `MessageChannel`：
+    ```javascript
+    // 在 Editor (父容器) 中
+    const channel = new MessageChannel();
+    const iframe = document.querySelector('iframe');
+    // 将端口 2 发送给 iframe，端口 1 留给自己
+    iframe.contentWindow.postMessage('init_communication', '*', [channel.port2]);
+
+    channel.port1.onmessage = (e) => {
+      console.log('收到预览页面的反馈：', e.data);
+    };
+    // 发送实时属性更新
+    channel.port1.postMessage({ type: 'update_props', data: { color: 'red' } });
+    ```
+
+**2. 避开“渲染阻塞”：宏任务调度**
+在编辑器拖动组件时，可能会触发大量的计算（如吸附对齐、图层排序）。如果这些计算太重，会导致掉帧。
+*   **底层原理**：`MessageChannel` 的消息传递属于 **宏任务 (MacroTask)**。
+*   **实战思考**：Vue 或 React 等框架在底层调度任务时，有时会平衡 `setTimeout` 和 `MessageChannel`。相比 `setTimeout(fn, 0)` 有 4ms 的最小延迟，`MessageChannel` 在大多数浏览器中几乎是“零延迟”的宏任务，非常适合用来将繁重的计算任务切片（Time Slicing），从而保持 LEGO 画布的丝滑体验。
+
+**💡 避坑指南/面试金句：**
+*   **“独立频道”**：面试时提到 `MessageChannel`，一定要强调它的“端口（Port）”概念。它就像是一条**专线**，一旦建立，父页面和子 Iframe 的通讯就不再受到全局 `postMessage` 杂音的干扰。
+*   **“零延迟宏任务”**：指出它是现代框架（如 React Scheduler）实现细粒度任务调度的一个黑科技，这能体现你对底层性能优化的敏感度。
+
+---
 
 #### 前后端通信方式（必背）
 
@@ -2311,6 +2916,48 @@ Axios 是一种基于Promise封装的HTTP客户端，其特点如下:
 3. iframe流：页面嵌入一个隐藏的iframe 通过其src属性与服务器建立长连接 服务器通过iframe推送数据/实时到达，浏览器兼容性好/维护长连接开销
 4. websocket：基于TCP的双向通信协议，客户端和服务端建立持久连接，数据帧格式序列传输/实时性高，性能优越，节省网络带宽资源/浏览器，重连
 5. SSE：服务器向客户端单向推送数据，基于HTTP/使用简单，轻量级，支持断线重连
+
+---
+
+#### 🚀 项目实战解析 (LEGO)
+
+在 **LEGO 这种高度交互的编辑器项目** 中，选择哪种通信方式往往决定了用户体验的“丝滑度”：
+
+**1. 基础业务：Axios (标准 HTTP)**
+LEGO 的 90% 的功能（如获取模板列表、保存作品、登录）都是基于 **Axios (HTTP)** 实现的。
+*   **特性回扣**：利用 `Promise` 的特性，结合前端的 `async/await`，我们将复杂的异步流程（如先上传图片、再拿 URL 保存组件、最后更新 Vuex）写成了像同步代码一样的逻辑。
+
+**2. 预览状态同步：轮询 (Short Polling)**
+在“发布作品”或“扫码预览”阶段，后台可能需要时间来生成静态页面或处理图片。
+*   **LEGO 场景**：当用户在 PC 端点击“发布”时，前端可能会进入一个“发布中”的状态，此时通过简单的 `setInterval` 每隔 3 秒请求一次状态接口：
+    ```javascript
+    // 伪代码：检查作品发布状态
+    const checkStatus = () => {
+      const timer = setInterval(async () => {
+        const { data } = await axios.get(`/status/${workId}`)
+        if (data.status === 'published') {
+          clearInterval(timer) // 成功后清除
+          showSuccessMessage('发布成功！')
+        }
+      }, 3000)
+    }
+    ```
+*   **实战思考**：为什么不用 WebSocket？因为发布是一个“低频、瞬时”的任务，建立的长连接开销反而比几次简单的 HTTP 请求更大。
+
+**3. 未来演进：WebSocket (多人协作)**
+设想 **LEGO 2.0** 要引入“多人实时编辑”功能（类似 Google Docs）。
+*   **技术选型**：此时 **WebSocket** 是唯一选择。
+*   **原因**：组件的属性修改（如拖拽坐标）频率极高（每秒 60 次）。如果用 HTTP 轮询，服务器会瞬间崩溃且延迟巨大；而 WebSocket 的全双向、低开销数据帧传输，能让不同用户看到的画布同步延迟控制在毫秒级。
+
+**4. 状态实时推送：SSE (Server-Sent Events)**
+如果我们要实现一个“实时日志”或“服务器构建进度”面板（类似于 Vercel 的部署面板）。
+*   **原因**：这种场景只需要服务器推送到浏览器，不需要客户端回传大量数据。SSE 基于 HTTP 协议，比 WebSocket 更轻量，且天然支持断线重连，是监控类功能的首选。
+
+**💡 避坑指南/面试金句：**
+*   **“按需选择，不过度设计”**：在面试中，你可以这样总结：“在我的 **LEGO 项目** 中，虽然 WebSocket 听起来很高级，但我们坚持**‘轻量优先’**。对于普通的 CRUD 使用 Axios；对于发布状态的追踪采用轮询；而将 WebSocket 留给实时性要求极高的协作场景。这也是架构设计中‘关注点分离’的体现。”
+*   **“心跳机制”**：如果聊到 WebSocket，记得主动提到“心跳检测（Heartbeat）”和“自动重连”，这能证明你处理过网络不稳定的真实线上环境。
+
+---
 
 #### websocket的开启用的是什么方法
 
@@ -2453,6 +3100,46 @@ JSON和XML之间的区别
 * 使用 Canvas 绘制:通过 Canvas API 可以绘制出页面内容，并将其导出为图片格式。具体实现可以参考Fabric.js、Puppeteer 等库。
 * 使用服务器端渲染:对于需要生成动态内容或者需要进行复杂操作的页面，可以使用服务器端渲染技术(如Node.is 或 PHP)来生成网页截图。
 
+---
+
+#### 🚀 项目实战解析 (LEGO)
+
+在 **LEGO 编辑器** 中，保存作品封面是一个核心功能。我们采用了 **`html2canvas`** 库，结合后端上传流程，实现了完整的海报生成闭环：
+
+**1. 核心链路：Canvas -> Blob -> Upload**
+在 `helper.ts` 中，我们封装了 `takeScreenshotAndUpload` 函数。它不仅是截图，更像是一条“工业流水线”：
+```typescript
+// helper.ts
+export async function takeScreenshotAndUpload(ele: HTMLElement) {
+  // 1. 调用 html2canvas 将 DOM 节点转换为 Canvas 对象
+  // width: 375 确保了截图尺寸符合 H5 预览规范
+  // useCORS: true 允许跨域加载图片资产
+  const canvas = await html2canvas(ele, { width: 375, useCORS: true, scale: 1 })
+  
+  // 2. 将 Canvas 转换为 Blob 对象（为了像文件一样上传）
+  const canvasBlob = await getCanvasBlob(canvas)
+  
+  if (canvasBlob) {
+    // 3. 调用统一的上传接口，发送二进制流至服务器
+    const data = await uploadFile<RespUploadData>(canvasBlob)
+    return data
+  }
+}
+```
+
+**2. 跨域“生死战” (The CORS Challenge)**
+这是前端截图最容易踩的坑。
+*   **LEGO 策略**：我们在 `html2canvas` 的配置中强制开启了 `useCORS: true`。同时，要求后端（OSS/CDN）配合设置 `Access-Control-Allow-Origin`。如果这个设置不对，Canvas 会被标记为“被污染（Tainted）”，导致 `toBlob` 或 `toDataURL` 报错，截图功能直接报废。
+
+**3. 体验优化：预览即所得**
+在发布面板 `PreviewForm.vue` 中，我们并非直接展示截图，而是先通过 `iframe` 让用户确认效果，随后在后台静默触发 `takeScreenshotAndUpload`。这保证了用户操作的连贯性，不需要等待截图完成即可继续编辑。
+
+**💡 避坑指南/面试金句：**
+*   **“Canvas 并不是万能的”**：在面试中提到截图，一定要表现出你的清醒：“虽然 LEGO 使用了 `html2canvas`，但必须承认它本质上是根据 DOM 重绘 Canvas，某些复杂的 CSS 属性（如双重阴影、某些渐变）可能会有偏差。”
+*   **“从内存到网络”**：描述流程时，重点强调 **Blob** 的转换。不要说传 Base64，要说“转换成 Blob 二进制流通过 `FormData` 上传”，这体现了你对前端二进制处理（Buffer/Blob/ArrayBuffer）的深刻理解。
+
+---
+
 以上这些方法备有优缺点。
 
 * 使用浏览器截图功能简单便捷，但是可能无法自定义截图范围和格式，
@@ -2467,6 +3154,35 @@ JSON和XML之间的区别
 4. JS可以操作DOM，如果在修改DOM的时候渲染页面，可能导致渲染结果不一致/JS引擎和GUI线程设置为互斥关系，js执行时，GUI渲染线程会被挂起
 5. js执行时间过长，会导致渲染过程不连贯，产生阻塞感
 
+---
+
+#### 🚀 项目实战解析 (LEGO)
+
+在 **LEGO 项目的构建优化** 中，我们对脚本加载策略的选择直接关系到首屏性能（First Paint）：
+
+**1. 业务主代码：`defer` 是标配**
+当你运行 `npm run build` 后，观察生成的 `index.html`，你会发现 Webpack/Vite 自动为 `app.js` 和 `chunk-vendors.js` 注入了 `defer` 属性。
+*   **原因**：Vue 应用的初始化代码（`mount('#app')`）严格依赖 HTML 中的 `<div id="app">` 节点。
+*   **逻辑**：`defer` 保证了脚本虽然并行下载，但一定会在 HTML 解析完毕（`DOMContentLoaded` 之前）才执行。如果用 `async`，脚本下载完立即抢占执行，此时 `#app` 可能还没渲染出来，导致白屏报错。
+
+**2. 统计与监控脚本：`async` 的用武之地**
+在 `public/index.html` 中引入的**第三方统计代码（如 Google Analytics, Sentry）**，我们通常手动添加 `async`。
+*   **代码示例**：
+    ```html
+    <!-- 越快跑越好，完全不依赖 DOM，也不在乎执行顺序 -->
+    <script async src="https://hm.baidu.com/hm.js?xxx"></script>
+    ```
+*   **原因**：这些脚本与业务逻辑彻底解耦。使用 `async` 可以让它们尽早下载并执行，不错过任何一个用户（Page View），且不拖慢主业务代码的下载带宽。
+
+**3. CDN 资源库：必须用 `defer`**
+为了通过 CDN 加速加载 Vue/ElementPlus，我们在 `index.html` 中引入这些库时，**必须使用 `defer` 且严格保持顺序**。
+*   **错误示范**：如果给 CDN 的 Vue 用了 `async`，可能会出现业务代码 `app.js` 先下完先跑了，结果报错 `Vue is not defined`。
+*   **LEGO 策略**：`defer` 不仅延迟执行，还**严格保证执行顺序**（按 HTML 标签书写顺序）。
+
+**💡 避坑指南/面试金句：**
+*   **“Async 是独狼，Defer 是军队”**：`async` 各跑各的，谁快谁先上（乱序）；`defer` 纪律严明，统一下载，按令排队执行（有序）。
+*   **“首屏优化”**：在面试中谈到首屏优化时，一定要加上一句：“我们在项目中通过正确使用 `defer` 彻底消灭了 Render-Blocking Resources（渲染阻塞资源），这是提升 Lighthouse 分数的关键一环。”
+
 #### 页面加载的过程中，JS 文件是不是一定会阻塞 DOM 和 CSSOM 的构建?
 
 不一定
@@ -2475,7 +3191,7 @@ JavaScript阻塞DOM和CSSOM的构建的情况主要集中在以下两个方面
 
 **JavaScript文件被放置在head标签内部**
 
-当]avaScript文件被放置在head标签内部时，浏览器会先加载JavaScript文件并执行它，然后才会继续解析HTML文档。因此，如果JavaScript文件过大或服务器响应时间过长，就会导致页面一直处于等待状态，进而影响DOM和CSSOM的构建。
+当javaScript文件被放置在head标签内部时，浏览器会先加载JavaScript文件并执行它，然后才会继续解析HTML文档。因此，如果JavaScript文件过大或服务器响应时间过长，就会导致页面一直处于等待状态，进而影响DOM和CSSOM的构建。
 
 **JavaScript代码修改了DOM结构**
 
@@ -2510,9 +3226,41 @@ Web Workers 是一种运行在后台线程的JavaScript脚本，它不会阻塞D
 
 将 html 作为 svg 的外联元素，利用 svg 的 API 导出为图片
 
-**方案三:使用Node]s 调用浏览器方法**
+**方案三:使用Nodejs 调用浏览器方法**
 
 在后端生成海报，比如可以使用nodeJS，通过puppter等库，调用浏览器的 page 对象，基于page.screenshots 截图并保存到磁盘。
+
+---
+
+#### 🚀 项目实战解析 (LEGO)
+
+在 **LEGO H5 营销平台** 中，生成分享海报是核心功能。我们最终选择了 **方案一 (`html2canvas`)**，以下是我们的技术决策路径和踩坑经验：
+
+**1. 为什么不用方案二 (SVG)？**
+虽然 `<foreignObject>` 理论上能完美还原 CSS，但它对**跨域资源**的限制近乎变态。只要 HTML 里有一张图片跨域（即使服务器配了 CORS），整个 SVG 导出也会失败。且 IE 浏览器完全不支持。
+
+**2. 为什么不用方案三 (Puppeteer)？**
+Puppeteer 是后端起 Chrome 截图，效果最完美。但由于**并发性能差**（启动浏览器极耗内存）和**成本高**，我们在 C 端高并发场景（如万人同时抢购生成海报）下无法支撑，只适合离线生成。
+
+**3. LEGO 的方案一实战 (html2canvas)**
+我们通过前端直接重绘，虽然无法完美支持某些 CSS3 属性（如 `background-clip: text`），但胜在**实时、低成本、兼容性好**。
+*   **解决模糊 (Blurry)**：
+    手机屏幕通常是 Retina 屏 (dpr >= 2)，默认 Canvas 绘制通过 CSS 像素，导致生成图模糊。我们在配置中显式开启缩放：
+    ```typescript
+    html2canvas(element, {
+      scale: window.devicePixelRatio || 2, // 强制 2 倍或 3 倍渲染
+    })
+    ```
+*   **解决跨域 (CORS)**：
+    这是最大的坑。我们必须同时做两件事：
+    1.  前端配置：`useCORS: true`。
+    2.  服务端（OSS）：响应头必须带 `Access-Control-Allow-Origin: *`。
+*   **解决白边/偏移**：
+    在截图前，我们会将目标 DOM 的 `transform` 重置，并确保页面滚动条置顶 (`window.scrollTo(0,0)`)，这是因为 `html2canvas` 对滚动位置的计算有已知 Bug。
+
+**💡 避坑指南/面试金句：**
+*   **“Canvas 只是模拟”**：面试时要提及：“`html2canvas` 并不是截图，它是**基于 DOM 信息的重绘**。所以它不支持伪元素、复杂的 CSS 滤镜以及 iFrame 内容。”
+*   **“性能平衡”**：对于含有几百个 DOM 节点的复杂海报，生成可能耗时 1秒+。我们会在生成的瞬间展示一个 `Loading` 占位，避免用户感到卡顿。
 
 #### postMessage 有哪些使用场景?
 
@@ -2544,6 +3292,53 @@ otherWindow.postMessage(message,targetOrigin,[transfer]);
 **source**
 
 对发送消息的窗口对象的引用; 可以使用此来在具有不同origin的两个窗口之间建立双向通信。
+
+---
+
+#### 🚀 项目实战解析 (LEGO)
+
+在 **LEGO 编辑器** 中，`postMessage` 是连接 **“编辑器主控台”** 与 **“H5 预览 iframe”** 之间的唯一纽带。即使用户看着像是在同一个页面操作，底层其实在进行高频的跨窗口通信。
+
+**1. 业务场景：实时预览 (Live Preview)**
+当用户在左侧属性面板修改字体颜色时，右侧的 iframe 需要毫秒级同步更新。
+*   **Editor (父)**：`http://admin.lego.com`
+*   **Preview (子)**：`http://h5.lego.com` (注意：这是典型的跨域场景)
+
+**2. 封装实战 (`usePostMessage`)**
+为了代码复用，我们将通信逻辑封装为 Hook：
+```typescript
+// usePostMessage.ts
+const sendMessage = (type: string, payload: any) => {
+  const iframe = document.getElementById('preview-iframe') as HTMLIFrameElement
+  if (!iframe) return
+  // 安全关键点：明确指定目标域名，坚决不用 '*'
+  // 这样只有 h5.lego.com 能收到消息，防止恶意网站截获 Token
+  iframe.contentWindow?.postMessage({ type, payload }, 'http://h5.lego.com')
+}
+```
+
+**3. 安全防线 (Security Thinking)**
+在接收端，我们实施了严格的“白名单机制”：
+```typescript
+// Preview.vue (子页面)
+window.addEventListener('message', (event) => {
+  // 1. 身份查验：只处理来自管理后台的消息
+  if (event.origin !== 'http://admin.lego.com') {
+    console.warn('收到不明来源消息，已拦截')
+    return
+  }
+  
+  // 2. 数据分发
+  const { type, payload } = event.data
+  if (type === 'UPDATE_PROPS') {
+    updateComponent(payload)
+  }
+})
+```
+
+**💡 避坑指南/面试金句：**
+*   **“拒绝通配符”**：在面试中一定要强调：“虽然 `postMessage` 很强大，但我从不使用 `targetOrigin: '*'`。这不仅是 ESLint 的报错，更是防止数据泄露（Data Leakage）的底线。”
+*   **“结构化克隆”**：`postMessage` 发送的对象会被**深拷贝**（Structured Clone），这意味着你**不能发送函数或 DOM 节点**，只能发送纯数据（JSON）。这也是为什么我们在 LEGO 中只传输组件的 `props` 数据配置，而不是组件实例本身。
 
 #### 为什么部分请求中，参数需要使用 encodeURIComponent 进行转码?
 
