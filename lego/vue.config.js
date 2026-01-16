@@ -4,11 +4,15 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 const CompressionWebpackPlugin = require('compression-webpack-plugin')
 const isStaging = !!process.env.VUE_APP_STAGINE
 const isProduction = process.env.NODE_ENV === 'production'
+const isGithubPages = process.env.VUE_APP_GH_PAGES === 'true'
+const ghPagesBase = process.env.VUE_APP_GH_PAGES_BASE || '/MpbLego/'
 const isAnalyzeMode = !!process.env.ANALYZE_MODE
 module.exports = {
   // 生产环境要使用 OSS 地址
   // 其他环境都使用绝对路径
-  publicPath: (isProduction && !isStaging) ? 'https://oss.imooc-lego.com/editor' : '/',
+  publicPath: (isProduction && isGithubPages)
+    ? ghPagesBase
+    : (isProduction && !isStaging) ? 'https://oss.imooc-lego.com/editor' : '/',
   css: {
     loaderOptions: {
       less: {
