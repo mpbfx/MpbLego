@@ -85,10 +85,18 @@ export default class UserController extends Controller {
   async loginByCellphone() {
     const { ctx, app } = this
     const { phoneNumber, veriCode } = ctx.request.body
-    // 验证码是否正确
-    const preVeriCode = await app.redis.get(`phoneVeriCode-${phoneNumber}`)
-    if (veriCode !== preVeriCode) {
-      return ctx.helper.error({ ctx, errorType: 'loginVeriCodeIncorrectFailInfo' })
+    // 临时开发环境：跳过验证码验证
+    if (app.config.env !== 'prod') {
+      // 开发环境下，使用固定验证码 1234
+      if (veriCode !== '1234') {
+        return ctx.helper.error({ ctx, errorType: 'loginVeriCodeIncorrectFailInfo' })
+      }
+    } else {
+      // 生产环境：验证码是否正确
+      const preVeriCode = await app.redis.get(`phoneVeriCode-${phoneNumber}`)
+      if (veriCode !== preVeriCode) {
+        return ctx.helper.error({ ctx, errorType: 'loginVeriCodeIncorrectFailInfo' })
+      }
     }
     const token = await ctx.service.user.loginByCellphone(phoneNumber)
     ctx.helper.success({ ctx, res: { token } })
