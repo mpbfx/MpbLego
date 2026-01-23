@@ -33,7 +33,7 @@
   },
   "devDependencies": {
     "@types/file-saver": "^2.0.2",
-    "@types/jest": "^24.0.19",
+    "@types/jest": "^24.9.1",
     "@types/lodash-es": "^4.17.4",
     "@types/qrcode": "^1.4.0",
     "@types/uuid": "^8.3.0",
@@ -51,6 +51,7 @@
     "cross-env": "^7.0.3",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^7.0.0-0",
+    "fast-check": "^4.5.3",
     "flush-promises": "^1.0.2",
     "less": "^3.12.0",
     "less-loader": "^7.1.0",
