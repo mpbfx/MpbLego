@@ -17,11 +17,9 @@ const app = createApp(App)
 let baseBackendURL = ''
 let baseH5URL = ''
 if (process.env.NODE_ENV === 'development' || process.env.VUE_APP_STAGINE) {
-  // use test backend api when
-  // in development env
-  // in staging env
-  baseBackendURL = 'http://182.92.168.192:8081'
-  baseH5URL = 'http://182.92.168.192:8082'
+  // use local backend api when in development env
+  baseBackendURL = 'http://localhost:7001'
+  baseH5URL = 'http://localhost:7001'
 } else {
   baseBackendURL = 'https://api.imooc-lego.com'
   baseH5URL = 'https://h5.imooc-lego.com'

@@ -430,6 +430,7 @@ Firefox，Chrome 和 Opera 都会在 DOMContentLoaded 中自动填充表单例�
           }, 1000 * 50) // 每50秒自动保存
         })
         ```
+
     *   **原理**：此时页面元素已生成，相关的数据响应式系统已建立，是启动后台任务的最佳时机。
 
 2.  **离开页面保护：`beforeunload` 的应用**
@@ -453,6 +454,7 @@ Firefox，Chrome 和 Opera 都会在 DOMContentLoaded 中自动填充表单例�
           window.removeEventListener('beforeunload', beforeUnloadListener)
         })
         ```
+
     *   **原理**：利用 `beforeunload` 事件，在页面卸载前一刻（用户点击关闭按钮时）进行拦截，这是防止用户误操作导致作品丢失的最后一道防线。
 
 #### MutationObserver
@@ -648,6 +650,7 @@ DOM(Document Object Model)和 BOM(Browser Object Model)是JavaScript 中常用�
         }
         document.addEventListener('click', handler) // 绑定到 document
         ```
+
     *   **解析**：这里使用了标准的 DOM API `contains` 来判断点击事件的 `target` 是否在目标元素内部。
 
 2.  **DOM 操作：获取截图区域**
@@ -670,6 +673,7 @@ DOM(Document Object Model)和 BOM(Browser Object Model)是JavaScript 中常用�
            // ...
         }, 1000 * 50)
         ```
+
     *   **其他 BOM 应用**：`localStorage` (Storage API) 用于 Token 存储；`navigator.clipboard` (Navigator API) 用于复制文本。
 
 ### 资源加载与性能优化
@@ -767,6 +771,7 @@ DOM(Document Object Model)和 BOM(Browser Object Model)是JavaScript 中常用�
   <div id="app"></div>
   <!-- built files will be auto injected -->
 </body>
+
 ```
 
 这是因为脚手架（Vue CLI / Webpack）在构建阶段（`npm run build`）会自动处理脚本注入，其默认行为通常符合最佳实践：
@@ -916,6 +921,7 @@ autocomplete 属性是用来规定输入字段是否启用自动完成的功能�
         ```html
         <link href="/js/editor.js" rel="prefetch">
         ```
+
     *   **效果**：当用户访问首页（Home）时，浏览器会在网络空闲时默默下载 `editor.js`。当用户点击“创建设计”跳转到编辑器时，资源已在本地缓存中，实现**秒开**体验。
 
 3.  **Preload 的应用**：
@@ -923,6 +929,7 @@ autocomplete 属性是用来规定输入字段是否启用自动完成的功能�
         ```html
         <link href="/js/app.js" rel="preload" as="script">
         ```
+
     *   这确保了核心 JS 拥有最高的下载优先级，避免首屏白屏时间过长。
 
 ### 移动适配与响应式
@@ -1137,6 +1144,7 @@ sizes就是指默认显示128px，如果视区宽度大于360px，则显示340px
           return { left, top }
         }
         ```
+
     *   **核心逻辑**：必须加上 `container.scrollTop`，否则当画布滚动后，拖拽的组件会“跟不上”鼠标（向上偏移了滚动距离）。这展示了 Scroll 属性在复杂交互应用中的核心地位。
 
 #### Canvas和SVG有什么区别?
@@ -1180,6 +1188,7 @@ sizes就是指默认显示128px，如果视区宽度大于360px，则显示340px
         // 将 Canvas 转换为 Blob 对象以上传
         canvas.toBlob(blob => { ... })
         ```
+
     *   **Canvas 优势**：利用 Canvas 可以方便地将像素数据转换为 Blob/File 对象进行上传，这是 SVG 做不到的（SVG 本质是 XML 文本）。
 
 2.  **场景二：二维码生成（qrcode）**
@@ -1192,6 +1201,7 @@ sizes就是指默认显示128px，如果视区宽度大于360px，则显示340px
           return QRCode.toCanvas(ele, url, { width })
         }
         ```
+
     *   **Canvas 优势**：相比生成大量的 DOM 节点（如 `div` 矩阵）来模拟二维码，Canvas 绘制性能更高，且生成的图像易于保存和复制。
 
 3.  **总结**：在 LEGO 中，我们主要利用 Canvas **“易于转换为图片数据”** 的特性来实现截图和导出，利用 SVG (图标库) **“无损缩放”** 的特性来实现 UI 图标展示。
@@ -1324,6 +1334,7 @@ i 和 em 的区别
             }
           </div>
         ```
+
     *   **注意**：在 TSX 中，虽然最终渲染的是 HTML，但编写时遵循的是 XML 严格语法。例如 `<input>` 必须写成 `<input />` 自闭合形式。同时 `PropsTable.tsx` 展示了如何用 `div` (块级) 进行布局，用 `span` (行内) 显示标签文本，体现了基础的 HTML 结构语义。
 
 最后
@@ -1370,6 +1381,7 @@ src和href都是用来加载外部资源，区别如下
         ```html
         <link rel="icon" href="<%= BASE_URL %>favicon.ico">
         ```
+
         *   **特性**：浏览器识别到这是 Favicon 的引用关系，会并行下载它，**不会阻塞**页面后续 DOM 的解析。
     *   **场景二：文件下载**：在 `src/helper.ts` 的 `downloadFile` 函数中，我们创建 `<a>` 标签并设置 `href` 来触发下载。
         ```typescript
@@ -1383,6 +1395,7 @@ src和href都是用来加载外部资源，区别如下
         ```html
         <img :src="file.url" class="upload-list-thumbnail">
         ```
+
         *   **特性**：这是**内容嵌入**。浏览器必须下载该图片数据，并将其**替换**掉这块 `img` 占位区域，显示为具体的像素。`src` 的内容是页面不可或缺的一部分。
     *   **场景二：JS 脚本**：虽然看不到源码，但构建后的 `app.js` 最终是以 `<script src="...">` 形式存在的。它代表**执行**，JS 代码被下载并执行后，页面的功能才会被激活。
 

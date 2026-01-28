@@ -1,5 +1,6 @@
-// This file is created by egg-ts-helper@1.26.0
+// This file is created by egg-ts-helper@1.35.2
 // Do not modify this file!!!!!!!!!
+/* eslint-disable */
 
 import 'egg';
 import ExportUser from '../../../app/model/user';
