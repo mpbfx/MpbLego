@@ -294,3 +294,22 @@ let saySomething = (name) => console.log(`hello, ${name}`);
 async function autoPlay(){
     await sleep(saySomething, 1000, 'TianTian');
 }
+
+
+function toTree1(list){
+    let map = [];
+    let res = [];
+    list.forEach(item => {
+        map[item.id] = { ...item, children: [] };
+    })
+    list.forEach(item => {
+        const node = map[item.id];
+        if(item.pid){
+            if(map[item.pid]){
+                map[item.pid].children.push(node);
+            }
+        }else{
+            res.push(node);
+        }
+    })
+}
