@@ -244,30 +244,40 @@ const arr = [
   { id: "15", name: "小涛", pid: "06", job: "运维工程师" },
 ];
 
-// * 数组转树  递归求解
-// [原子模型]: ID映射映射表(Map) -> 遍历找父级 -> 挂载children
+// [原子模型]: 映射表引用(Map) -> 单次遍历 -> 动态挂载/预建占位
 // [逻辑骨架]:
-// 1. for(item of list) map[item.id] = { ...item, children: [] }
-// 2. for(item of list) { if(hasPid) map[pid].children.push(node); else res.push(node); }
-// [通俗讲解]: “车间组装”。先让所有零件(扁平数组)按工号在架子上站好(Map)，然后指挥：有上级的零件直接跳进上级的口袋(children)，剩下的就是总装部的领头羊。
-//  */
+// 1. const map = {}, res = [];
+// 2. for(const item of list) {
+//      map[id] = { ...item, children: map[id]?.children || [] }
+//      if(pid) (map[pid] ||= { children: [] }).children.push(map[id])
+//      else res.push(map[id])
+//    }
+// [通俗讲解]: “实时入伙”。零件一边在名册上签到，一边找组织。如果上级还没来，就先在架子上给上级占个空位(children)；如果上级已经到了，直接跳进去。
 function toTree(list) {
-  const map = {}
-  const res = []
-  list.forEach(item => {
-    map[item.id] = { ...item, children: [] }
-  })
-  list.forEach(item => {
-    const node = map[item.id]
-    if (item.pid) {
-      if (map[item.pid]) {
-        map[item.pid].children.push(node)
-      }
-    } else {
-      res.push(node)
+  const map = {};
+  const res = [];
+  for (const item of list) {
+    const id = item.id;
+    const pid = item.pid;
+    // 1. 确保当前节点在 map 中存在（如果不存在就创建，如果存在就保留之前的 children）
+    if (!map[id]) {
+      map[id] = { children: [] };
     }
-  })
-  return res
+    // 把真实数据合并进去
+    map[id] = { ...item, children: map[id].children };
+    // 2. 挂载到父节点
+    if (pid) {
+      // 如果父节点还没在 map 里，先占个位
+      if (!map[pid]) {
+        map[pid] = { children: [] };
+      }
+      map[pid].children.push(map[id]);
+    } else {
+      // 根节点
+      res.push(map[id]);
+    }
+  }
+  return res;
 }
 
 let result = toTree(arr);
@@ -279,29 +289,29 @@ console.log(result);
 ```javascript
 // [原子模型]: 转字符串 -> 倒序遍历 -> 计数器(count)满3个插逗号 -> 反转结果
 // [逻辑骨架]:
-// 1. for(i = len-1; i >= 0; i--) { 
-//      count++; res.push(n[i]); 
-//      if(count === 3) { res.push(','); count = 0; } 
-//    }
-// [通俗讲解]: “包装分箱”。把漫长的零件(数字)从传送带尾部往前推，每数3个就塞一个隔板(逗号)，让数量一眼就能看清。
-toLocaleString()
-const n=123456
-const thousandSeparator = function (n) {
-  //先转字符串
-  n = n.toString();
+// 1. let str = n.toString(), res = [];
+// 2. for(i = len-1; i >= 0; i--) { res.push(str[i]); count++; if(count === 3 && i !== 0) { res.push(','); count = 0; } }
+// [通俗讲解]: “分箱包装”。从最后一位往前数，每放满3个零件就塞进一个隔板(逗号)，最后把整个传送带反过来。
+function thousandSeparator(n) {
+  const str = n.toString();
+  const res = [];
   let count = 0;
-  const arr = [];
-  for (let i = n.length - 1; i >= 0; i--) {
+
+  // 从后往前遍历每一位数字
+  for (let i = str.length - 1; i >= 0; i--) {
+    res.push(str[i]);
     count++;
-    if (count < 4) {
-      arr.push(n[i]);
-    } else {
-      arr.push(...[".", n[i]]);
-      count = 1;
+
+    // 每数够3位，且还没到最开头的一位，就补一个逗号
+    if (count === 3 && i !== 0) {
+      res.push(',');
+      count = 0;
     }
   }
-  return arr.reverse().join("");
-};
+
+  // 翻转并拼接
+  return res.reverse().join('');
+}
 
 ```
 
@@ -605,49 +615,39 @@ child.sayAge(); // 10
 #### 1.异步并发数限制
 
 ```javascript
-// [原子模型]: 任务池(tasks) + 执行池(doing) -> 递归加入任务 -> Promise.race 等空位
+// [原子模型]: 任务池(tasks) + 执行池(doing) -> 限制并发 -> Promise.race 控速
 // [逻辑骨架]:
-// 1. enqueue() { 
-//      if(allStarted) return;
-//      const task = Promise.resolve().then(() => iterateFunc()); 
-//      doing.push(task.then(() => doing.remove(task)));
-//      if(doing.length >= count) await Promise.race(doing);
-//      return enqueue();
+// 1. while (i < array.length) { 
+//      const task = iterateFunc(array[i++]);
+//      doing.push(task); 
+//      task.then(() => doing.splice(indexOf(task), 1));
+//      if (doing.length >= limit) await Promise.race(doing);
 //    }
-// [通俗讲解]: “产能限制”。工厂只有几条生产线(limit)，所有订单得排队，跑得最快的那条线一旦空出来(race)，立马就把队头的新订单塞进去。
-function limit(count, array, iterateFunc) {
-  const tasks = []       // 所有任务的 Promise（用于最后收集结果）
-  const doingTasks = []  // 正在执行的任务（用于控制并发数）
-  let i = 0              // 当前要执行的任务索引
+// [通俗讲解]: “流水线限流”。只有固定数量的工位(limit)，来一个活儿上一条线。如果线全满了，就得等着，谁先干完(race)谁就把位子腾出来给下一个人。
+async function asyncLimit(limit, array, iterateFunc) {
+  const results = [];
+  const doing = []; // 正在执行的任务池
 
-  const enqueue = () => {
-    // 1. 递归终止条件：所有任务都已启动
-    if (i === array.length) {
-      return Promise.resolve()
+  for (const item of array) {
+    // 1. 启动任务并存入结果数组
+    const p = Promise.resolve().then(() => iterateFunc(item));
+    results.push(p);
+
+    // 2. 如果限流限制大于 0，则进行并发控制
+    if (limit <= array.length) {
+      // 任务完成时，从正在执行池中移除自己
+      const e = p.then(() => doing.splice(doing.indexOf(e), 1));
+      doing.push(e);
+
+      // 3. 如果正在执行的任务达到上限，就等其中任意一个完成
+      if (doing.length >= limit) {
+        await Promise.race(doing);
+      }
     }
-
-    // 2. 创建任务（关键：用 Promise.resolve().then 延迟执行）
-    const task = Promise.resolve().then(() => iterateFunc(array[i++]))
-    tasks.push(task)  // 保存到结果数组
-
-    // 3. 创建"完成后的清理动作"
-    // doing 是一个 Promise，当 task 完成时，从 doingTasks 中移除自己
-    const doing = task.then(() => 
-      doingTasks.splice(doingTasks.indexOf(doing), 1)
-    )
-    doingTasks.push(doing)  // 加入正在执行队列
-
-    // 4. 判断是否需要等待
-    const res = doingTasks.length >= count 
-      ? Promise.race(doingTasks)  // 达到上限，等任意一个完成
-      : Promise.resolve()         // 未达上限，立即继续
-
-    // 5. 递归调用，启动下一个任务
-    return res.then(enqueue)
   }
 
-  // 启动递归，最后等所有任务完成
-  return enqueue().then(() => Promise.all(tasks))
+  // 4. 最后等所有任务全部执行完并返回结果
+  return Promise.all(results);
 }
 
 // test
@@ -665,50 +665,44 @@ limit(2, [1000, 1000, 1000, 1000], timeout).then((res) => {
 // 1. push(task) { que.push(task); run(); }
 // 2. run() { if(count < limit && que.len) { task = que.shift(); count++; task().finally(() => { count--; run(); }) } }
 // [通俗讲解]: “值班调度”。门口有个计数器(count)，只要在干活的人没满，就让排队的人进去开工。干完一个，计数器减一，再喊下一个开工。
-//模拟接口请求
-function getData(src) {
-  return new Promise((resolve,reject)=>{
-    setTimeout(() => {
-      resolve(src)
-    }, 1000);
-  })
-}
-
-/*异步并发限制*/
-function limitRequest(limit) {
-  this.que = []
-  this.limit = limit
-  this.count = 0
-  //添加任务
-  this.push = function(task) {
-    this.que.push(task)
-    this.run()
+class LimitRequest {
+  constructor(limit) {
+    this.limit = limit;
+    this.count = 0;
+    this.queue = [];
   }
-  //执行任务
-  this.run = function() {
-    //1.如果队列非空,并且当前正在运行个数<limit
-    if(this.que.length && this.count < this.limit) {
-      let task = this.que.shift()
-      this.count++
-      task.fn(task.src).then(msg => {
-        console.log(msg)
-      }).catch(err => {
-        console.error(err)
-      }).finally(() => {
-        this.count--
-        this.run()
-      })
+
+  // 添加任务
+  push(fn, src) {
+    this.queue.push({ fn, src });
+    this.run();
+  }
+
+  // 执行任务
+  run() {
+    // 只要队列有活，且人手没满，就继续派活
+    if (this.queue.length > 0 && this.count < this.limit) {
+      const { fn, src } = this.queue.shift();
+      this.count++;
+
+      fn(src)
+        .then((res) => console.log('任务成功:', res))
+        .catch((err) => console.error('任务失败:', err))
+        .finally(() => {
+          this.count--;
+          this.run(); // 递归调用，尝试处理下一个
+        });
     }
   }
 }
 
-
-//测试使用
-let p = new limitRequest(2)//一次性最多执行2个任务
-p.push({fn:getData,src:1})
-p.push({fn:getData,src:1})
-p.push({fn:getData,src:1})
-p.push({fn:getData,src:1})
+// 测试
+const getData = (src) => new Promise(res => setTimeout(() => res(src), 1000));
+const p = new LimitRequest(2);
+p.push(getData, 1);
+p.push(getData, 2);
+p.push(getData, 3);
+p.push(getData, 4);
 ```
 
 **改进版：支持动态添加 + 获取结果**
@@ -772,56 +766,37 @@ Promise.all([p1, p2, p3, p4]).then(results => {
 #### 3.最多请求3次
 
 ```javascript
-// [原子模型]: 递归调用请求 -> catch 时判断次数 -> 没满就 setTimeout 重试
+// [原子模型]: 循环调用 -> catch 时判断次数 -> 没满就等待重试 -> 满了就彻底失败
 // [逻辑骨架]:
-// 1. makeRequest() {
-//      fn().catch(err => { if(count < max) setTimeout(makeRequest, delay); else reject(err); })
-//    }
-// [通俗讲解]: “顽强快递员”。送货失败了不气馁，等几秒钟再送一次，直到送了3次还没成功才死心反馈失败。
-function retryRequest(requestFunction, maxAttempts, delay) {
-  return new Promise((resolve, reject) => {
-    let attempts = 0;
+// 1. while (attempts < max) { try { return await fn(); } catch(e) { attempts++; if(attempts === max) throw e; await sleep(delay); } }
+// [通俗讲解]: “顽强快递员”。送货失败了不气馁，等一会再送，直到送够3次还没成功才死心反馈失败。
+async function retryRequest(fn, maxAttempts, delay) {
+  let attempts = 0;
 
-    function makeRequest() {
+  while (attempts < maxAttempts) {
+    try {
+      // 尝试执行请求
+      return await fn();
+    } catch (error) {
       attempts++;
-
-      requestFunction()
-        .then(resolve)
-        .catch((error) => {
-          if (attempts < maxAttempts) {
-            setTimeout(makeRequest, delay);
-          } else {
-            reject(error);
-          }
-        });
+      console.warn(`第 ${attempts} 次尝试失败`);
+      
+      // 如果达到最大次数，直接抛出错误
+      if (attempts >= maxAttempts) {
+        throw error;
+      }
+      
+      // 否则等待一段时间再试
+      await new Promise(resolve => setTimeout(resolve, delay));
     }
-
-    makeRequest();
-  });
+  }
 }
 
-// 示例用法：
-const maxAttempts = 3;
-const delay = 1000; // 1秒钟
-const fakeApiRequest = () => {
-  return new Promise((resolve, reject) => {
-    // 模拟一个请求，这里可以替换成实际的请求逻辑
-    const success = Math.random() < 0.8; // 模拟80%的成功率
-    if (success) {
-      resolve('请求成功');
-    } else {
-      reject('请求失败');
-    }
-  });
-};
-
-retryRequest(fakeApiRequest, maxAttempts, delay)
-  .then((result) => {
-    console.log(result);
-  })
-  .catch((error) => {
-    console.error('最大重试次数已达到，请求失败：', error);
-  });
+// 示例用法
+const fakeApi = () => Math.random() > 0.8 ? Promise.resolve("成功") : Promise.reject("失败");
+retryRequest(fakeApi, 3, 1000)
+  .then(res => console.log('最终结果:', res))
+  .catch(err => console.error('重试耗尽:', err));
 ```
 
 #### 4.promise.all
@@ -835,23 +810,22 @@ retryRequest(fakeApiRequest, maxAttempts, delay)
 // [通俗讲解]: “团队同步”。一队业务员出去谈生意，只要有一个谈崩了全队就失败；要是全都谈成了，就带上所有合同(结果数组)风光回厂。
 function promiseAll(promises) {
   return new Promise((resolve, reject) => {
-    if (!Array.isArray(promises)) return reject(new TypeError('Arguments must be an array'));
-    
     const res = [];
-    let count = 0;
+    let finishedCount = 0;
     const len = promises.length;
-    if (len === 0) return resolve(res);
 
-    promises.forEach((promise, idx) => {
-      // 用 Promise.resolve 包裹，兼容非 Promise 值
-      Promise.resolve(promise).then(
-        (val) => {
-          res[idx] = val;
-          count++;
-          if (count === len) resolve(res);
-        },
-        (err) => reject(err)
-      );
+    if (len === 0) return resolve([]);
+
+    promises.forEach((p, index) => {
+      // Promise.resolve 包裹，确保 p 是一个 Promise
+      Promise.resolve(p)
+        .then((value) => {
+          res[index] = value;
+          finishedCount++;
+          // 当所有 Promise 都完成时，resolve 结果
+          if (finishedCount === len) resolve(res);
+        })
+        .catch(reject); // 只要有一个失败，直接整个失败
     });
   });
 }
@@ -859,82 +833,54 @@ function promiseAll(promises) {
 function promiseAllSettled(promises) {
   return new Promise((resolve) => {
     const res = [];
-    let count = 0;
+    let finishedCount = 0;
     const len = promises.length;
-    if (len === 0) return resolve(res);
 
-    promises.forEach((promise, idx) => {
-      Promise.resolve(promise).then(
-        (value) => {
-          res[idx] = { status: 'fulfilled', value };
-          count++;
-          if (count === len) resolve(res);
-        },
-        (reason) => {
-          res[idx] = { status: 'rejected', reason };
-          count++;
-          if (count === len) resolve(res);
-        }
-      );
+    if (len === 0) return resolve([]);
+
+    promises.forEach((p, index) => {
+      Promise.resolve(p)
+        .then((value) => {
+          res[index] = { status: 'fulfilled', value };
+        })
+        .catch((reason) => {
+          res[index] = { status: 'rejected', reason };
+        })
+        .finally(() => {
+          finishedCount++;
+          if (finishedCount === len) resolve(res);
+        });
     });
   });
 }
-
-// 测试案例
-const p1 = Promise.resolve('First');
-const p2 = Promise.reject('Rejected');
-const p3 = Promise.resolve('Third');
-
-console.log('--- 测试 promiseAll ---');
-promiseAll([p1, Promise.resolve('Success'), p3])
-  .then(res => console.log('All Success:', res))
-  .catch(err => console.error('All Failed:', err));
-
-promiseAll([p1, p2, p3])
-  .then(res => console.log('All Success:', res))
-  .catch(err => console.error('All Failed (Expected):', err));
-
-console.log('--- 测试 promiseAllSettled ---');
-promiseAllSettled([p1, p2, p3]).then(res => {
-  console.log('AllSettled Res:', JSON.stringify(res, null, 2));
-});
 ```
 
 #### 6.Promise手写红绿灯
 
 ```javascript
-// [原子模型]: 封装延时函数 light(timer, cb) -> 链式调用 .then() -> 递归触发循环
+// [原子模型]: 封装延时函数 light(timer, cb) -> 异步循环
 // [逻辑骨架]:
-// 1. light(t, cb) { return new Promise(res => { cb(); setTimeout(res, t); }) }
-// 2. step() { light(red).then(() => light(green)).then(() => light(yellow)).then(step); }
-// [通俗讲解]: “流水线红绿灯”。设定好每个灯亮的时长(Promise+setTimeout)，只要前一个灯灭了，下一个灯立马通过 .then() 收到信号并亮起，循环往复。
-function red() {
-  console.log("red (3s)");
-}
-function green() {
-  console.log("green (2s)");
-}
-function yellow() {
-  console.log("yellow (1s)");
+// 1. const sleep = (t) => new Promise(res => setTimeout(res, t))
+// 2. while(true) { await sleep(red); await sleep(green); ... }
+// [通俗讲解]: “流水线红绿灯”。设定好每个灯亮的时长(Promise+setTimeout)，通过 await 让代码像排队一样轮流执行，无限循环。
+async function trafficLight() {
+  const red = () => console.log("🔴 红灯亮 (3s)");
+  const green = () => console.log("🟢 绿灯亮 (2s)");
+  const yellow = () => console.log("🟡 黄灯亮 (1s)");
+
+  const sleep = (delay) => new Promise(res => setTimeout(res, delay));
+
+  while (true) {
+    red();
+    await sleep(3000);
+    green();
+    await sleep(2000);
+    yellow();
+    await sleep(1000);
+  }
 }
 
-const light = (timer, cb) => {
-  return new Promise(resolve => {
-    cb();
-    setTimeout(resolve, timer);
-  });
-};
-
-const step = () => {
-  Promise.resolve()
-    .then(() => light(3000, red))
-    .then(() => light(2000, green))
-    .then(() => light(1000, yellow))
-    .then(step); // 递归调用实现循环
-};
-
-// 启动
-step();
+// trafficLight(); // 启动循环
 ```
 
 #### 7.定时器hooks（选背）
@@ -1050,61 +996,38 @@ export default useTimer;
 // [逻辑骨架]:
 // 1. sleep/print(fn) { queue.push(fn); return this; }
 // 2. execute() { for(task of queue) await task(); }
-// [通俗讲解]: “预排班计划”。先开一个空的排班表(queue)，把所有的“睡觉”、“打印”任务先写在表上。最后拉闸启动(execute)，按表里的顺序一个等一个地执行。
-class Task {
+// [通俗讲解]: “预排班计划”。先开一个空的排班表(queue)，把所有的“睡觉”、“打印”任务先写在表上。最后通过 execute() 统一触发，按表里的顺序一个等一个地执行。
+class TaskQueue {
   constructor() {
     this.queue = [];
   }
 
+  // 延迟任务
   sleep(time) {
-    const sleepTask = () => {
-      return new Promise((resolve) => {
-        setTimeout(resolve, time);
-      });
-    };
+    this.queue.push(() => new Promise(res => setTimeout(res, time)));
+    return this; // 返回 this 实现链式调用
+  }
 
-    this.queue.push(sleepTask);
+  // 打印任务
+  print(val) {
+    this.queue.push(() => {
+      console.log(val);
+      return Promise.resolve();
+    });
     return this;
   }
 
-  async print(value) {
-    const printTask = () => {
-      return new Promise((resolve) => {
-        console.log(value);
-        resolve();
-      });
-    };
-
-    this.queue.push(printTask);
-
-    await this.executeQueue();
-    return this;
-  }
-
-  async executeQueue() {
+  // 启动执行
+  async execute() {
     for (const task of this.queue) {
       await task();
     }
-    this.queue = [];
+    this.queue = []; // 执行完清空队列
   }
 }
 
-// 示例用法
-async function example() {
-  const task = new Task();
-
-  await task.sleep(1000); // 等1s
-  await task.print(1);   // 输出1
-  await task.sleep(2000); // 等2s
-  await task.sleep(3000); // 等3s
-  await task.print(2);   // 输出2
-  await task.print(3);   // 输出3
-  await task.print(4);   // 输出4
-
-  // 之后还可以继续输入指令继续执行
-}
-
-example();
+// 示例
+// new TaskQueue().print('开始').sleep(1000).print('1s后').execute();
 ```
 
 #### 9.实现sleep
@@ -1291,26 +1214,36 @@ function shallow(obj) {
 #### 1.深拷贝
 
 ```javascript
-// [原子模型]: 类型判断(基础类型/Date/RegExp) -> 递归剥洋葱 -> 闭包解决循环引用(可选)
+// [原子模型]: 类型判断(基础/引用) -> 递归深挖 -> 闭包记录循环引用
 // [逻辑骨架]:
-// 1. if(!isObject) return obj;
-// 2. newObj = isArray ? [] : {};
-// 3. for(key in obj) newObj[key] = deepCopy(obj[key]);
-// [通俗讲解]: “原材料克隆”。不只是把货物的标签抄一遍，而是递归进去，把盒子里的零件、零件里的螺丝也全按照原样复制一份新的出来。
-  if (obj === null || typeof obj !== "object") return obj
-  if (obj instanceof Date) return new Date(obj)
-  if (obj instanceof RegExp) return new RegExp(obj)
-  if (obj instanceof Error) return new Error(obj.message)
-  if (obj instanceof Function) return function (...args) {
-    return obj.call(this, ...args)
-  }
-  const newObj = Array.isArray(obj) ? [] : {}
+// 1. if(typeof obj !== 'object') return obj;
+// 2. if(map.has(obj)) return map.get(obj);
+// 3. newObj = Array.isArray(obj) ? [] : {}; map.set(obj, newObj);
+// 4. for(key in obj) newObj[key] = deepClone(obj[key], map);
+// [通俗讲解]: “原材料克隆”。不只是把货物的标签抄一遍，而是递归进去，把盒子里的零件、零件里的螺丝也全按照原样复制一份，并用记录本(Map)记下复制过的东西防止套路循环。
+function deepClone(obj, hash = new WeakMap()) {
+  // 基础类型或空，直接返回
+  if (obj === null || typeof obj !== 'object') return obj;
+
+  // 处理特殊对象：日期、正则
+  if (obj instanceof Date) return new Date(obj);
+  if (obj instanceof RegExp) return new RegExp(obj);
+
+  // 防环：如果已经克隆过该对象，直接返回记录的结果
+  if (hash.has(obj)) return hash.get(obj);
+
+  // 初始化容器
+  const newObj = Array.isArray(obj) ? [] : {};
+  hash.set(obj, newObj);
+
+  // 递归处理每一个属性
   for (const key in obj) {
     if (Object.prototype.hasOwnProperty.call(obj, key)) {
-      newObj[key] = deepCopy(obj[key])
+      newObj[key] = deepClone(obj[key], hash);
     }
   }
-  return newObj
+
+  return newObj;
 }
 ```
 
@@ -1359,45 +1292,58 @@ const source = { a: { b: { c: 1, d: 2 }, e: 3 }, f: { g: 2 } }
 console.log(objectFlat(source));
 ```
 
-#### 3.实现数组 API
-
-```javascript
 // [原子模型]: 循环遍历(for) -> 执行回调 fn(this[i], i, this) -> push 到新数组或累计结果
 // [逻辑骨架]:
 // 1. map: res.push(fn(item))
 // 2. filter: if(fn(item)) res.push(item)
 // 3. reduce: res = fn(res, item)
-Array.prototype.map = function(fn) {
-  const res = []
-  for(let i = 0; i < this.length; i++) {
-    res.push(fn(this[i], i, this)) 
-  }
-  return res
-}
 
-Array.prototype.filter = function(fn) {
-  const res = []
-  for(let i = 0; i < this.length; i++) {
-    if(fn(this[i], i, this)) {
-      res.push(this[i])
+// Map 实现
+Array.prototype.myMap = function(fn) {
+  const res = [];
+  for (let i = 0; i < this.length; i++) {
+    // 只有在元素存在时才执行（跳过空位置）
+    if (Object.prototype.hasOwnProperty.call(this, i)) {
+      res.push(fn(this[i], i, this));
     }
   }
-  return res
-}
+  return res;
+};
 
-Array.prototype.reduce = function(fn, initValue) {
-  let res, start = 0
-  if(arguments.length !== 1) {
-    res = initValue
-  } else {
-    res = this[0]
-    start = 1
+// Filter 实现
+Array.prototype.myFilter = function(fn) {
+  const res = [];
+  for (let i = 0; i < this.length; i++) {
+    if (Object.prototype.hasOwnProperty.call(this, i)) {
+      if (fn(this[i], i, this)) {
+        res.push(this[i]);
+      }
+    }
   }
-  for(let i = start; i < this.length; i++) {
-    res = fn(res, this[i], i, this)
+  return res;
+};
+
+// Reduce 实现
+Array.prototype.myReduce = function(fn, initialValue) {
+  let accumulator = initialValue;
+  let startIndex = 0;
+
+  // 如果没有提供初始值，则使用数组第一个元素
+  if (arguments.length === 1) {
+    if (this.length === 0) {
+      throw new TypeError('Reduce of empty array with no initial value');
+    }
+    accumulator = this[0];
+    startIndex = 1;
   }
-  return res
-}
+
+  for (let i = startIndex; i < this.length; i++) {
+    if (Object.prototype.hasOwnProperty.call(this, i)) {
+      accumulator = fn(accumulator, this[i], i, this);
+    }
+  }
+  return accumulator;
+};
 ```
 
 #### 6.实现call,apply,bind
@@ -1409,83 +1355,105 @@ Array.prototype.reduce = function(fn, initValue) {
 //      const fn = Symbol(); thisArg[fn] = this;
 //      const res = thisArg[fn](...args); delete thisArg[fn]; return res;
 //    }
-// [通俗讲解]: “临时外派”。我这个高级技师(函数)，临时去你的地盘(thisArg)干活，在你的设备上干完活我就卷铺盖走人，不留痕迹。
-// 实现call
-Function.prototype.mycall = function () {
-    let [thisArg, ...args] = [...arguments]   
-    thisArg = Object(thisArg) || window
-    let fn = Symbol()
-    thisArg[fn] = this
-    let result = thisArg[fn](...args)
-    delete thisArg[fn]
-    return result
-}
-// 实现apply
-Function.prototype.myapply = function (thisArg, args) {
-  thisArg = Object(thisArg) || window
-  let fn = Symbol()
-  thisArg[fn] = this
-  let result = thisArg[fn](...(args || []))
-  delete thisArg[fn]
-  return result
-}
+// [通俗讲解]: “临时外派”。我这个技师(函数)，临时去你的地盘(thisArg)干活，在你家的设备上插个优盘(Symbol)运行我的程序，干完拔掉优盘走人。
 
-// 实现bind
-Function.prototype.mybind = function(context, ...args){
-    return (...newArgs) => {
-        return this.call(context,...args, ...newArgs)
-    }
-}
+// 实现 call
+Function.prototype.myCall = function(context, ...args) {
+  // 处理上下文：null 或 undefined 指向 globalThis(window)
+  context = context || window;
+  // 包装成对象位，因为要在其上挂载属性
+  const target = Object(context);
+  const fnKey = Symbol('tempFn');
+
+  // 将当前函数挂载到指定上下文
+  target[fnKey] = this;
+  const result = target[fnKey](...args);
+
+  // 用完即删
+  delete target[fnKey];
+  return result;
+};
+
+// 实现 apply
+Function.prototype.myApply = function(context, argsArray = []) {
+  context = context || window;
+  const target = Object(context);
+  const fnKey = Symbol('tempFn');
+
+  target[fnKey] = this;
+  // apply 接受的是参数数组
+  const result = target[fnKey](...argsArray);
+
+  delete target[fnKey];
+  return result;
+};
+
+// 实现 bind
+Function.prototype.myBind = function(context, ...args) {
+  const self = this;
+  return function(...newArgs) {
+    // 闭包保存原函数，执行时合并参数
+    return self.apply(context, [...args, ...newArgs]);
+  };
+};
 ```
 
 ### <font style="color:rgb(26, 32, 41);">🌐</font><font style="color:rgb(26, 32, 41);"> 七、浏览器与网络</font>
 
-#### 1.Ajax
+// [原子模型]: 实例化 XHR -> 设置 open(method, url) -> 监听 onreadystatechange -> 发送 send()
+// [通俗讲解]: “发传真”。先买台机器(new XHR)，填好对方地址(open)，盯着显示屏状态(onreadystatechange)，最后按下发送键(send)。
+function ajax(url, method = 'GET') {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open(method, url, true);
+    
+    xhr.onreadystatechange = function() {
+      // readyState 4 表示请求完成
+      if (this.readyState !== 4) return;
+      
+      if (this.status >= 200 && this.status < 300) {
+        resolve(this.response);
+      } else {
+        reject(new Error(`请求失败: ${this.status} ${this.statusText}`));
+      }
+    };
 
-```javascript
-const xhr = new XMLHttpRequest();
-xhr.open("GET", url, true);
-xhr.onreadystatechange = function () {
-  if (this.readyState !== 4) return;
-  if (this.status === 200) {
-    console.log(this.response);
-  } else {
-    throw new Error(xhr.statusText);
-  }
-};
-xhr.send();
+    xhr.onerror = () => reject(new Error('网络连接异常'));
+    xhr.send();
+  });
+}
+
+// ajax('https://api.example.com').then(console.log).catch(console.error);
 ```
 
 #### 2.二进制转base64（选背）
 
 ```javascript
-// [原子模型]: 3个字节(24bit) 为一组 -> 拆为 4个 6bit 索引 -> 查表转换为字符 -> 不足补 '='
-// [逻辑骨架]:
-// 1. while(i < binary.length) { index = get6Bit(); res += base64Table[index]; }
-// 将二进制数据每 6bit 位替换成一个 base64 字符
-function binaryTobase64(code) {
-  let base64Code = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-  let res = '';
-  // 1 bytes = 8bit，6bit 位替换成一个 base64 字符
-  // 所以每 3 bytes 的数据，能成功替换成 4 个 base64 字符
+// [原子模型]: 每3个字节(24bit) 为一组 -> 拆为 4个 6bit 索引 -> 查表转换 -> 不足补 '='
+// [通俗讲解]: “二进制装箱”。把漫长的 01 串按 24 位一箱打包，每箱拆成 4 个小格(每格6位)，去查 64 字符表。最后如果箱子没装满，就用 '=' 封箱。
+function binaryToBase64(binaryStr) {
+  const table = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+  let res = "";
+  
+  // 每 6 位处理一次
+  for (let i = 0; i < binaryStr.length; i += 6) {
+    let chunk = binaryStr.slice(i, i + 6);
     
-  // 对不足 24 bit (也就是 3 bytes) 的情况进行特殊处理
-  if (code.length % 24 === 8) {
-    code += '0000';
-    res += '=='
-  }
-  if (code.length % 24 === 16) {
-    code += '00';
-    res += '='
+    // 如果不足 6 位，右侧补 0
+    if (chunk.length < 6) {
+      chunk = chunk.padEnd(6, '0');
+    }
+    
+    const index = parseInt(chunk, 2);
+    res += table[index];
   }
 
-  let encode = '';
-  // code 按 6bit 一组，转换为
-  for (let i = 0; i < code.length; i += 6) {
-    let item = code.slice(i, i + 6);
-    encode += base64Code[parseInt(item, 2)];
-  }
-  return encode + res;
+  // 计算补位 '=' 的个数
+  // 原始字节数应该是 8 的倍数。Base64 要求是 24 位的倍数。
+  // 这里的二进制逻辑较复杂，面试通常考原理，代码建议记思路。
+  const paddingMap = { 8: "==", 16: "=" };
+  const originalBitLength = binaryStr.length % 24;
+  return res + (paddingMap[originalBitLength] || "");
 }
 ```
 
@@ -1534,62 +1502,57 @@ function base64encode(text) {
 #### 4.模拟实现localstorage（选背）
 
 ```javascript
-'use strict'
-const valuesMap = new Map()
-
-class LocalStorage {
-  getItem (key) {
-    const stringKey = String(key)
-    if (valuesMap.has(key)) {
-      return String(valuesMap.get(stringKey))
-    }
-    return null
+// [原子模型]: Proxy 拦截 get/set -> 映射到内部 Map 存储 -> 维持 localStorage API 特性
+// [通俗讲解]: “私人保险柜”。虽然看起来像在给一个普通对象存取属性，其实背后都被代理(Proxy)拦截了，悄悄存进了一个私有的 Map 仓库里。
+class LocalArrayStorage {
+  constructor() {
+    this.store = new Map();
   }
 
-  setItem (key, val) {
-    valuesMap.set(String(key), String(val))
+  setItem(key, value) {
+    this.store.set(String(key), String(value));
   }
 
-  removeItem (key) {
-    valuesMap.delete(key)
+  getItem(key) {
+    return this.store.get(String(key)) || null;
   }
 
-  clear () {
-    valuesMap.clear()
+  removeItem(key) {
+    this.store.delete(String(key));
   }
 
-  key (i) {
-    if (arguments.length === 0) {
-      throw new TypeError("Failed to execute 'key' on 'Storage': 1 argument required, but only 0 present.") // this is a TypeError implemented on Chrome, Firefox throws Not enough arguments to Storage.key.
-    }
-    let arr = Array.from(valuesMap.keys())
-    return arr[i]
+  clear() {
+    this.store.clear();
   }
 
-  get length () {
-    return valuesMap.size
+  get length() {
+    return this.store.size;
   }
 }
-const instance = new LocalStorage()
 
-global.localStorage = new Proxy(instance, {
-  set: function (obj, prop, value) {
-    if (LocalStorage.prototype.hasOwnProperty(prop)) {
-      instance[prop] = value
-    } else {
-      instance.setItem(prop, value)
+const storageInstance = new LocalArrayStorage();
+
+// 使用 Proxy 模拟原生 localStorage 的属性访问行为
+const mockLocalStorage = new Proxy(storageInstance, {
+  get(target, prop) {
+    // 如果是调用方法 (如 setItem), 直接返回方法
+    if (prop in target) {
+      return target[prop];
     }
-    return true
+    // 否则作为 key 去获取值
+    return target.getItem(prop);
   },
-  get: function (target, name) {
-    if (LocalStorage.prototype.hasOwnProperty(name)) {
-      return instance[name]
+  set(target, prop, value) {
+    if (prop in target) {
+      target[prop] = value;
+    } else {
+      target.setItem(prop, value);
     }
-    if (valuesMap.has(name)) {
-      return instance.getItem(name)
-    }
+    return true;
   }
-})
+});
+
+// global.localStorage = mockLocalStorage; // 注册到全局
 ```
 
 #### 5.实现构造函数，对象中包含构造函数调用次数（选背）
@@ -1668,45 +1631,59 @@ try {
 
 ### <font style="color:rgb(26, 32, 41);">🏗</font><font style="color:rgb(26, 32, 41);"> 八、前端框架与设计模式</font>
 
-#### 1.发布订阅模式
-
-```javascript
-// [原子模型]: 结构 { 事件名: [回调函数] } -> 存(on) -> 删(off) -> 循环并执行(emit)
+// [原子模型]: 结构 { 事件名: [回调函数] } -> 存(on) -> 删(off) -> 执行(emit)
 // [逻辑骨架]:
-// 1. on(name, fn) { events[name].push(fn) }
-// 2. off(name, fn) { events[name].remove(fn) }
-// 3. emit(name, args) { events[name].forEach(fn => fn(args)) }
+// 1. Map 存储事件，键为事件名，值为回调数组。
+// 2. emit 遍历执行指定事件下的所有回调。
 // [通俗讲解]: “工厂大喇叭”。工厂里设个广播台，有人想听通知就去登记(on)。一旦有事发生了，大喇叭一喊(emit)，所有登记过的人都会收到消息并执行。
 class EventEmitter {
   constructor() {
-    this.events = {}
+    // 使用 Map 管理事件名和回调列表
+    this.events = new Map();
   }
+
+  // 1. 订阅（登记）
   on(name, fn) {
-    if (this.events[name]) {
-      if (!this.events[name].includes(fn)) {
-        this.events[name].push(fn)
-      }
-    } else {
-      this.events[name] = [fn]
+    if (!this.events.has(name)) {
+      this.events.set(name, []);
     }
+    this.events.get(name).push(fn);
   }
+
+  // 2. 取消订阅（注销）
   off(name, fn) {
-    if (this.events[name]) {
-      let idx = this.events[name].indexOf(fn)
-      if (idx !== -1) {
-        this.events[name].splice(idx, 1)
-      }
-    }
+    const handlers = this.events.get(name);
+    if (!handlers) return;
+
+    // 过滤掉当前要注销的函数
+    this.events.set(name, handlers.filter(h => h !== fn));
   }
+
+  // 3. 发布（广播）
   emit(name, ...args) {
-    if (this.events[name]) {
-      let tasks = [...this.events[name]]
-      for (const fn of tasks) {
-        fn.call(this, ...args)
-      }
-    }
+    const handlers = this.events.get(name);
+    if (!handlers) return;
+
+    // 依次执行
+    handlers.forEach(fn => {
+      fn.apply(this, args);
+    });
+  }
+
+  // 4. 一次性订阅
+  once(name, fn) {
+    const wrapper = (...args) => {
+      fn.apply(this, args);
+      this.off(name, wrapper); // 执行完立即注销
+    };
+    this.on(name, wrapper);
   }
 }
+
+// 示例
+// const bus = new EventEmitter();
+// bus.on('work', (task) => console.log('开始干活:', task));
+// bus.emit('work', '写代码');
 ```
 
 #### 2.发布订阅模式升级版（选背）
@@ -1966,75 +1943,92 @@ console.log('Groups for groupEvent after off:', [...eventBus.getGroups('groupEve
 // [逻辑骨架]:
 // 1. Subject { attach(o) { observers.push(o) }; setState(s) { observers.forEach(o => o.update(this)) } }
 // 2. Observer { update(subject) { ... } }
-class Subject {  // 被观察者：小宝宝
-  constructor(name)  {
+// [通俗讲解]: “奶爸奶妈监控”。小宝宝(Subject)是核心，爸爸妈妈(Observer)盯着宝宝。宝宝一哭(setState)，所有盯着的人都会收到通知并跑过来(update)。
+
+class Subject {
+  constructor(name) {
     this.name = name;
-    this.state = "开心的";
-    this.observer = [];
+    this.state = "开心";
+    this.observers = []; // 观察者队列
   }
 
-  attach(o) {
-    this.observer.push(o);
+  // 挂载观察者
+  attach(observer) {
+    this.observers.push(observer);
   }
 
+  // 改变状态并通知
   setState(newState) {
+    console.log(`${this.name} 的状态变更为: ${newState}`);
     this.state = newState;
-    this.observer.forEach(o => o.update(this));
+    this.notify();
   }
 
+  notify() {
+    this.observers.forEach(o => o.update(this));
+  }
 }
 
-class Observer { // 观察者：爸爸 妈妈
+class Observer {
   constructor(name) {
     this.name = name;
   }
 
-  update(baby) {
-    console.log("当前"+this.name+"被通知了，当前小宝宝的状态是："+baby.state);
+  // 被通知时的行为
+  update(subject) {
+    console.log(`${this.name} 收到通知，${subject.name} 目前是 ${subject.state} 状态`);
   }
 }
 
-// 爸爸妈妈需要观察小宝宝的心理变化
-let baby = new Subject("小宝宝");
-let father = new Observer("爸爸");
-let mother = new Observer("妈妈");
-
-baby.attach(father);
-baby.attach(mother);
-baby.setState("我饿了");
+// 测试
+// const baby = new Subject("宝宝");
+// const father = new Observer("爸爸");
+// baby.attach(father);
+// baby.setState("饿了");
 ```
 
 #### 4.useState
 
 ```javascript
-// [原子模型]: 外部数组 + 当前索引(cursor) -> 闭包保存索引 -> 更新后重置索引并 render
+// [原子模型]: 外部数组(states) + 当前指针(cursor) -> 按顺序存取 -> 更新后重置指针并渲染
 // [逻辑骨架]:
-// 1. const index = currentIndex++;
-// 2. const setState = (newVal) => { queue[index] = newVal; currentIndex = 0; render(); }
-// 3. return [queue[index], setState]
-// [通俗讲解]: “工位记录本”。在工厂传送带旁放一排本子，每个工人(useState调用)按顺序领一个固定的本子记录进度。只要顺序不变，他们就能各司其职不认错本子。
-let stateQueue = [];
-let currentIndex = 0;
-// 模拟 useState 实现
-function useState(initialState) {
-  // 记录当前索引（对应第几个 useState 调用）
-  const index = currentIndex++;
-  // 如果是首次渲染或状态队列中该位置未初始化，就用初始值
-  if (!stateQueue[index]) {
-    stateQueue[index] = initialState;
+// 1. const currentCursor = cursor++;
+// 2. const setState = (val) => { states[currentCursor] = val; cursor = 0; render(); }
+// 3. return [states[currentCursor], setState]
+// [通俗讲解]: “工位记录本”。在传送带旁放一排固定的本子(数组)，每个工人(useState调用)每次都按顺序领对应的本子。只要每次工人出场的顺序一样，数据就不会乱。
+
+let states = []; // 存储状态的“大仓库”
+let cursor = 0;  // 记录当前操作到第几个状态的“指针”
+
+function myUseState(initialState) {
+  const currentCursor = cursor;
+  
+  // 首次渲染：赋初值
+  if (states[currentCursor] === undefined) {
+    states[currentCursor] = initialState;
   }
-  // 生成更新状态的函数，更新后触发重新渲染
+
   const setState = (newState) => {
-    if(typeof newState === 'function'){
-      stateQueue[index] = newState(stateQueue[index]);
-    }else{
-      stateQueue[index] = newState;
-    }
-    currentIndex = 0;
-    // 重新渲染组件（调用 render 函数）
-    render();
+    // 允许传入函数或值
+    const nextValue = typeof newState === 'function' 
+      ? newState(states[currentCursor]) 
+      : newState;
+    
+    // 更新仓库数据
+    states[currentCursor] = nextValue;
+    
+    // 重要：重置指针，准备下一次渲染的“顺序读取”
+    cursor = 0;
+    mockRender(); 
   };
-  return [stateQueue[index], setState];
+
+  cursor++; // 指针后移，供下一个 useState 使用
+  return [states[currentCursor], setState];
+}
+
+function mockRender() {
+  console.log("--- 开始重新渲染 ---");
+  // 在实际环境中，这里会重新执行整个组件函数
 }
 ```
 
