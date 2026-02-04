@@ -1,0 +1,68 @@
+<link rel="stylesheet" href="hljs-github.min.css">
+<script src="highlight.min.js"></script>
+<div class="card">
+  <div class="front">{{FrontSide}}</div>
+  <hr>
+  <div class="back">{{Back}}</div>
+  <div class="meta">{{Source}}</div>
+  <div class="scratch">
+    <div class="scratch__label">Scratchpad</div>
+    <textarea class="scratch__input" id="scratchpad" placeholder="Notes…"></textarea>
+  </div>
+</div>
+<script>
+(() => {
+  const noteId = "{{Id}}";
+  const key = "anki_scratchpad_" + noteId;
+  const el = document.getElementById("scratchpad");
+  if (el) {
+    try { el.value = localStorage.getItem(key) || ""; } catch (e) {}
+    el.addEventListener("input", () => {
+      try { localStorage.setItem(key, el.value); } catch (e) {}
+    });
+  }
+
+  const addCopyButtons = () => {
+    document.querySelectorAll("pre").forEach((pre) => {
+      if (pre.querySelector(".copy-btn")) return;
+      const btn = document.createElement("button");
+      btn.className = "copy-btn";
+      btn.type = "button";
+      btn.textContent = "Copy";
+      btn.addEventListener("click", async () => {
+        const codeEl = pre.querySelector("code");
+        const text = (codeEl ? codeEl.innerText : pre.innerText) || "";
+        try {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            await navigator.clipboard.writeText(text);
+          } else {
+            const ta = document.createElement("textarea");
+            ta.value = text;
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand("copy");
+            ta.remove();
+          }
+          btn.textContent = "Copied";
+          setTimeout(() => (btn.textContent = "Copy"), 800);
+        } catch (e) {
+          btn.textContent = "Failed";
+          setTimeout(() => (btn.textContent = "Copy"), 800);
+        }
+      });
+      pre.style.position = "relative";
+      pre.appendChild(btn);
+    });
+  };
+
+  const highlight = () => {
+    if (!window.hljs || !hljs.highlightElement) return;
+    document.querySelectorAll("pre code").forEach((code) => {
+      try { hljs.highlightElement(code); } catch (e) {}
+    });
+  };
+
+  addCopyButtons();
+  highlight();
+})();
+</script>
