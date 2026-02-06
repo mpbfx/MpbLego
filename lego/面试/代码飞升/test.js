@@ -1063,9 +1063,111 @@ Array.prototype.filter = function(fn){
     return res;
 }
 
-Array.prototype.reduce = function(fn, initValue){
-    let res, start = 0;
-    if(arguments.length !== 1){
-        
+function retryRequest(requestFunction, maxAttempts, delay) { 
+  return new Promise((resolve, reject) => { 
+    let attempts = 0; 
+ 
+    function makeRequest() { 
+      attempts++; 
+ 
+      requestFunction() 
+        .then(resolve) 
+        .catch((error) => { 
+          if (attempts < maxAttempts) { 
+            setTimeout(makeRequest, delay); 
+          } else { 
+            reject(error); 
+          } 
+        }); 
+    } 
+ 
+    makeRequest(); 
+  }); 
+} 
+ 
+// 示例用法： 
+const maxAttempts = 3; 
+const delay = 1000; // 1秒钟 
+const fakeApiRequest = () => { 
+  return new Promise((resolve, reject) => { 
+    // 模拟一个请求，这里可以替换成实际的请求逻辑 
+    const success = Math.random() < 0.8; // 模拟80%的成功率 
+    if (success) { 
+      resolve('请求成功'); 
+    } else { 
+      reject('请求失败'); 
+    } 
+  }); 
+}; 
+ 
+retryRequest(fakeApiRequest, maxAttempts, delay) 
+  .then((result) => { 
+    console.log(result); 
+  }) 
+  .catch((error) => { 
+    console.error('最大重试次数已达到，请求失败：', error); 
+  }); 
+
+
+function retryRequest(requestFunction, maxAttempts, delay){
+    return new Promise((resolve, reject) => {
+        let attempts = 0;
+
+        function makeRequest(){
+            attempts++;
+
+            requestFunction()
+                .then(resolve)
+                .catch((error) => {
+                    if(attempts < maxAttempts){
+                        setTimeout(makeRequest, delay);
+                    }else{
+                        reject(error);
+                    }
+                })
+        }
+        makeRequest();
+    })
+}
+
+function deepcopy(obj){
+    if(!obj || typeof obj !== 'object') return;
+    let newObj = Array.isArray(object) ? [] : {};
+    for(let key in obj){
+        if(obj.hasOwnProperty(key)){
+            newObj[key] = typeof obj[key] === 'object' ? deepcopy(obj[key]) : obj[key];
+        }
     }
+    return newObj;
+}
+
+function isEqual(obj1, obj2){
+    if(typeof obj1 !== 'object' || typeof obj2 !== 'object'){
+        return obj1 === obj2;
+    }
+    if(obj1 === obj2) return true;
+    let key1 = Object.keys(obj1);
+    let key2 = Object.keys(obj2);
+    if(key1.length !== key2.length) return false;
+
+    for(let key of key1){
+        if(!isEqual(obj1[key], obj2[key])) return false;
+    }
+    return true;
+}
+
+function praseUrl(url){
+    let resObj = {};
+    if(!url.includes('?')) return;
+    let praseStr = url.split('?')[1];
+    praseStr.split('&').forEach(str => {
+        let [key, value] = str.split('=');
+        if(!key) return;
+        value = value !== undefined ? decodeURIComponent(value) : true;
+        if(resObj[key]){
+            resObj[key] = [].concat(resObj[key, value]);
+        }else{
+            resObj[key] = value;
+        }
+    })
 }
