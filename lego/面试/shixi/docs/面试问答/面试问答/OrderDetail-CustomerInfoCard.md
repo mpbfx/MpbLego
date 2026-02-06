@@ -1,8 +1,8 @@
-# CustomerInfoCard 前端面试问答
+﻿# CustomerInfoCard 前端面试问答
 
 ## 前端面试官：你是如何实现 CustomerInfoCard 的？（从前端技术角度，包含 Vue / HTML / CSS / JS 等）
 
-我把“订单基础信息编辑 + 客户结算关键日期”放在一张卡里，核心是：用 `CardWrapper` 统一 view/edit 模式与操作按钮；组件内部维护 `formData` 做“编辑草稿”，通过 `$emit` 把保存/搜索/清除日期等动作交给父页调用接口，并在父页做局部刷新，避免整页重拉。
+我把“订单基础信息编辑 + 客户结算关键日期”放在一张卡里，核心是：用 `CardWrapper` 统一 view/edit 模式与操作按钮；组件内部维护 `formData` 做“编辑草稿”，通过 `$emit` 把保存/搜索/日期变更/清除日期等动作交给父页调用接口，并在父页做局部刷新，避免整页重拉。
 
 - **Vue 组件分层**：父页 `pages/orderManagement/orderDetail.vue` 负责数据拉取与接口编排；卡片 `components/OrderDetail/Cards/CustomerInfoCard.vue` 负责表单渲染、校验、交互细节；通用壳 `components/OrderDetail/CardWrapper.vue` 提供 mode（view/edit/add）与按钮区。
 - **模板（HTML/组件）结构**：`CardWrapper` + `v-slot="{ mode }"`；`mode==='edit'` 渲染 AntD 表单（`a-form/a-form-item/a-input/a-select/a-date-picker`）；`mode!=='edit'` 渲染只读的 grid view（label/value）。
@@ -12,8 +12,9 @@
   - 语言方向：`onSrcLangChange/onDesLangChange` 防止源语言与目标语言相同（相同则清空另一侧）。
   - 金额/字数：`checkTwoDigitNumber` 做“两位小数”约束，`isNumer` 做数字判定；不满足时提示“不会计算总价”。
   - 总价联动：`calculateTotalPrice()` 支持“重复量级 + 权重”加成，统一保留两位小数（`roundDecimal`）。
+- **保存兜底**：`handleSave` 里会在提交前补齐 `expectFinishDate`（默认取 `addOrderTime`），兼容后端对该字段“非空”的历史约束。
 - **异步搜索下拉（Vue 事件 + 父子通信）**：客户名称 `a-select` 的 `@search/@change` 通过 `$emit('user-search'|'user-change')` 交给父页做 debounce 搜索与“带出历史订单信息预填”（`getPmAndUserLastOrderInfo`）。
-- **权限/状态驱动 UI（如有）**：结算节点日期（交付/提单/确认/回款）的“可编辑/可删除”由 `orderInfo.statusStr + 各日期字段` 推导；删除按钮还叠加 `v-checkPermission` label 控制（例如 `ordermanagement-deleteFinishAndSendBillOrderDate`）。
+- **权限/状态驱动 UI（如有）**：结算节点日期（交付/提单/确认/回款）的“可编辑/可删除”由 `permissionTable + orderInfo.statusStr + 各日期字段` 共同决定；删除按钮还叠加 `v-checkPermission` label 控制（例如 `ordermanagement-deleteFinishAndSendBillOrderDate`）。`addOrderTime` 也有状态门禁（已进入结算链路后不可编辑）。
 - **性能与体验细节（如有）**：父页保存成功后只刷新“客户信息 + 操作记录”，不刷新整个页面；日期删除走二次确认 modal，避免误操作导致订单状态回滚。
 - **CSS/布局**：
   - 编辑态：`grid-form` 用 CSS Grid 排版（4 列），密集布局但字段对齐。
@@ -64,8 +65,21 @@ export default {
     }
   },
   computed: {
-    canEditTranslateFinish() { return this.orderInfo.statusStr === '翻译中' },
-    canEditSendBill() { return !this.orderInfo.sendBillTime && this.orderInfo.translateFinishTime },
+    canEditAddOrderTime() {
+      const status = Number(this.orderInfo?.status)
+      if (!Number.isNaN(status)) return status <= 10
+      return !this.orderInfo?.translateFinishTime && !this.orderInfo?.sendBillTime && !this.orderInfo?.incomeFinishTime && !this.orderInfo?.rebateFinishTime
+    },
+    canEditFinishAndSendBill() {
+      const roleType = this.$store?.state?.userinfo?.roleType
+      return (permissionTable['ordermanagement-editFinishAndSendBillOrderDate'] || []).includes(roleType)
+    },
+    canEditIncomeAndRebateFinish() {
+      const roleType = this.$store?.state?.userinfo?.roleType
+      return (permissionTable['ordermanagement-editIncomeAndRebateFinishOrderDate'] || []).includes(roleType)
+    },
+    canEditTranslateFinish() { return this.canEditFinishAndSendBill && !this.orderInfo.translateFinishTime && this.orderInfo.statusStr === '翻译中' },
+    canEditSendBill() { return this.canEditFinishAndSendBill && !this.orderInfo.sendBillTime && this.orderInfo.translateFinishTime },
     canCancelSendBill() { return !!this.orderInfo.sendBillTime && !this.orderInfo.incomeFinishTime }
     // ...
   },
@@ -79,10 +93,21 @@ export default {
   methods: {
     handleSave() {
       if (!this.validateForm()) return
+      if (!this.canEditAddOrderTime) {
+        this.formData.addOrderTime = this.orderInfo?.addOrderTime || this.formData.addOrderTime
+      }
+      if (!this.formData.expectFinishDate) {
+        this.formData.expectFinishDate = this.formData.addOrderTime || this.orderInfo?.addOrderTime || ''
+      }
       this.$emit('save', this.formData)
     },
     onUserNameSearch(value) { this.$emit('user-search', value) },
     onUserNameChange(value, option) { this.$emit('user-change', value, option) },
+    onTranslateFinishTimeChange(value) {
+      if (value && value !== this.orderInfo.translateFinishTime) {
+        this.$emit('date-change', { type: 'translateFinishTime', value })
+      }
+    },
     handleCancelModalOk() {
       this.$emit('cancel-date', this.cancelModal.dateType)
       this.resetCancelModal()
@@ -102,7 +127,6 @@ export default {
   :show-edit="showEdit"
   @save="handleSave"
   @cancel="handleCancel"
-  @clear="handleClear"
   @mode-change="handleModeChange"
 >
   <template v-slot="{ mode }">
@@ -123,7 +147,11 @@ export default {
 
       <a-form-item label="交付日期">
         <div class="inline-date">
-          <a-date-picker v-model="formData.translateFinishTime" :disabled="!canEditTranslateFinish" />
+          <a-date-picker
+            v-model="formData.translateFinishTime"
+            :disabled="!canEditTranslateFinish"
+            @change="onTranslateFinishTimeChange"
+          />
           <a-icon v-if="canCancelTranslateFinish" type="delete" @click="showCancelConfirm('translateFinishTime')" />
         </div>
       </a-form-item>
@@ -188,12 +216,15 @@ calculateTotalPrice() {
 文件：`pages/orderManagement/orderDetail.vue`
 
 ```js
-// 子组件触发：@save="saveCustomerInfo" @user-search="handleUserSearch" @cancel-date="cancelSettlementDate"
+// 子组件触发：@save="saveCustomerInfo" @user-search="handleUserSearch"
+//           @cancel-date="cancelSettlementDate" @date-change="handleDateChange"
 async saveCustomerInfo(formData) {
   const settlementKeys = ['translateFinishTime', 'sendBillTime', 'incomeFinishTime', 'rebateFinishTime']
+  const basicFormData = { ...formData }
+  settlementKeys.forEach(key => { delete basicFormData[key] })
 
   // 1) 先更新订单基础信息（不包含结算日期）
-  await this.$http.post(`${path.updateSalesOrder}?id=${this.orderId}`, strip(formData, settlementKeys))
+  await this.$http.post(`${path.updateSalesOrder}?id=${this.orderId}`, { id: this.orderId, langDirection: '', ...basicFormData })
 
   // 2) 同一次保存：结算日期“先取消（回滚链路）再确认（推进链路）”
   for (const key of [...settlementKeys].reverse()) {
@@ -206,6 +237,12 @@ async saveCustomerInfo(formData) {
   await this.refreshCustomerInfo()
   await this.refreshOperationRecord()
   this.$refs.customerInfoCard?.setMode('view')
+}
+
+async handleDateChange({ type, value }) {
+  await this.$http.post(apiMap[type], { id: this.orderId, confirmDate: value }, 'query')
+  await this.refreshCustomerInfo()
+  await this.refreshOperationRecord()
 }
 ```
 
@@ -228,3 +265,54 @@ async saveCustomerInfo(formData) {
   }
 }
 ```
+
+---
+
+## 补充：主导职责、量化结果、复盘与分时长回答
+
+### 主导职责（可直接说）
+
+在「订单详情与卡片协作」这部分，我主导完成了：方案拆解、风险评估、核心代码落地、联调上线与复盘沉淀。主导范围覆盖：详情页编排、卡片状态管理、提交链路与回滚。
+
+### 量化结果（请按真实数据替换）
+
+- 关键指标：首屏可用时间、卡片保存成功率、联动回归缺陷数 从 X 优化到 Y。
+- 交付效率：同类需求交付周期从 X 天 缩短到 Y 天。
+- 稳定性：相关线上问题从 X 个/迭代下降到 Y 个/迭代。
+- 可维护性：重复逻辑与临时补丁占比下降 X%。
+
+### 故障复盘卡片（与本文主题相关）
+
+1) 现象：卡片联动导致数据不一致。  
+- 影响：核心流程可用性或数据一致性受影响。  
+- 定位：通过日志、埋点、接口返回与代码链路回溯定位到根因。  
+- 止血：快速回滚/降级并加兜底判断。  
+- 长期修复：补充边界校验、自动化测试与发布前检查项。
+
+2) 现象：改造后出现跨模块联动异常。  
+- 影响：上下游模块结果不一致。  
+- 定位：接口契约、状态同步或配置项存在偏差。  
+- 止血：统一契约并临时加兼容转换。  
+- 长期修复：把契约收敛为单一来源并补文档与门禁。
+
+3) 现象：高峰期下性能或失败率波动。  
+- 影响：用户体验下降，工单增加。  
+- 定位：识别瓶颈点（请求并发、渲染、缓存或鉴权链路）。  
+- 止血：限流/重试/懒加载或拆分重任务。  
+- 长期修复：建立持续监控与阈值告警，按周复盘。
+
+### 分时长回答（背诵版）
+
+- 30 秒：
+  这部分是我主导落地的，核心目标是把「订单详情与卡片协作」做到稳定、可扩展、可复用，重点解决一致性和线上可维护性。
+
+- 90 秒：
+  我按“问题-方案-结果”推进：先定义边界与关键风险，再做结构化改造和统一约定，最后用测试、监控和流程门禁固化成果，确保同类问题不反复出现。
+
+- 3 分钟：
+  按“背景、挑战、方案、落地、结果、复盘”展开：
+  1) 业务背景与约束。  
+  2) 当前痛点与失败案例。  
+  3) 方案选择与取舍依据。  
+  4) 实施路径与跨团队配合。  
+  5) 指标结果与后续优化计划。

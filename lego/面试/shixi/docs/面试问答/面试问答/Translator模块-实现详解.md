@@ -379,3 +379,40 @@ this.scale = parseFloat(Math.max(0.1, fitScale).toFixed(3))
 2) 合同下载/简历预览用 `fetch + credentials` 与 `$http` 并存，工程上可以抽一个“文件下载/预览”工具函数统一处理（`pages/translator/contract.vue:406`、`pages/translator/resumePreview.vue:167`）。  
 3) translator 简历页非常大，建议继续保持“逻辑模块化”，避免页面组件继续膨胀（已经在做了，`pages/translator/index.vue:188`）。  
 
+
+---
+
+## 13. 补充：主导职责、量化结果、故障复盘、分时长回答
+
+### 13.1 主导职责（可直接说）
+
+Translator 模块由我主导：模块边界设计、layout 挡板、SSR 初始化分流、卡片复用体系、合同/PDF 预览下载链路。
+
+### 13.2 量化结果（请按真实数据替换）
+
+- 登录态一致性：未登录误渲染率从 `X%` 到 `Y%`。
+- 卡片复用：Translator 与 ResourceDetail 复用比例提升到 `X%`。
+- 合同/PDF 预览：预览失败率从 `X%` 到 `Y%`。
+- 模块迭代效率：新增一个业务卡片的交付周期从 `X` 天到 `Y` 天。
+
+### 13.3 故障复盘卡片
+
+1) 退出后刷新“自动登录”复盘：`logged_out` 标记 + SSR 优先判断解决。  
+2) 合同下载偶发失败复盘：统一 `credentials: include` 与错误提示策略。  
+3) 简历页体量膨胀复盘：持续模块化拆分，避免单文件失控。
+
+### 13.4 分时长回答（背诵版）
+
+- 30 秒：
+  我主导在同一 Nuxt 中做了一个独立的 translator 子站，核心是独立入口、SSR 登录态一致、业务状态机驱动菜单，以及卡片与逻辑模块复用。
+
+- 90 秒：
+  我先在 layout 层做登录/开通挡板，再在 `nuxtServerInit` 按路径分流不同用户校验接口，保证首屏状态正确；页面层通过 `components/ResourceDetail/Cards` + `utils/resource/*` 复用实现高复用低耦合；合同与 PDF 链路补上鉴权与容错，保证可用性。
+
+- 3 分钟：
+  依次讲边界、状态、复用、文件链路：
+  1) 为何 translator 不走大客户权限。  
+  2) SSR 首屏如何判定登录与开通。  
+  3) 多卡片 + 工厂函数如何提高复用。  
+  4) 合同/PDF 如何处理鉴权与跨域。  
+  最后给出一致性和失败率指标。

@@ -1,12 +1,12 @@
-# CustomerSettlementCard 前端面试问答
+﻿# CustomerSettlementCard 前端面试问答
 
 ## 前端面试官：你是如何实现 CustomerSettlementCard 的？（从前端技术角度，包含 Vue / HTML / CSS / JS 等）
 
 这张卡的目标是把“客户结算节点日期（交付/提单/确认/回款）”做成独立的、只负责日期确认/清除的 UI：每个节点一行 `date-picker + action-icon`，并根据订单状态和前置节点是否完成来决定可编辑性；真正的确认/取消接口调用仍由父页处理。
 
-注意：当前版本 `pages/orderManagement/orderDetail.vue` 里该卡片被注释掉（结算日期入口并入了 `CustomerInfoCard`），但这张卡仍可作为“独立结算卡”保留，面试时可以说“我们把高风险结算节点拆成独立卡，后来为了减少入口重复合并到客户信息卡”。
+注意：当前版本 `pages/orderManagement/orderDetail.vue` 里该卡片被注释掉（结算日期入口并入了 `CustomerInfoCard`，主流程通过 `@date-change/@cancel-date` 触发父页接口），但这张卡仍可作为“独立结算卡”保留，面试时可以说“我们把高风险结算节点拆成独立卡，后来为了减少入口重复合并到客户信息卡”。
 
-- **Vue 组件分层**：父页 `pages/orderManagement/orderDetail.vue` 提供 `saveSettlementDate/cancelSettlementDate`；卡片 `components/OrderDetail/Cards/CustomerSettlementCard.vue` 只维护本地日期输入与交互；通用 `components/OrderDetail/CardWrapper.vue` 提供骨架与 loading。
+- **Vue 组件分层**：父页 `pages/orderManagement/orderDetail.vue` 统一提供 `handleDateChange/cancelSettlementDate`（并保留 `saveSettlementDate` 兼容独立卡接入）；卡片 `components/OrderDetail/Cards/CustomerSettlementCard.vue` 只维护本地日期输入与交互；通用 `components/OrderDetail/CardWrapper.vue` 提供骨架与 loading。
 - **模板（HTML/组件）结构**：2 列 grid（4 个节点 = 4 行）；每行：`a-date-picker` + `a-icon(save|delete)`；图标显示条件区分“已有确认日期（显示 delete）”与“未确认但已选择（显示 save）”。
 - **响应式数据与单向数据流**：`orderInfo` props 输入；watch `orderInfo` 同步到 `localDatetime`（避免直接修改 props）；点击保存 `$emit('save-date', dateType, localDatetime[dateType])`，点击清除走确认弹窗后 `$emit('cancel-date', dateType)`。
 - **表单校验实现（JS）**：日期保存前只做“是否选择日期”的轻校验（未选则提示）。
@@ -34,7 +34,7 @@
 ### 1）关联文件定位（页面/组件/工具）
 
 ```text
-页面（如有）：pages/orderManagement/orderDetail.vue（目前注释了该卡片的渲染）
+页面（如有）：pages/orderManagement/orderDetail.vue（目前注释了该卡片渲染，结算入口在 CustomerInfoCard）
 组件：components/OrderDetail/Cards/CustomerSettlementCard.vue
 相关：components/OrderDetail/CardWrapper.vue
      middleware/checkPermission.js（指令）
@@ -127,7 +127,20 @@ showCancelConfirm(dateType) {
 文件：`pages/orderManagement/orderDetail.vue`
 
 ```js
-// （当前 CustomerSettlementCard 渲染被注释，但父页接口编排仍保留）
+// 现网主入口：CustomerInfoCard 触发 @date-change/@cancel-date
+async handleDateChange({ type, value }) {
+  const apiMap = {
+    translateFinishTime: path.confirmFileTranslated,
+    sendBillTime: path.confirmOrderSendBill,
+    incomeFinishTime: path.confirmOrderIncome,
+    rebateFinishTime: path.confirmOrderRebate
+  }
+  await this.$http.post(apiMap[type], { id: this.orderId, confirmDate: value }, 'query')
+  await this.refreshCustomerInfo()
+  await this.refreshOperationRecord()
+}
+
+// 预留入口：若恢复独立 CustomerSettlementCard，可继续使用 save-date/cancel-date
 async saveSettlementDate(dateType, dateValue) {
   const apiMap = {
     translateFinishTime: path.confirmFileTranslated,
@@ -175,3 +188,54 @@ async cancelSettlementDate(dateType) {
   }
 }
 ```
+
+---
+
+## 补充：主导职责、量化结果、复盘与分时长回答
+
+### 主导职责（可直接说）
+
+在「订单详情与卡片协作」这部分，我主导完成了：方案拆解、风险评估、核心代码落地、联调上线与复盘沉淀。主导范围覆盖：详情页编排、卡片状态管理、提交链路与回滚。
+
+### 量化结果（请按真实数据替换）
+
+- 关键指标：首屏可用时间、卡片保存成功率、联动回归缺陷数 从 X 优化到 Y。
+- 交付效率：同类需求交付周期从 X 天 缩短到 Y 天。
+- 稳定性：相关线上问题从 X 个/迭代下降到 Y 个/迭代。
+- 可维护性：重复逻辑与临时补丁占比下降 X%。
+
+### 故障复盘卡片（与本文主题相关）
+
+1) 现象：卡片联动导致数据不一致。  
+- 影响：核心流程可用性或数据一致性受影响。  
+- 定位：通过日志、埋点、接口返回与代码链路回溯定位到根因。  
+- 止血：快速回滚/降级并加兜底判断。  
+- 长期修复：补充边界校验、自动化测试与发布前检查项。
+
+2) 现象：改造后出现跨模块联动异常。  
+- 影响：上下游模块结果不一致。  
+- 定位：接口契约、状态同步或配置项存在偏差。  
+- 止血：统一契约并临时加兼容转换。  
+- 长期修复：把契约收敛为单一来源并补文档与门禁。
+
+3) 现象：高峰期下性能或失败率波动。  
+- 影响：用户体验下降，工单增加。  
+- 定位：识别瓶颈点（请求并发、渲染、缓存或鉴权链路）。  
+- 止血：限流/重试/懒加载或拆分重任务。  
+- 长期修复：建立持续监控与阈值告警，按周复盘。
+
+### 分时长回答（背诵版）
+
+- 30 秒：
+  这部分是我主导落地的，核心目标是把「订单详情与卡片协作」做到稳定、可扩展、可复用，重点解决一致性和线上可维护性。
+
+- 90 秒：
+  我按“问题-方案-结果”推进：先定义边界与关键风险，再做结构化改造和统一约定，最后用测试、监控和流程门禁固化成果，确保同类问题不反复出现。
+
+- 3 分钟：
+  按“背景、挑战、方案、落地、结果、复盘”展开：
+  1) 业务背景与约束。  
+  2) 当前痛点与失败案例。  
+  3) 方案选择与取舍依据。  
+  4) 实施路径与跨团队配合。  
+  5) 指标结果与后续优化计划。
