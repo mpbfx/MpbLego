@@ -1064,22 +1064,14 @@ autoPlay()
 //    }
 // [通俗讲解]: “急躁的工人”。工人一干活就要先等5秒，如果这5秒内老板又喊他干活，他之前的等待就作废，重新开始记5秒。
 function debounce(fn, delay) {
-    let timer = null;
-    
-    // 使用剩余参数 ...args 来接收所有参数
-    return function(...args) { 
-        // 箭头函数会自动捕获外层 this，所以不需要手动保存 context
-        if (timer) {
-            clearTimeout(timer);
-        }
-
-        timer = setTimeout(() => {
-            // 直接调用 fn 并传入 args
-            fn(...args); 
-        }, delay);
-    };
+  let timer = null;
+  return function(...args) {
+    if (timer) clearTimeout(timer);
+    timer = setTimeout(() => {
+      fn.apply(this, args);
+    }, delay);
+  };
 }
-
 ```
 
 #### 2.节流
@@ -1091,16 +1083,15 @@ function debounce(fn, delay) {
 //      if (now - lastTime > delay) { fn(...args); lastTime = now; }
 //    }
 // [通俗讲解]: “冷静的闸机”。不管多少人挤破头想进厂，检票闸机每隔10分钟才开一次门，没到点谁也进不来。
-function throttle(fn,delay){
-    let lastTime=0
-    return function(...agrs){
-        const nowTime=new Date().getTime()
-        if(nowTime-lastTime>delay){
-            fn(...agrs)
-            lastTime=nowTime
-        }
+function throttle(fn, delay) {
+  let lastTime = 0;
+  return function(...args) {
+    const nowTime = Date.now();
+    if (nowTime - lastTime > delay) {
+      fn.apply(this, args);
+      lastTime = nowTime;
     }
-
+  };
 }
 ```
 
@@ -1116,27 +1107,18 @@ function throttle(fn,delay){
 //      return (...rest) => curry(fn, ...args, ...rest);
 //    }
 // [通俗讲解]: “零件分步组装”。原本要一口气装完的设备，现在可以先装一部分零件，剩下的零件什么时候送达，什么时候再继续装，直到装完。
-const curry = (fn, ...args) => {
-  if(args.length >= fn.length) {
-    return fn(...args)
-  }
-  return (...rest) => {
-    return curry(fn, ...args, ...rest)
-  }
-}
-
-// bfe
 function curry(fn) {
   return function curried(...args) {
-    if(fn.length <= args.length) {
-      return fn(...args)
+    if (args.length >= fn.length) {
+      return fn.apply(this, args);
     }
     return (...rest) => {
-      return curried(...args, ...rest)
-    }
-  }
+      return curried.apply(this, [...args, ...rest]);
+    };
+  };
 }
 ```
+
 
 #### 4.curry/反curry介绍， 手写通用curry化工厂函数，增加占位符实现
 
